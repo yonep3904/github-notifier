@@ -10,6 +10,7 @@
     "hono": "^4.12.9"
   },
   "devDependencies": {
+    "@hono/eslint-config": "^2.1.0",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "eslint": "^9.39.4",
     "prettier": "^3.8.1",
