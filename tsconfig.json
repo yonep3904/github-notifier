@@ -13,6 +13,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+
+    // Vitest globals
+    "types": ["vitest/globals"]
   }
 }
