@@ -20,6 +20,7 @@
     "hono": "^4.12.9"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.4.9",
     "@edge-runtime/vm": "^5.0.0",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.2",
