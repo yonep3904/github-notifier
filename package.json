@@ -22,13 +22,8 @@
   "devDependencies": {
     "@biomejs/biome": "2.4.9",
     "@edge-runtime/vm": "^5.0.0",
-    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.2",
-    "eslint": "^9.39.4",
-    "eslint-config-prettier": "^10.1.8",
-    "prettier": "^3.8.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.2",
     "vitest": "^4.1.2",
     "wrangler": "^4.4.0"
   }
