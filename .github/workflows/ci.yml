@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -35,11 +35,8 @@ jobs:
       - name: Type check
         run: npm run typecheck
 
-      - name: Lint check
-        run: npm run lint:check
-
-      - name: Format check
-        run: npm run format:check
+      - name: Biome check(lint and format)
+        run: npm run ci
 
       - name: Run tests
         run: npm run test:run

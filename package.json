@@ -5,16 +5,18 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "lint": "eslint . --fix",
-    "lint:check": "eslint .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
+    "lint": "biome lint --write .",
+    "lint:check": "biome lint .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "check": "biome check --write .",
+    "check:check": "biome check .",
+    "ci": "biome ci",
     "test": "vitest",
     "test:run": "vitest run",
     "test:watch": "vitest watch",
-    "test:coverage": "vitest run --coverage",
-    "ci": "npm run typecheck && npm run lint:check && npm run format:check && npm run test:run"
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "hono": "^4.12.9"
