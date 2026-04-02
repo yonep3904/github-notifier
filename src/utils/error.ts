@@ -46,3 +46,12 @@ export function getErrorStack(error: unknown): string {
   }
   return "not an error";
 }
+
+/**
+ * Checks whether the given error is an AbortError.
+ * Typically used to detect request cancellations (e.g., via AbortController).
+ * @param error The error object
+ */
+export function isAbortError(error: unknown): boolean {
+  return isError(error) && error.name === "AbortError";
+}
