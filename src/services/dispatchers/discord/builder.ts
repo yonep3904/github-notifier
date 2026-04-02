@@ -8,18 +8,35 @@ import type {
   SystemNotificationContent,
 } from "@/types/internal/notification";
 import type { RGB } from "@/types/utility/scalars";
+import { truncateText } from "@/utils/text";
 
 export class DiscordNotificationBuilder implements NotificationBuilder<DiscordNotificationPayload> {
+  private static MAX_LENGTH = {
+    content: 2000,
+    embeds: 25,
+    embedTitle: 256,
+    embedDescription: 4096,
+    embedTotal: 6000, // Not Implemented: This is the total maximum length of all embed fields combined
+    fieldName: 256,
+    fieldValue: 1024,
+  } as const;
   static readonly SERVICE_NAME = "discord";
 
+  /**
+   * Builds a DiscordNotificationPayload from a generic Notification object.
+   * It also applies truncation to ensure that the payload adheres to Discord's limits on content and embed lengths.
+   * @param notification The generic Notification object to be transformed into a DiscordNotificationPayload
+   * @returns A DiscordNotificationPayload object ready to be sent to the Discord webhook
+   * @throws {NotificationBuildError} If the notification source or type is unsupported, or if any required fields are missing
+   */
   build(notification: Notification): DiscordNotificationPayload {
     switch (notification.source) {
       case "manual":
-        return this.buildManualNotification(notification.content);
+        return this.finalizePayload(this.buildManualNotification(notification.content));
       case "github":
-        return this.buildGithubNotification(notification.content);
+        return this.finalizePayload(this.buildGithubNotification(notification.content));
       case "system":
-        return this.buildSystemNotification(notification.content);
+        return this.finalizePayload(this.buildSystemNotification(notification.content));
       default:
         throw new NotificationBuildError(
           "Unsupported notification source",
@@ -80,6 +97,36 @@ export class DiscordNotificationBuilder implements NotificationBuilder<DiscordNo
           color: this.toDiscordColor(content.color),
         },
       ],
+    };
+  }
+
+  private finalizePayload(payload: DiscordNotificationPayload): DiscordNotificationPayload {
+    const content: DiscordNotificationPayload["content"] = payload.content
+      ? truncateText(payload.content, DiscordNotificationBuilder.MAX_LENGTH.content)
+      : undefined;
+
+    const embeds: DiscordNotificationPayload["embeds"] = payload.embeds
+      ?.slice(0, DiscordNotificationBuilder.MAX_LENGTH.embeds)
+      .map((embed) => ({
+        ...embed,
+        title: embed.title
+          ? truncateText(embed.title, DiscordNotificationBuilder.MAX_LENGTH.embedTitle)
+          : undefined,
+        description: embed.description
+          ? truncateText(embed.description, DiscordNotificationBuilder.MAX_LENGTH.embedDescription)
+          : undefined,
+        fields: embed.fields
+          ?.slice(0, DiscordNotificationBuilder.MAX_LENGTH.embeds)
+          .map((field) => ({
+            name: truncateText(field.name, DiscordNotificationBuilder.MAX_LENGTH.fieldName),
+            value: truncateText(field.value, DiscordNotificationBuilder.MAX_LENGTH.fieldValue),
+          })),
+      }));
+
+    return {
+      ...payload,
+      content,
+      embeds,
     };
   }
 
