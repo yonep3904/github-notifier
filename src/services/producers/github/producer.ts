@@ -1,5 +1,5 @@
 import type { NotificationReceiver } from "@/services/pipeline";
-import type { GithubWebhookEvent, GithubWebhookEventName } from "@/types/external/github";
+import type { GithubWebhookEvent } from "@/types/external/github";
 import type { Notification } from "@/types/internal/notification";
 import type { GithubWebhookParser } from "./parser";
 
@@ -17,7 +17,10 @@ export class GithubNotificationProducer {
    * Produce a GitHub notification and send it to the receiver.
    * @param payload The payload of the GitHub notification.
    */
-  async produce<K extends GithubWebhookEventName>(eventType: K, payload: unknown): Promise<void> {
+  async produce<E extends GithubWebhookEvent>(
+    eventType: E["type"],
+    payload: E["payload"],
+  ): Promise<boolean> {
     const now = new Date().toISOString();
 
     const event = {
@@ -28,7 +31,7 @@ export class GithubNotificationProducer {
 
     const content = this.parser.parse(event);
     if (!content) {
-      return;
+      return false;
     }
 
     const notification: Notification = {
@@ -37,5 +40,6 @@ export class GithubNotificationProducer {
     };
 
     await this.receiver.notify(notification);
+    return true;
   }
 }
