@@ -25,4 +25,18 @@ export class NotifyController {
 
     return c.json({ ok: true, queued: true });
   }
+
+  async github(c: Context<AppEnv>) {
+    const eventType = c.get("githubWebhookEvent");
+    const body = c.get("json");
+
+    // Unsupported events are ignored to avoid unnecessary queueing and processing
+    if (!this.dependencies.githubParser.isSupportedEvent(eventType)) {
+      return c.json({ ok: true, queued: false, ignored: true });
+    }
+
+    const queued = await this.dependencies.githubProducer.produce(eventType, body);
+
+    return c.json({ ok: true, queued });
+  }
 }
