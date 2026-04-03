@@ -1,5 +1,6 @@
 import type { Config, ValidConfig } from "@/types/config";
 import type { Env } from "@/types/env";
+import { allSupportedEvents } from "./templates/github-events";
 import { validateConfig } from "./validate-config";
 
 export const createConfig = (env: Env): ValidConfig => {
@@ -22,7 +23,7 @@ export const createConfig = (env: Env): ValidConfig => {
       github: {
         allowed: true,
         secret: env.GITHUB_WEBHOOK_SECRET,
-        handleEventTypes: undefined,
+        handleEventTypes: [...allSupportedEvents],
       },
       manual: {
         allowed: true,
