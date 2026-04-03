@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { NotifyController } from "@/controllers";
 import { createNotifyRoutes } from "@/routes";
 import type { Env } from "@/types/env";
+import type { NotificationJob } from "@/types/internal/pipeline";
 import { DependenciesStore } from "./dependencies-store";
 
 let app: Hono | null = null;
@@ -19,5 +20,14 @@ export default {
     }
 
     return app.fetch(req, env);
+  },
+
+  async queue(batch: MessageBatch<NotificationJob>, env: Env) {
+    const dependencies = DependenciesStore.get(env);
+
+    const consumer = dependencies.consumer;
+
+    const jobs = batch.messages.map((m) => m.body);
+    await consumer.handleBatch(jobs);
   },
 };
