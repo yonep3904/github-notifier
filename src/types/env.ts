@@ -1,3 +1,4 @@
+import type { ManualNotifyRequest } from "@/schemas/notify";
 import type { NotificationJob } from "@/types/internal/pipeline";
 
 export type Env = CloudflareBindings & {
@@ -17,4 +18,15 @@ export type Env = CloudflareBindings & {
   SLACK_WEBHOOK_URL_3?: string;
   SLACK_WEBHOOK_URL_4?: string;
   SLACK_WEBHOOK_URL_5?: string;
+};
+
+export type Variables = {
+  json: unknown;
+  manualNotify: ManualNotifyRequest;
+  githubWebhookEvent: string;
+};
+
+export type AppEnv = {
+  Bindings: CloudflareBindings;
+  Variables: Variables;
 };
