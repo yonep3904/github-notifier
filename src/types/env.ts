@@ -27,6 +27,6 @@ export type Variables = {
 };
 
 export type AppEnv = {
-  Bindings: CloudflareBindings;
+  Bindings: Env;
   Variables: Variables;
 };
