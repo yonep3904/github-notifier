@@ -149,6 +149,15 @@ export class GithubWebhookParser {
     }
   }
 
+  /**
+   * Checks if the event is supported for notification.
+   * @param eventName The name of the GitHub webhook event
+   * @returns True if the event is supported, false otherwise
+   */
+  isSupportedEvent(eventName: GithubWebhookEventName): eventName is SupportedEventName {
+    return this.supportedEventsSet.has(eventName as SupportedEventName);
+  }
+
   private handleBranchProtectionRule(
     event: Extract<SupportedEvent, { type: "branch_protection_rule" }>,
   ): GithubNotificationContent {
@@ -803,15 +812,6 @@ export class GithubWebhookParser {
       url: undefined,
       fields: [this.createField("Action", action ?? "unknown", true)],
     });
-  }
-
-  /**
-   * Checks if the event is supported for notification.
-   * @param eventName The name of the GitHub webhook event
-   * @returns True if the event is supported, false otherwise
-   */
-  private isSupportedEvent(eventName: GithubWebhookEventName): eventName is SupportedEventName {
-    return this.supportedEventsSet.has(eventName as SupportedEventName);
   }
 
   private createStateColor<S extends string | null>(
