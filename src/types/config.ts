@@ -1,25 +1,9 @@
 import type { SupportedEventName } from "@/services/producers/github";
 import type { NotificationSource } from "@/types/internal/notification";
 
-export type Channel =
-  | {
-      type: "discord";
-      id: string;
-      webhookUrl: string;
-      allowedSources?: NotificationSource[];
-      enabled: boolean;
-    }
-  | {
-      type: "slack";
-      id: string;
-      webhookUrl: string;
-      allowedSources?: NotificationSource[];
-      enabled: boolean;
-    };
-
-export type Config = {
+type _Config<ChannelType> = {
   dispatch: {
-    channels: Channel[];
+    channels: ChannelType[];
     timeout?: number;
     defaultRetryAfterMs?: number;
     reenqueueLimit?: number;
@@ -40,3 +24,27 @@ export type Config = {
     maxWorkflowJobLines: number;
   };
 };
+
+export type Channel =
+  | {
+      type: "discord";
+      id: string;
+      webhookUrl?: string;
+      allowedSources?: NotificationSource[];
+      enabled: boolean;
+    }
+  | {
+      type: "slack";
+      id: string;
+      webhookUrl?: string;
+      allowedSources?: NotificationSource[];
+      enabled: boolean;
+    };
+
+export type ValidChannel = Channel & {
+  webhookUrl: string;
+};
+
+export type Config = _Config<Channel>;
+
+export type ValidConfig = _Config<ValidChannel>;
