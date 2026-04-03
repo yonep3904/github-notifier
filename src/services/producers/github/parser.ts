@@ -154,7 +154,7 @@ export class GithubWebhookParser {
    * @param eventName The name of the GitHub webhook event
    * @returns True if the event is supported, false otherwise
    */
-  isSupportedEvent(eventName: GithubWebhookEventName): eventName is SupportedEventName {
+  isSupportedEvent(eventName: string): eventName is SupportedEventName {
     return this.supportedEventsSet.has(eventName as SupportedEventName);
   }
 
