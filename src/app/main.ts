@@ -5,21 +5,21 @@ import type { Env } from "@/types/env";
 import type { NotificationJob } from "@/types/internal/pipeline";
 import { DependenciesStore } from "./dependencies-store";
 
-let app: Hono | null = null;
+export function createApp(env: Env) {
+  const dependencies = DependenciesStore.get(env);
+
+  const notifyController = new NotifyController(dependencies);
+  const notifyRoutes = createNotifyRoutes(notifyController);
+
+  const app = new Hono();
+  app.route("/notify", notifyRoutes);
+
+  return app;
+}
 
 export default {
   fetch(req: Request, env: Env) {
-    if (!app) {
-      const dependencies = DependenciesStore.get(env);
-
-      const notifyController = new NotifyController(dependencies);
-      const notifyRoutes = createNotifyRoutes(notifyController);
-
-      app = new Hono();
-      app.route("/notify", notifyRoutes);
-    }
-
-    return app.fetch(req, env);
+    return createApp(env).fetch(req, env);
   },
 
   async queue(batch: MessageBatch<NotificationJob>, env: Env) {
