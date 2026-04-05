@@ -60,8 +60,8 @@ export function validateConfig(config: Config): ValidConfig {
 
   // 2. A channel with { webhookUrl: undefined } is considered invalid
   //    If an enabled channel is missing webhookUrl, throw an error
-  for (const ch of parsed.dispatch.channels) {
-    if (ch.enabled && !ch.webhookUrl) {
+  for (const ch of parsed.dispatch.channels.filter((c) => c.enabled)) {
+    if (!ch.webhookUrl) {
       throw new InvalidConfigurationError(
         `Channel "${ch.id}" (${ch.type}) is enabled but webhookUrl is missing`,
       );
@@ -110,4 +110,28 @@ export function validateConfig(config: Config): ValidConfig {
   }
 
   return newConfig;
+}
+
+/**
+ * A wrapper function that checks the configuration and returns a result object instead of throwing errors.
+ * @param config - The configuration object to check
+ * @returns An object indicating whether the configuration is valid and either the validated config or an error message
+ */
+export function checkConfig(
+  config: Config,
+):
+  | { status: "ready"; config: Config; validConfig: ValidConfig }
+  | { status: "invalid"; config: Config; error: string } {
+  try {
+    const validatedConfig = validateConfig(config);
+    return { status: "ready", validConfig: validatedConfig, config };
+  } catch (err: unknown) {
+    if (err instanceof z.ZodError) {
+      return { status: "invalid", error: `Configuration validation error: ${err.message}`, config };
+    } else if (err instanceof InvalidConfigurationError) {
+      return { status: "invalid", error: `Invalid configuration: ${err.message}`, config };
+    } else {
+      return { status: "invalid", error: `Unknown error during configuration validation`, config };
+    }
+  }
 }

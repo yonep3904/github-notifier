@@ -1,4 +1,3 @@
-import { createConfig } from "@/config";
 import { createDiscordNotificationDispatcher } from "@/services/dispatchers";
 import { NotificationConsumer, NotificationReceiver } from "@/services/pipeline";
 import {
@@ -7,9 +6,10 @@ import {
   ManualNotificationProducer,
   SystemNotificationProducer,
 } from "@/services/producers";
+import type { ValidConfig } from "@/types/config";
 import type { Env } from "@/types/env";
 
-export interface Dependencies {
+export interface NotifyServices {
   systemProducer: SystemNotificationProducer;
   manualProducer: ManualNotificationProducer;
   githubProducer: GithubNotificationProducer;
@@ -17,9 +17,7 @@ export interface Dependencies {
   consumer: NotificationConsumer;
 }
 
-export function createDependencies(env: Env): Dependencies {
-  const config = createConfig(env);
-
+export function createNotifyServices(config: ValidConfig, env: Env): NotifyServices {
   const receiver = new NotificationReceiver(env.NOTIFICATION_QUEUE);
   const githubParser = new GithubWebhookParser(config.contents);
 

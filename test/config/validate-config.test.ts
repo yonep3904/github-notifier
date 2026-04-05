@@ -1,4 +1,4 @@
-import { validateConfig } from "@/config/validate-config";
+import { validateConfig } from "@/config";
 import { InvalidConfigurationError } from "@/errors/config";
 import { createBaseConfig } from "../helpers/factories/config";
 

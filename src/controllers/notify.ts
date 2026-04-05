@@ -1,21 +1,14 @@
 import type { Context } from "hono";
-import type {
-  GithubNotificationProducer,
-  GithubWebhookParser,
-  ManualNotificationProducer,
-} from "@/services/producers";
+import type { Dependencies } from "@/compositions";
+import { assertReady } from "@/lib/assert-ready";
 import type { AppEnv } from "@/types/env";
 
-interface NotifyControllerDependencies {
-  manualProducer: ManualNotificationProducer;
-  githubProducer: GithubNotificationProducer;
-  githubParser: GithubWebhookParser;
-}
-
 export class NotifyController {
-  constructor(private readonly dependencies: NotifyControllerDependencies) {}
+  constructor(private readonly dependencies: Dependencies) {}
 
   async manual(c: Context<AppEnv>) {
+    assertReady(this.dependencies);
+
     const body = c.get("manualNotify");
     await this.dependencies.manualProducer.produce({
       type: "standard",
@@ -27,6 +20,8 @@ export class NotifyController {
   }
 
   async github(c: Context<AppEnv>) {
+    assertReady(this.dependencies);
+
     const eventType = c.get("githubWebhookEvent");
     const body = c.get("json");
 
