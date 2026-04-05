@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { NotifyController } from "@/controllers";
+import { NotifyController, QueueController } from "@/controllers";
 import { errorHandler } from "@/middleware";
 import { createNotifyRoutes } from "@/routes";
 import type { AppEnv, Env } from "@/types/env";
@@ -28,14 +28,8 @@ export default {
   async queue(batch: MessageBatch<NotificationJob>, env: Env) {
     const dependencies = DependenciesStore.get(env);
 
-    if (dependencies.status === "invalid") {
-      batch.ackAll(); // Invalid configuration, so we acknowledge the batch to prevent retries.
-      return;
-    }
+    const queue = new QueueController(dependencies);
 
-    const consumer = dependencies.consumer;
-
-    const jobs = batch.messages.map((m) => m.body);
-    await consumer.handleBatch(jobs);
+    await queue.handleBatch(batch, env);
   },
 };
