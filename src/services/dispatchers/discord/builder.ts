@@ -131,7 +131,7 @@ export class DiscordNotificationBuilder implements NotificationBuilder<DiscordNo
   }
 
   private toDiscordColor(color: RGB): number {
-    if (!/^#?[0-9A-Fa-f]{6}$/.test(color)) {
+    if (!/^#[0-9A-Fa-f]{6}$/.test(color)) {
       throw new NotificationBuildError("Invalid color", DiscordNotificationBuilder.SERVICE_NAME);
     }
     return parseInt(color.replace("#", ""), 16);
