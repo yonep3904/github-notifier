@@ -1,10 +1,9 @@
-import type { Config, ValidConfig } from "@/types/config";
+import type { Config } from "@/types/config";
 import type { Env } from "@/types/env";
 import { allSupportedEvents } from "./templates/github-events";
-import { validateConfig } from "./validate-config";
 
-export const createConfig = (env: Env): ValidConfig => {
-  const config: Config = {
+export const createConfig = (env: Env): Config => {
+  return {
     dispatch: {
       channels: [
         {
@@ -35,6 +34,4 @@ export const createConfig = (env: Env): ValidConfig => {
       maxWorkflowJobLines: 10,
     },
   };
-
-  return validateConfig(config);
 };
