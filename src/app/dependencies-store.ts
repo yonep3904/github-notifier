@@ -1,5 +1,5 @@
+import { createDependencies, type Dependencies } from "@/compositions";
 import type { Env } from "@/types/env";
-import { createDependencies, type Dependencies } from "./dependencies";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: This class is designed to be a simple singleton store for dependencies, so it only contains static members and methods.
 export class DependenciesStore {
