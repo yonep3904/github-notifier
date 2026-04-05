@@ -1,6 +1,7 @@
+import { createTestEnv } from "test/helpers/env";
+import { createMockQueue } from "test/helpers/mocks/queue";
 import app from "@/app/main";
 import type { ManualNotificationPayload } from "@/types/external/manual";
-import { createMockQueue, createTestEnv } from "../helpers/env";
 
 describe("/notify", () => {
   it("returns 200 when the request body is valid JSON", async () => {
