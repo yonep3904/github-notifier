@@ -1,5 +1,5 @@
 import type { Dependencies } from "@/compositions";
-import { ServiceUnavailableError } from "@/errors/controllers/";
+import { ServiceUnavailableError } from "@/errors/service";
 
 export function assertReady(
   deps: Dependencies,
