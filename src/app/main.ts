@@ -28,6 +28,11 @@ export default {
   async queue(batch: MessageBatch<NotificationJob>, env: Env) {
     const dependencies = DependenciesStore.get(env);
 
+    if (dependencies.status === "invalid") {
+      batch.ackAll(); // Invalid configuration, so we acknowledge the batch to prevent retries.
+      return;
+    }
+
     const consumer = dependencies.consumer;
 
     const jobs = batch.messages.map((m) => m.body);
