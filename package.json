@@ -16,7 +16,10 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:watch": "vitest watch",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "build:css": "tailwindcss -i ./src/app/style.css -o ./dist/style.css --minify",
+    "build": "npm run build:css",
+    "tailwind:canonicalize": "tailwindcss canonicalize"
   },
   "dependencies": {
     "hono": "^4.12.9",
