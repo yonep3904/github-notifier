@@ -1,73 +1,38 @@
-import { createConfig } from "@/config";
-import { createDiscordNotificationDispatcher } from "@/services/dispatchers";
-import { NotificationConsumer, NotificationReceiver } from "@/services/pipeline";
-import {
-  GithubNotificationProducer,
-  GithubWebhookParser,
-  ManualNotificationProducer,
-  SystemNotificationProducer,
-} from "@/services/producers";
+import { checkConfig, createConfig } from "@/config";
+import type { Config, ValidConfig } from "@/types/config";
 import type { Env } from "@/types/env";
+import { createNotifyServices, type NotifyServices } from "./conditional/notify";
 
-export interface Dependencies {
-  systemProducer: SystemNotificationProducer;
-  manualProducer: ManualNotificationProducer;
-  githubProducer: GithubNotificationProducer;
-  githubParser: GithubWebhookParser;
-  consumer: NotificationConsumer;
-}
+// biome-ignore lint/suspicious/noEmptyInterface: This interface is intentionally left empty as a placeholder for potential future base services that are not conditional on configuration validity.
+interface BaseServices {}
+interface ConditionalServices extends NotifyServices {}
+
+export type Dependencies =
+  | ({
+      status: "ready";
+      config: ValidConfig;
+    } & BaseServices &
+      ConditionalServices)
+  | ({
+      status: "invalid";
+      config: Config;
+      error: string;
+    } & BaseServices);
 
 export function createDependencies(env: Env): Dependencies {
-  const config = createConfig(env);
+  const config = checkConfig(createConfig(env));
 
-  const receiver = new NotificationReceiver(env.NOTIFICATION_QUEUE);
-  const githubParser = new GithubWebhookParser(config.contents);
-
-  const systemProducer = new SystemNotificationProducer(receiver);
-  const manualProducer = new ManualNotificationProducer(receiver);
-  const githubProducer = new GithubNotificationProducer(receiver, githubParser);
-
-  const dispatchers = config.dispatch.channels
-    .filter((ch) => ch.enabled)
-    .map((ch) => {
-      switch (ch.type) {
-        case "discord":
-          return createDiscordNotificationDispatcher({
-            id: ch.id,
-            webhookUrl: ch.webhookUrl,
-            allowSources: ch.allowedSources,
-            timeout: config.dispatch.timeout,
-            defaultRetryAfterMs: config.dispatch.defaultRetryAfterMs,
-          });
-        case "slack":
-          // TODO: Implement SlackNotificationDispatcher and return its instance here
-          throw new Error("Slack dispatcher is not implemented yet");
-        // return createSlackNotificationDispatcher({
-        //   id: ch.id,
-        //   webhookUrl: ch.webhookUrl,
-        //   allowSources: ch.allowedSources,
-        //   timeout: config.dispatch.timeout,
-        //   defaultRetryAfterMs: config.dispatch.defaultRetryAfterMs,
-        // });
-        default:
-          throw new Error("Unsupported channel type");
-      }
-    });
-
-  const consumer = new NotificationConsumer(
-    {
-      reenqueueLimit: config.dispatch.reenqueueLimit,
-    },
-    // TODO: Implement proper dispatcher selection logic
-    dispatchers[0],
-    env.NOTIFICATION_QUEUE,
-  );
-
-  return {
-    systemProducer,
-    manualProducer,
-    githubProducer,
-    githubParser,
-    consumer,
-  };
+  if (config.status === "ready") {
+    return {
+      status: "ready",
+      config: config.validConfig,
+      ...createNotifyServices(config.validConfig, env),
+    };
+  } else {
+    return {
+      status: "invalid",
+      config: config.config,
+      error: config.error,
+    };
+  }
 }
