@@ -60,8 +60,8 @@ export function validateConfig(config: Config): ValidConfig {
 
   // 2. A channel with { webhookUrl: undefined } is considered invalid
   //    If an enabled channel is missing webhookUrl, throw an error
-  for (const ch of parsed.dispatch.channels) {
-    if (ch.enabled && !ch.webhookUrl) {
+  for (const ch of parsed.dispatch.channels.filter((c) => c.enabled)) {
+    if (!ch.webhookUrl) {
       throw new InvalidConfigurationError(
         `Channel "${ch.id}" (${ch.type}) is enabled but webhookUrl is missing`,
       );
