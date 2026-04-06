@@ -8,4 +8,6 @@ interface StatusRootPageProps {
   snapshot: StatusSnapshot;
 }
 
-export function StatusRootPage({ baseUrl, status, snapshot }: StatusRootPageProps) {}
+export function StatusRootPage({ baseUrl, status, snapshot }: StatusRootPageProps) {
+  return <> Not Implemented </>;
+}
