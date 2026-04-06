@@ -30,6 +30,9 @@
 
       "style": {
         "useImportType": "error"
+      },
+      "nursery": {
+        "useSortedClasses": "error"
       }
     }
   },

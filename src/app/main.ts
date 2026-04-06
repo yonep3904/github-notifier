@@ -1,7 +1,7 @@
 import { Hono } from "hono";
-import { NotifyController, QueueController } from "@/controllers";
+import { DocsController, NotifyController, QueueController, StatusController } from "@/controllers";
 import { errorHandler } from "@/middleware";
-import { createNotifyRoutes } from "@/routes";
+import { createDocsRoutes, createNotifyRoutes, createStatusRoutes } from "@/routes";
 import type { AppEnv, Env } from "@/types/env";
 import type { NotificationJob } from "@/types/internal/pipeline";
 import { DependenciesStore } from "./dependencies-store";
@@ -9,12 +9,20 @@ import { DependenciesStore } from "./dependencies-store";
 export function createApp(env: Env) {
   const dependencies = DependenciesStore.get(env);
 
+  const docsController = new DocsController(dependencies);
+  const docsRoutes = createDocsRoutes(docsController);
+
+  const statusController = new StatusController(dependencies);
+  const statusRouter = createStatusRoutes(statusController);
+
   const notifyController = new NotifyController(dependencies);
   const notifyRoutes = createNotifyRoutes(notifyController);
 
   const app = new Hono<AppEnv>();
 
   app.onError(errorHandler);
+  app.route("/docs", docsRoutes);
+  app.route("/status", statusRouter);
   app.route("/notify", notifyRoutes);
 
   return app;

@@ -16,17 +16,25 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:watch": "vitest watch",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "build:css": "tailwindcss -i ./src/app/style.css -o ./dist/style.css --minify",
+    "build": "npm run build:css",
+    "tailwind:canonicalize": "tailwindcss canonicalize"
   },
   "dependencies": {
     "hono": "^4.12.9",
+    "lucide": "^1.7.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.9",
     "@edge-runtime/vm": "^5.0.0",
     "@octokit/openapi-types": "^27.0.0",
+    "@tailwindcss/cli": "^4.2.2",
     "@vitest/coverage-v8": "^4.1.2",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vitest": "^4.1.2",
     "wrangler": "^4.4.0"

@@ -3,10 +3,10 @@ import { InvalidConfigurationError } from "@/errors/config";
 import { supportedEventList } from "@/services/producers";
 import type { Config, ValidChannel, ValidConfig } from "@/types/config";
 
-const notificationSourceSchema = z.enum(["github", "manual", "system"]);
-const eventTypeSchema = z.enum(supportedEventList);
+export const notificationSourceSchema = z.enum(["github", "manual", "system"]);
+export const eventTypeSchema = z.enum(supportedEventList);
 
-const channelSchema = z.discriminatedUnion("type", [
+export const channelSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("discord"),
     id: z.string().min(1),
@@ -23,7 +23,7 @@ const channelSchema = z.discriminatedUnion("type", [
   }),
 ]);
 
-const configSchema = z.object({
+export const configSchema = z.object({
   dispatch: z.object({
     channels: z.array(channelSchema),
     timeout: z.number().positive().optional(),
@@ -34,7 +34,7 @@ const configSchema = z.object({
     github: z.object({
       allowed: z.boolean(),
       secret: z.string().optional(),
-      handleEventTypes: z.array(eventTypeSchema).optional(),
+      handleEventTypes: z.array(eventTypeSchema),
     }),
     manual: z.object({
       allowed: z.boolean(),

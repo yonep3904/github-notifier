@@ -2,7 +2,7 @@ import {
   createGithubNotification,
   createManualNotification,
   createSystemNotification,
-} from "test//helpers/factories/notification";
+} from "test/helpers/factories/notification";
 import { NotificationBuildError } from "@/errors/notification";
 import { DiscordNotificationBuilder } from "@/services/dispatchers/discord/builder";
 
