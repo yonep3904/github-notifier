@@ -1,10 +1,11 @@
 import { checkConfig, createConfig } from "@/config";
 import type { Config, ValidConfig } from "@/types/config";
 import type { Env } from "@/types/env";
+import { createDocsServices, type DocsServices } from "./base/docs";
 import { createStatusServices, type StatusServices } from "./base/status";
 import { createNotifyServices, type NotifyServices } from "./conditional/notify";
 
-interface BaseServices extends StatusServices {}
+interface BaseServices extends DocsServices, StatusServices {}
 interface ConditionalServices extends NotifyServices {}
 
 export type Dependencies =
@@ -26,6 +27,7 @@ export function createDependencies(env: Env): Dependencies {
     return {
       status: "ready",
       config: config.validConfig,
+      ...createDocsServices(),
       ...createStatusServices("ready", config.config),
       ...createNotifyServices(config.validConfig, env),
     };
@@ -34,6 +36,7 @@ export function createDependencies(env: Env): Dependencies {
       status: "invalid",
       config: config.config,
       error: config.error,
+      ...createDocsServices(),
       ...createStatusServices("invalid", config.config),
     };
   }
