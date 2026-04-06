@@ -12,7 +12,7 @@ type _Config<ChannelType> = {
     github: {
       allowed: boolean;
       secret?: string;
-      handleEventTypes?: SupportedEventName[];
+      handleEventTypes: SupportedEventName[];
     };
     manual: {
       allowed: boolean;

@@ -34,7 +34,7 @@ export const configSchema = z.object({
     github: z.object({
       allowed: z.boolean(),
       secret: z.string().optional(),
-      handleEventTypes: z.array(eventTypeSchema).optional(),
+      handleEventTypes: z.array(eventTypeSchema),
     }),
     manual: z.object({
       allowed: z.boolean(),
