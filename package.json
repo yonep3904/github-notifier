@@ -8,7 +8,6 @@
     "preview": "pnpm run build && vite preview",
     "deploy": "pnpm run build && wrangler deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-
     "lint": "biome lint .",
     "typecheck": "tsc --noEmit",
     "lint:fix": "biome lint --write .",
@@ -16,7 +15,6 @@
     "format:fix": "biome format --write .",
     "check": "biome check .",
     "check:fix": "biome check --write .",
-
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
@@ -32,6 +30,7 @@
     "@cloudflare/vitest-plugin": "^1.1.2",
     "@octokit/openapi-types": "^29.0.0",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.4.0",
     "@vitest/coverage-istanbul": "^4.1.11",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
