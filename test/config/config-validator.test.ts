@@ -1,7 +1,7 @@
 import { validateConfig } from "@/config";
 import { createBaseConfig } from "../helpers/factories/config";
 
-describe("ConfigValidator", () => {
+describe("validateConfig", () => {
   it("returns a valid config and removes channels without webhook URLs", () => {
     const config = createBaseConfig();
     config.dispatch.channels.push({ type: "slack", id: "disabled-slack", enabled: false });
