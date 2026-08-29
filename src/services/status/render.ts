@@ -8,11 +8,6 @@ export class StatusRenderer {
   ) {}
 
   renderRootPage(baseUrl: string) {
-    return this.rootPage({
-      baseUrl,
-      status: this.manager.getStatus(),
-      config: this.manager.getConfig(),
-      snapshot: this.manager.getSnapshot(),
-    });
+    return this.rootPage({ model: this.manager.createPageModel(baseUrl) });
   }
 }
