@@ -14,6 +14,26 @@ describe("ConfigValidator", () => {
     expect(result.issues).toEqual([]);
   });
 
+  it("applies the allowedSources default to ValidConfig", () => {
+    const config = createBaseConfig();
+    config.dispatch.channels[0] = {
+      type: "discord",
+      id: "discord-main",
+      webhookUrl: "https://discord.example/webhook",
+      enabled: true,
+    };
+
+    const result = validateConfig(config);
+
+    expect(result.status).toBe("valid");
+    if (result.status !== "valid") throw new Error("expected valid config");
+    expect(result.validConfig.dispatch.channels[0]?.allowedSources).toEqual([
+      "github",
+      "manual",
+      "system",
+    ]);
+  });
+
   it.each([
     [
       "enabled channel without webhook",
