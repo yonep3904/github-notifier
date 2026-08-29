@@ -70,7 +70,7 @@ function getDisplayConfig(validation: ValidateConfigResult): NormalizedConfig {
 }
 
 /** Builds status-page presentation data from an already validated Config result. */
-export class StatusManager {
+export class StatusPageModelBuilder {
   constructor(private readonly validation: ValidateConfigResult) {}
 
   createPageModel(baseUrl: string): StatusPageModel {

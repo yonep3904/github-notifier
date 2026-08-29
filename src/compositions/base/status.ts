@@ -1,5 +1,5 @@
 import type { ValidateConfigResult } from "@/config";
-import { StatusManager, StatusRenderer } from "@/services/status";
+import { StatusPageModelBuilder, StatusRenderer } from "@/services/status";
 import { StatusRootPage } from "@/views/pages/status";
 
 export interface StatusServices {
@@ -7,8 +7,8 @@ export interface StatusServices {
 }
 
 export function createStatusServices(validation: ValidateConfigResult): StatusServices {
-  const manager = new StatusManager(validation);
-  const render = new StatusRenderer(manager, StatusRootPage);
+  const modelBuilder = new StatusPageModelBuilder(validation);
+  const render = new StatusRenderer(modelBuilder, StatusRootPage);
 
   return {
     statusRender: render,
