@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+@layer base {
+  .app-background {
+    background-color: #0c0a09;
+    background-image:
+      radial-gradient(
+        ellipse 100% 70% at 50% -20%,
+        rgb(14 165 233 / 18%) 0%,
+        rgb(14 165 233 / 7%) 42%,
+        transparent 72%
+      ),
+      radial-gradient(ellipse 55% 55% at 105% 28%, rgb(52 211 153 / 10%) 0%, transparent 72%),
+      radial-gradient(ellipse 50% 50% at -5% 46%, rgb(56 189 248 / 8%) 0%, transparent 75%),
+      linear-gradient(160deg, #0c0a09 0%, #0d1110 46%, #0c0a09 100%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+}
