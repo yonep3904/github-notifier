@@ -22,3 +22,18 @@ export const toneStyles: Record<Tone, { badge: string; text: string }> = {
     text: "text-sky-300",
   },
 };
+
+export function statusToTone(status: "success" | "warning" | "error" | "invalid" | "valid"): Tone {
+  switch (status) {
+    case "success":
+    case "valid":
+      return "success";
+
+    case "warning":
+      return "warning";
+
+    case "error":
+    case "invalid":
+      return "danger";
+  }
+}

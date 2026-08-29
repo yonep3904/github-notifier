@@ -1,1 +1,1 @@
-export { type Tone, toneStyles } from "./tone";
+export { statusToTone, type Tone, toneStyles } from "./tone";
