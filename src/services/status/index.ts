@@ -5,6 +5,7 @@ export type {
   StatusChannelModel,
   StatusDisplayState,
   StatusHeroModel,
+  StatusMetric,
   StatusPageModel,
 } from "./status-page-model-builder";
 export { StatusPageModelBuilder } from "./status-page-model-builder";
