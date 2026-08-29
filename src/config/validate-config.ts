@@ -16,6 +16,7 @@ export type ValidateConfigResult =
   | {
       status: "valid";
       config: Config;
+      normalizedConfig: NormalizedConfig;
       validConfig: ValidConfig;
       issues: ConfigIssue[];
     }
@@ -214,6 +215,6 @@ export function validateConfig(config: Config): ValidateConfigResult {
       },
     };
 
-    return { status: "valid", config, validConfig, issues };
+    return { status: "valid", config, normalizedConfig: parsedConfig, validConfig, issues };
   }
 }

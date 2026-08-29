@@ -65,7 +65,6 @@ function getDisplayState(issues: ConfigIssue[]): StatusDisplayState {
 }
 
 function getDisplayConfig(validation: ValidateConfigResult): NormalizedConfig {
-  if (validation.status === "valid") return validation.validConfig;
   return validation.normalizedConfig ?? emptyConfig;
 }
 
