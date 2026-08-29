@@ -43,8 +43,15 @@ export type Channel =
 
 export type ValidChannel = Channel & {
   webhookUrl: string;
+  allowedSources: NotificationSource[];
+};
+
+export type NormalizedChannel = Channel & {
+  allowedSources: NotificationSource[];
 };
 
 export type Config = _Config<Channel>;
+
+export type NormalizedConfig = _Config<NormalizedChannel>;
 
 export type ValidConfig = _Config<ValidChannel>;

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { supportedEventList } from "@/services/producers";
-import type { Config, ValidChannel, ValidConfig } from "./types";
+import type { Config, NormalizedConfig, ValidChannel, ValidConfig } from "./types";
 
 export type ConfigIssueSeverity = "error" | "warning";
 
@@ -22,25 +22,27 @@ export type ValidateConfigResult =
   | {
       status: "invalid";
       config: Config;
+      normalizedConfig?: NormalizedConfig;
       issues: ConfigIssue[];
     };
 
 const notificationSourceSchema = z.enum(["github", "manual", "system"]);
 const eventTypeSchema = z.enum(supportedEventList);
+const defaultAllowedSources = ["github", "manual", "system"] as const;
 
 export const channelSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("discord"),
     id: z.string().min(1),
     webhookUrl: z.url().optional(),
-    allowedSources: z.array(notificationSourceSchema).optional(),
+    allowedSources: z.array(notificationSourceSchema).default([...defaultAllowedSources]),
     enabled: z.boolean(),
   }),
   z.object({
     type: z.literal("slack"),
     id: z.string().min(1),
     webhookUrl: z.url().optional(),
-    allowedSources: z.array(notificationSourceSchema).optional(),
+    allowedSources: z.array(notificationSourceSchema).default([...defaultAllowedSources]),
     enabled: z.boolean(),
   }),
 ]);
@@ -112,7 +114,7 @@ export function validateConfig(config: Config): ValidateConfigResult {
       );
     }
 
-    if (channel.enabled && channel.allowedSources?.length === 0) {
+    if (channel.enabled && channel.allowedSources.length === 0) {
       issues.push(
         issue(
           `${basePath}.allowedSources`,
@@ -198,7 +200,7 @@ export function validateConfig(config: Config): ValidateConfigResult {
   const hasErrors = issues.some(({ severity }) => severity === "error");
 
   if (hasErrors) {
-    return { status: "invalid", config, issues };
+    return { status: "invalid", config, normalizedConfig: parsedConfig, issues };
   } else {
     const channels = parsedConfig.dispatch.channels.filter(
       (channel): channel is ValidChannel => channel.webhookUrl !== undefined,

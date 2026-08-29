@@ -1,37 +1,28 @@
 import type { DiscordNotificationPayload } from "@/types/external/discord";
 import type { NotificationDispatcher } from "@/types/internal/dispatcher";
 import type { Notification, NotificationSource } from "@/types/internal/notification";
-import { createConfig, type DefaultConfig } from "@/utils/create-config";
 import { DiscordNotificationBuilder } from "./builder";
 import { DiscordNotificationSender, type DiscordNotificationSenderConfig } from "./sender";
 
 export interface DiscordNotificationDispatcherConfig {
   id: string;
-  allowSources?: NotificationSource[];
+  allowSources: NotificationSource[];
 }
 
 export class DiscordNotificationDispatcher implements NotificationDispatcher {
-  private static readonly DEFAULTS: DefaultConfig<DiscordNotificationDispatcherConfig> = {
-    allowSources: ["manual", "github", "system"],
-  };
-
-  private readonly config: Required<DiscordNotificationDispatcherConfig>;
-
   /**
    * Initializes a new instance of the DiscordNotificationDispatcher with the provided configuration, builder, and sender.
    * @param config The configuration for the DiscordNotificationDispatcher, including:
    * - id: A unique identifier for this dispatcher instance (used for logging and diagnostics)
-   * - allowSources: An optional array of notification sources that this dispatcher is allowed to handle. If not provided, defaults to ["manual", "github", "system"].
+   * - allowSources: Notification sources that this dispatcher is allowed to handle.
    * @param builder An instance of DiscordNotificationBuilder used to build DiscordNotificationPayloads from generic Notifications
    * @param sender An instance of DiscordNotificationSender used to send DiscordNotificationPayloads to the Discord webhook
    */
   constructor(
-    config: DiscordNotificationDispatcherConfig,
+    private readonly config: DiscordNotificationDispatcherConfig,
     private readonly builder: DiscordNotificationBuilder,
     private readonly sender: DiscordNotificationSender,
-  ) {
-    this.config = createConfig(config, DiscordNotificationDispatcher.DEFAULTS);
-  }
+  ) {}
 
   /**
    * Builds a DiscordNotificationPayload from a generic Notification object.
@@ -98,7 +89,7 @@ export interface CreateDiscordNotificationDispatcherConfig
  * This function initializes the necessary builder and sender instances and returns a fully configured dispatcher ready for use.
  * @param config The configuration for the DiscordNotificationDispatcher, including:
  * - id: A unique identifier for this dispatcher instance (used for logging and diagnostics)
- * - allowSources: An optional array of notification sources that this dispatcher is allowed to handle. If not provided, defaults to ["manual", "github", "system"].
+ * - allowSources: Notification sources that this dispatcher is allowed to handle.
  * - webhookUrl: The Discord webhook URL to which notifications will be sent
  * - timeout: Optional timeout in milliseconds for the webhook request (default: 5000ms)
  * - defaultRetryAfterMs: Optional default retry-after duration in milliseconds for rate limit errors when the response does not specify one (default: 3000ms)
