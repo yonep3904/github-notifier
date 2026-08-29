@@ -6,6 +6,7 @@ export type {
   StatusDisplayState,
   StatusHeroModel,
   StatusMetric,
+  StatusOption,
   StatusPageModel,
 } from "./status-page-model-builder";
 export { StatusPageModelBuilder } from "./status-page-model-builder";

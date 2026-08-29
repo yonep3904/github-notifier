@@ -1,4 +1,6 @@
 import type { Channel, ConfigIssue, NormalizedConfig, ResolveConfigResult } from "@/config";
+import { SUPPORTED_GITHUB_EVENTS } from "@/constants/github-events";
+import { NOTIFICATION_SOURCES } from "@/constants/source";
 import { maskWebhookUrl } from "@/utils/mask";
 import type { Tone } from "@/views/constants";
 
@@ -16,12 +18,17 @@ export type StatusHeroModel = {
   summary: string;
 };
 
+export type StatusOption = {
+  label: string;
+  selected: boolean;
+};
+
 export type StatusChannelModel = {
   id: string;
   type: Channel["type"];
   enabled: boolean;
   webhook: string | undefined;
-  sources: NonNullable<Channel["allowedSources"]>;
+  sources: StatusOption[];
   status: StatusDisplayState;
   issues: ConfigIssue[];
 };
@@ -30,7 +37,7 @@ export type GithubHandlerStatusModel = {
   endpoint: string;
   enabled: boolean;
   secretSet: boolean;
-  acceptedEvents: string[];
+  events: StatusOption[];
   status: StatusDisplayState;
   issues: ConfigIssue[];
 };
@@ -124,7 +131,10 @@ export class StatusPageModelBuilder {
         endpoint: `${baseUrl}/notify/github`,
         enabled: config.handlers.github.allowed,
         secretSet: config.handlers.github.secret !== undefined,
-        acceptedEvents: config.handlers.github.handleEventTypes,
+        events: SUPPORTED_GITHUB_EVENTS.map((event) => ({
+          label: event,
+          selected: config.handlers.github.handleEventTypes.includes(event),
+        })),
         status: getDisplayState(githubIssues),
         issues: githubIssues,
       },
@@ -144,7 +154,10 @@ export class StatusPageModelBuilder {
           type: channel.type,
           enabled: channel.enabled,
           webhook: channel.webhookUrl ? maskWebhookUrl(channel.webhookUrl) : undefined,
-          sources: channel.allowedSources,
+          sources: NOTIFICATION_SOURCES.map((source) => ({
+            label: source,
+            selected: channel.allowedSources.includes(source),
+          })),
           status: getDisplayState(channelIssues),
           issues: channelIssues,
         };
