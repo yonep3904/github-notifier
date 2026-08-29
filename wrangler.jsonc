@@ -16,8 +16,5 @@
         "max_retries": 5
       }
     ]
-  },
-  "assets": {
-    "directory": "./dist"
   }
 }

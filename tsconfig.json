@@ -16,6 +16,6 @@
     },
 
     // Vitest globals
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "@cloudflare/vitest-plugin/types", "vite/client"]
   }
 }
