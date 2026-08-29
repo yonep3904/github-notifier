@@ -1,6 +1,7 @@
 {
   "name": "github-notifier",
   "type": "module",
+  "packageManager": "pnpm@11.9.0",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
@@ -18,7 +19,7 @@
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
     "build:css": "tailwindcss -i ./src/app/style.css -o ./dist/style.css --minify",
-    "build": "npm run build:css",
+    "build": "pnpm run build:css",
     "tailwind:canonicalize": "tailwindcss canonicalize"
   },
   "dependencies": {
