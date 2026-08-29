@@ -1,4 +1,4 @@
-import type { SupportedEventName } from "@/services/producers/github";
+import type { SupportedGithubEventName } from "@/constants/github-events";
 import type { NotificationSource } from "@/types/internal/notification";
 
 type _Config<ChannelType> = {
@@ -12,7 +12,7 @@ type _Config<ChannelType> = {
     github: {
       allowed: boolean;
       secret?: string;
-      handleEventTypes: SupportedEventName[];
+      handleEventTypes: SupportedGithubEventName[];
     };
     manual: {
       allowed: boolean;

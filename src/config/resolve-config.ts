@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { supportedEventList } from "@/services/producers";
+import { SUPPORTED_GITHUB_EVENTS } from "@/constants/github-events";
 import type { Config, NormalizedConfig, RuntimeChannel, RuntimeConfig } from "./types";
 
 export type ConfigIssueSeverity = "error" | "warning";
@@ -41,7 +41,7 @@ function parseConfig(
   config: Config,
 ): { success: true; config: NormalizedConfig } | { success: false; issues: ConfigIssue[] } {
   const notificationSourceSchema = z.enum(["github", "manual", "system"]);
-  const eventTypeSchema = z.enum(supportedEventList);
+  const eventTypeSchema = z.enum(SUPPORTED_GITHUB_EVENTS);
   const defaultAllowedSources = ["github", "manual", "system"] as const;
 
   const channelSchema = z.discriminatedUnion("type", [

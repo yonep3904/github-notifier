@@ -1,6 +1,6 @@
-import type { GithubWebhookEvent, GithubWebhookEventName } from "@/types/external/github";
+import type { GithubWebhookEventName } from "@/types/external/github";
 
-export const supportedEventList: GithubWebhookEventName[] = [
+export const SUPPORTED_GITHUB_EVENTS = [
   "branch_protection_rule",
   "check_suite",
   "commit_comment",
@@ -26,11 +26,6 @@ export const supportedEventList: GithubWebhookEventName[] = [
   "watch",
   "workflow_job",
   "workflow_run",
-];
+] as const satisfies readonly GithubWebhookEventName[];
 
-export type SupportedEventName = Extract<
-  GithubWebhookEventName,
-  (typeof supportedEventList)[number]
->;
-
-export type SupportedEvent = Extract<GithubWebhookEvent, { type: SupportedEventName }>;
+export type SupportedGithubEventName = (typeof SUPPORTED_GITHUB_EVENTS)[number];

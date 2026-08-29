@@ -20,8 +20,19 @@ describe("StatusPageModelBuilder", () => {
       secretSet: true,
       status: "success",
     });
+    expect(model.githubHandler.events).toEqual(
+      expect.arrayContaining([
+        { label: "push", selected: true },
+        { label: "issues", selected: false },
+      ]),
+    );
     expect(model.manualHandler.endpoint).toBe("https://notifier.example/notify");
     expect(model.channels[0]?.webhook).not.toContain("discord.example/webhook");
+    expect(model.channels[0]?.sources).toEqual([
+      { label: "github", selected: true },
+      { label: "manual", selected: true },
+      { label: "system", selected: true },
+    ]);
     expect(JSON.stringify(model)).not.toContain("github-sensitive-value");
     expect(JSON.stringify(model)).not.toContain("manual-sensitive-value");
   });

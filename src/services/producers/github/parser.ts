@@ -1,3 +1,4 @@
+import { SUPPORTED_GITHUB_EVENTS, type SupportedGithubEventName } from "@/constants/github-events";
 import type {
   GithubOpenAPIComponents,
   GithubWebhookEvent,
@@ -6,11 +7,8 @@ import type {
 import type { FieldItem, GithubNotificationContent } from "@/types/internal/notification";
 import type { RGB } from "@/types/utility/scalars";
 import { createConfig, type DefaultConfig } from "@/utils/create-config";
-import {
-  type SupportedEvent,
-  type SupportedEventName,
-  supportedEventList,
-} from "./supported-github-events";
+
+type SupportedEvent = Extract<GithubWebhookEvent, { type: SupportedGithubEventName }>;
 
 export type StatusColor = "success" | "pending" | "failure" | "unknown";
 
@@ -32,7 +30,9 @@ export class GithubWebhookParser {
   }
 
   // Set for quick lookup of supported events
-  private readonly supportedEventsSet: Set<SupportedEventName> = new Set(supportedEventList);
+  private readonly supportedEventsSet: Set<SupportedGithubEventName> = new Set(
+    SUPPORTED_GITHUB_EVENTS,
+  );
 
   // Constants
   private static readonly colorMap = {
@@ -54,7 +54,7 @@ export class GithubWebhookParser {
     deploy: "#1A7F37",
   } as const satisfies Record<string, RGB>;
 
-  private static readonly eventColorMap: Partial<Record<SupportedEventName, RGB>> = {
+  private static readonly eventColorMap: Partial<Record<SupportedGithubEventName, RGB>> = {
     branch_protection_rule: GithubWebhookParser.colorMap.default,
     check_suite: GithubWebhookParser.colorMap.workflow,
     // issue
@@ -154,8 +154,8 @@ export class GithubWebhookParser {
    * @param eventName The name of the GitHub webhook event
    * @returns True if the event is supported, false otherwise
    */
-  isSupportedEvent(eventName: string): eventName is SupportedEventName {
-    return this.supportedEventsSet.has(eventName as SupportedEventName);
+  isSupportedEvent(eventName: string): eventName is SupportedGithubEventName {
+    return this.supportedEventsSet.has(eventName as SupportedGithubEventName);
   }
 
   private handleBranchProtectionRule(
