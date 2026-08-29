@@ -1,5 +1,5 @@
 import type { JSX } from "hono/jsx";
-import { type Tone, toneStyles } from "@/views/constants";
+import { type Tone, toneStyles } from "@/views/utils";
 
 export type BadgeProps = JSX.IntrinsicElements["span"] & {
   tone?: Tone;

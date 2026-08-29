@@ -1,5 +1,5 @@
 import { type Child, useId } from "hono/jsx";
-import type { Tone } from "@/views/constants";
+import type { Tone } from "@/views/utils";
 import { Badge } from "./Badge";
 
 export interface CardProps {

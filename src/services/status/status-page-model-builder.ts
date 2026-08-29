@@ -2,7 +2,7 @@ import type { Channel, ConfigIssue, NormalizedConfig, ResolveConfigResult } from
 import { SUPPORTED_GITHUB_EVENTS } from "@/constants/github-events";
 import { NOTIFICATION_SOURCES } from "@/constants/source";
 import { maskWebhookUrl } from "@/utils/mask";
-import type { Tone } from "@/views/constants";
+import type { Tone } from "@/views/utils";
 
 export type StatusDisplayState = "success" | "warning" | "error";
 
