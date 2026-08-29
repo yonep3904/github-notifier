@@ -1,9 +1,9 @@
+import type { Config } from "@/config";
 import type { StatusSnapshot } from "@/services/status";
-import type { Config } from "@/types/config";
 
 interface StatusRootPageProps {
   baseUrl: string;
-  status: "ready" | "invalid";
+  status: "valid" | "invalid";
   config: Config;
   snapshot: StatusSnapshot;
 }

@@ -1,3 +1,4 @@
+import type { ValidConfig } from "@/config";
 import { createDiscordNotificationDispatcher } from "@/services/dispatchers";
 import { NotificationConsumer, NotificationReceiver } from "@/services/pipeline";
 import {
@@ -6,7 +7,6 @@ import {
   ManualNotificationProducer,
   SystemNotificationProducer,
 } from "@/services/producers";
-import type { ValidConfig } from "@/types/config";
 import type { Env } from "@/types/env";
 
 export interface NotifyServices {
