@@ -1,2 +1,2 @@
 export * from "./docs";
-export * from "./status";
+export { StatusRootPage, type StatusRootPageProps } from "./status";

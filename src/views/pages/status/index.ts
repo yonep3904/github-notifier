@@ -1,1 +1,1 @@
-export * from "./root";
+export { StatusRootPage, type StatusRootPageProps } from "./root";
