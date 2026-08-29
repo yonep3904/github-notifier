@@ -1,7 +1,7 @@
 import type { JSX } from "hono/jsx";
 import type { IconNode } from "lucide";
 
-type LucideIconProps = JSX.IntrinsicElements["span"] & {
+export type LucideIconProps = JSX.IntrinsicElements["span"] & {
   icon: IconNode;
   size?: number;
   strokeWidth?: number;

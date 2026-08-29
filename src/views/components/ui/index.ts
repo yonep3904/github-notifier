@@ -1,1 +1,1 @@
-export * from "./LucideIcon";
+export { LucideIcon, type LucideIconProps } from "./LucideIcon";
