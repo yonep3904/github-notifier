@@ -1,3 +1,4 @@
+export { ChannelCard, type ChannelCardProps } from "./ChannelCard";
 export { GithubHandlerCard, type GithubHandlerCardProps } from "./GithubHandlerCard";
 export { IssueCard, type IssueCardProps } from "./IssueCard";
 export { IssueList, type IssueListProps } from "./IssueList";
