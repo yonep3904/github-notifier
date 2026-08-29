@@ -1,6 +1,6 @@
-import type { Config } from "@/types/config";
 import type { Env } from "@/types/env";
 import { allSupportedEvents } from "./templates/github-events";
+import type { Config } from "./types";
 
 export const createConfig = (env: Env): Config => {
   return {

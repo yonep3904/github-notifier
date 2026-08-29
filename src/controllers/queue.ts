@@ -7,7 +7,9 @@ export class QueueController {
 
   async handleBatch(batch: MessageBatch<unknown>, _env: Env) {
     if (this.dependencies.status === "invalid") {
-      console.error(`Invalid configuration: ${this.dependencies.error}`);
+      console.error(
+        `Invalid configuration: ${this.dependencies.issues.map((issue) => `${issue.path}: ${issue.detail}`).join("; ")}`,
+      );
       batch.ackAll(); // Invalid configuration, so we acknowledge the batch to prevent retries.
       return;
     }

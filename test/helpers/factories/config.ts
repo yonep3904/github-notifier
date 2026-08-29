@@ -1,4 +1,4 @@
-import type { Config } from "@/types/config";
+import type { Config } from "@/config";
 
 export function createBaseConfig(overrides: Partial<Config> = {}): Config {
   return {

@@ -41,10 +41,17 @@ export type Channel =
       enabled: boolean;
     };
 
-export type ValidChannel = Channel & {
+export type NormalizedChannel = Channel & {
+  allowedSources: NotificationSource[];
+};
+
+export type RuntimeChannel = Channel & {
   webhookUrl: string;
+  allowedSources: NotificationSource[];
 };
 
 export type Config = _Config<Channel>;
 
-export type ValidConfig = _Config<ValidChannel>;
+export type NormalizedConfig = _Config<NormalizedChannel>;
+
+export type RuntimeConfig = _Config<RuntimeChannel>;

@@ -1,14 +1,14 @@
-import { StatusManager, StatusRenderer } from "@/services/status";
-import type { Config } from "@/types/config";
+import type { ResolveConfigResult } from "@/config";
+import { StatusPageModelBuilder, StatusRenderer } from "@/services/status";
 import { StatusRootPage } from "@/views/pages/status";
 
 export interface StatusServices {
   statusRender: StatusRenderer;
 }
 
-export function createStatusServices(status: "ready" | "invalid", config: Config): StatusServices {
-  const manager = new StatusManager(status, config);
-  const render = new StatusRenderer(manager, StatusRootPage);
+export function createStatusServices(resolution: ResolveConfigResult): StatusServices {
+  const modelBuilder = new StatusPageModelBuilder(resolution);
+  const render = new StatusRenderer(modelBuilder, StatusRootPage);
 
   return {
     statusRender: render,

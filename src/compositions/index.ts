@@ -1,1 +1,1 @@
-export * from "./dependencies";
+export { createDependencies, type Dependencies } from "./dependencies";
