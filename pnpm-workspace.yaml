@@ -1,0 +1,10 @@
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  workerd: true
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - lucide@1.35.0
+  - miniflare@5.20260828.0-alpha
+  - wrangler@4.127.1
+  - zod@4.5.2
