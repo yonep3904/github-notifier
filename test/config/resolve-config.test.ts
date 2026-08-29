@@ -1,20 +1,20 @@
-import { validateConfig } from "@/config";
+import { resolveConfig } from "@/config";
 import { createBaseConfig } from "../helpers/factories/config";
 
-describe("validateConfig", () => {
+describe("resolveConfig", () => {
   it("returns a valid config and removes channels without webhook URLs", () => {
     const config = createBaseConfig();
     config.dispatch.channels.push({ type: "slack", id: "disabled-slack", enabled: false });
 
-    const result = validateConfig(config);
+    const result = resolveConfig(config);
 
     expect(result.status).toBe("valid");
     if (result.status !== "valid") throw new Error("expected valid config");
-    expect(result.validConfig.dispatch.channels.map(({ id }) => id)).toEqual(["discord-main"]);
+    expect(result.runtimeConfig.dispatch.channels.map(({ id }) => id)).toEqual(["discord-main"]);
     expect(result.issues).toEqual([]);
   });
 
-  it("applies the allowedSources default to ValidConfig", () => {
+  it("applies the allowedSources default to RuntimeConfig", () => {
     const config = createBaseConfig();
     config.dispatch.channels[0] = {
       type: "discord",
@@ -23,11 +23,11 @@ describe("validateConfig", () => {
       enabled: true,
     };
 
-    const result = validateConfig(config);
+    const result = resolveConfig(config);
 
     expect(result.status).toBe("valid");
     if (result.status !== "valid") throw new Error("expected valid config");
-    expect(result.validConfig.dispatch.channels[0]?.allowedSources).toEqual([
+    expect(result.runtimeConfig.dispatch.channels[0]?.allowedSources).toEqual([
       "github",
       "manual",
       "system",
@@ -89,7 +89,7 @@ describe("validateConfig", () => {
   ])("returns an error issue for %s", (_name, mutate, expectedPath) => {
     const config = createBaseConfig();
     mutate(config);
-    const result = validateConfig(config);
+    const result = resolveConfig(config);
     expect(result.status).toBe("invalid");
     expect(result.issues).toContainEqual(
       expect.objectContaining({ severity: "error", path: expectedPath }),
@@ -104,7 +104,7 @@ describe("validateConfig", () => {
       enabled: false,
       webhookUrl: "https://hooks.slack.example/test",
     });
-    const result = validateConfig(config);
+    const result = resolveConfig(config);
     expect(result.status).toBe("valid");
     expect(result.issues).toContainEqual(
       expect.objectContaining({ severity: "warning", path: "dispatch.channels.1.enabled" }),
@@ -114,7 +114,7 @@ describe("validateConfig", () => {
   it("turns schema failures into structured issues", () => {
     const config = createBaseConfig();
     config.contents.maxCommitLines = 0;
-    const result = validateConfig(config);
+    const result = resolveConfig(config);
     expect(result).toMatchObject({
       status: "invalid",
       issues: [expect.objectContaining({ severity: "error", path: "contents.maxCommitLines" })],

@@ -1,4 +1,4 @@
-import { validateConfig } from "@/config";
+import { resolveConfig } from "@/config";
 import { StatusPageModelBuilder } from "@/services/status";
 import { createBaseConfig } from "../../helpers/factories/config";
 
@@ -7,8 +7,8 @@ describe("StatusPageModelBuilder", () => {
     const config = createBaseConfig();
     config.handlers.github.secret = "github-sensitive-value";
     config.handlers.manual.password = "manual-sensitive-value";
-    const validation = validateConfig(config);
-    const model = new StatusPageModelBuilder(validation).createPageModel(
+    const resolution = resolveConfig(config);
+    const model = new StatusPageModelBuilder(resolution).createPageModel(
       "https://notifier.example",
     );
 
@@ -27,7 +27,7 @@ describe("StatusPageModelBuilder", () => {
   });
 
   it("does not cache page models", () => {
-    const modelBuilder = new StatusPageModelBuilder(validateConfig(createBaseConfig()));
+    const modelBuilder = new StatusPageModelBuilder(resolveConfig(createBaseConfig()));
     expect(modelBuilder.createPageModel("https://notifier.example")).not.toBe(
       modelBuilder.createPageModel("https://notifier.example"),
     );
@@ -41,7 +41,7 @@ describe("StatusPageModelBuilder", () => {
       enabled: false,
       webhookUrl: "https://hooks.slack.example/test",
     });
-    const model = new StatusPageModelBuilder(validateConfig(config)).createPageModel(
+    const model = new StatusPageModelBuilder(resolveConfig(config)).createPageModel(
       "https://notifier.example",
     );
 
@@ -49,7 +49,7 @@ describe("StatusPageModelBuilder", () => {
     expect(model.hero.headline).toContain("valid");
   });
 
-  it("keeps issue indexes aligned when ValidConfig filters an earlier channel", () => {
+  it("keeps issue indexes aligned when RuntimeConfig filters an earlier channel", () => {
     const config = createBaseConfig();
     config.dispatch.channels = [
       { type: "discord", id: "removed", enabled: false },
@@ -67,15 +67,15 @@ describe("StatusPageModelBuilder", () => {
       },
     ];
 
-    const validation = validateConfig(config);
-    expect(validation.status).toBe("valid");
-    if (validation.status !== "valid") throw new Error("expected valid config");
-    expect(validation.validConfig.dispatch.channels.map(({ id }) => id)).toEqual([
+    const resolution = resolveConfig(config);
+    expect(resolution.status).toBe("valid");
+    if (resolution.status !== "valid") throw new Error("expected valid config");
+    expect(resolution.runtimeConfig.dispatch.channels.map(({ id }) => id)).toEqual([
       "warning-target",
       "active",
     ]);
 
-    const model = new StatusPageModelBuilder(validation).createPageModel(
+    const model = new StatusPageModelBuilder(resolution).createPageModel(
       "https://notifier.example",
     );
 
@@ -91,7 +91,7 @@ describe("StatusPageModelBuilder", () => {
   it("still creates display data when the config shape is invalid at runtime", () => {
     const config = createBaseConfig();
     const malformedConfig = { ...config, handlers: undefined } as unknown as typeof config;
-    const model = new StatusPageModelBuilder(validateConfig(malformedConfig)).createPageModel(
+    const model = new StatusPageModelBuilder(resolveConfig(malformedConfig)).createPageModel(
       "https://notifier.example",
     );
 

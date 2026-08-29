@@ -1,4 +1,4 @@
-import type { Channel, ConfigIssue, NormalizedConfig, ValidateConfigResult } from "@/config";
+import type { Channel, ConfigIssue, NormalizedConfig, ResolveConfigResult } from "@/config";
 import { maskWebhookUrl } from "@/utils/mask";
 import type { Tone } from "@/views/constants";
 
@@ -64,17 +64,17 @@ function getDisplayState(issues: ConfigIssue[]): StatusDisplayState {
   return "success";
 }
 
-function getDisplayConfig(validation: ValidateConfigResult): NormalizedConfig {
-  return validation.normalizedConfig ?? emptyConfig;
+function getDisplayConfig(resolution: ResolveConfigResult): NormalizedConfig {
+  return resolution.normalizedConfig ?? emptyConfig;
 }
 
 /** Builds status-page presentation data from an already validated Config result. */
 export class StatusPageModelBuilder {
-  constructor(private readonly validation: ValidateConfigResult) {}
+  constructor(private readonly resolution: ResolveConfigResult) {}
 
   createPageModel(baseUrl: string): StatusPageModel {
-    const config = getDisplayConfig(this.validation);
-    const { issues, status } = this.validation;
+    const config = getDisplayConfig(this.resolution);
+    const { issues, status } = this.resolution;
     const enabledChannelCount = config.dispatch.channels.filter(({ enabled }) => enabled).length;
     const githubIssues = issues.filter(({ path }) => path.startsWith("handlers.github"));
     const manualIssues = issues.filter(({ path }) => path.startsWith("handlers.manual"));

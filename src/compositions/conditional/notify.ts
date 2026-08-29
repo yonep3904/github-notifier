@@ -1,4 +1,4 @@
-import type { ValidConfig } from "@/config";
+import type { RuntimeConfig } from "@/config";
 import { createDiscordNotificationDispatcher } from "@/services/dispatchers";
 import { NotificationConsumer, NotificationReceiver } from "@/services/pipeline";
 import {
@@ -17,7 +17,7 @@ export interface NotifyServices {
   consumer: NotificationConsumer;
 }
 
-export function createNotifyServices(config: ValidConfig, env: Env): NotifyServices {
+export function createNotifyServices(config: RuntimeConfig, env: Env): NotifyServices {
   const receiver = new NotificationReceiver(env.NOTIFICATION_QUEUE);
   const githubParser = new GithubWebhookParser(config.contents);
 

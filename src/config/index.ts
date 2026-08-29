@@ -1,11 +1,11 @@
 export { createConfig } from "./config";
+export type { ConfigIssue, ConfigIssueSeverity, ResolveConfigResult } from "./resolve-config";
+export { resolveConfig } from "./resolve-config";
 export type {
   Channel,
   Config,
   NormalizedChannel,
   NormalizedConfig,
-  ValidChannel,
-  ValidConfig,
+  RuntimeChannel,
+  RuntimeConfig,
 } from "./types";
-export type { ConfigIssue, ConfigIssueSeverity, ValidateConfigResult } from "./validate-config";
-export { validateConfig } from "./validate-config";

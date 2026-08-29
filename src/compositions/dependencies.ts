@@ -1,5 +1,5 @@
-import type { Config, ConfigIssue, ValidConfig } from "@/config";
-import { createConfig, validateConfig } from "@/config";
+import type { Config, ConfigIssue, RuntimeConfig } from "@/config";
+import { createConfig, resolveConfig } from "@/config";
 import type { Env } from "@/types/env";
 import { createDocsServices, type DocsServices } from "./base/docs";
 import { createStatusServices, type StatusServices } from "./base/status";
@@ -11,7 +11,7 @@ interface ConditionalServices extends NotifyServices {}
 export type Dependencies =
   | ({
       status: "valid";
-      config: ValidConfig;
+      config: RuntimeConfig;
       issues: ConfigIssue[];
     } & BaseServices &
       ConditionalServices)
@@ -23,24 +23,24 @@ export type Dependencies =
 
 export function createDependencies(env: Env): Dependencies {
   const config = createConfig(env);
-  const validation = validateConfig(config);
+  const resolution = resolveConfig(config);
 
-  if (validation.status === "valid") {
+  if (resolution.status === "valid") {
     return {
       status: "valid",
-      config: validation.validConfig,
-      issues: validation.issues,
+      config: resolution.runtimeConfig,
+      issues: resolution.issues,
       ...createDocsServices(),
-      ...createStatusServices(validation),
-      ...createNotifyServices(validation.validConfig, env),
+      ...createStatusServices(resolution),
+      ...createNotifyServices(resolution.runtimeConfig, env),
     };
   } else {
     return {
       status: "invalid",
-      config: validation.config,
-      issues: validation.issues,
+      config: resolution.inputConfig,
+      issues: resolution.issues,
       ...createDocsServices(),
-      ...createStatusServices(validation),
+      ...createStatusServices(resolution),
     };
   }
 }
