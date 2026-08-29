@@ -1,9 +1,9 @@
-import { type SupportedEventName, supportedEventList } from "@/services/producers/github";
+import { SUPPORTED_GITHUB_EVENTS, type SupportedGithubEventName } from "@/constants/github-events";
 
-export const allSupportedEvents: SupportedEventName[] = supportedEventList;
+export const allSupportedEvents: SupportedGithubEventName[] = [...SUPPORTED_GITHUB_EVENTS];
 
 // TODO
-export const recommendedEvents: SupportedEventName[] = [
+export const recommendedEvents: SupportedGithubEventName[] = [
   "issues",
   "issue_comment",
   "pull_request",
