@@ -34,6 +34,7 @@ export function Layout({ children, title, description, lang = "en" }: LayoutProp
           {children}
         </main>
       </body>
+      <script src="/copy.js" defer></script>
     </html>
   );
 }
