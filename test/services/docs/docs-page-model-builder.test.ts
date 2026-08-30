@@ -15,8 +15,10 @@ describe("DocsPageModelBuilder", () => {
       "manual-notification",
       "diagnostics",
     ]);
-    expect(JSON.stringify(model)).toContain("https://notifier.example/notify/github");
-    expect(JSON.stringify(model)).toContain("https://notifier.example/notify");
+    const serialized = JSON.stringify(model);
+    expect(serialized).toContain("https://notifier.example/notify/github");
+    expect(serialized).toContain("https://notifier.example/notify/manual");
+    expect(serialized).toContain("任意");
   });
 
   it("provides equivalent English content without changing the document structure", () => {

@@ -218,6 +218,49 @@ describe("manual notification authentication", () => {
       expect(mockQueue.send).not.toHaveBeenCalled();
     },
   );
+
+  it("accepts a request without authorization when password is not configured", async () => {
+    const mockQueue = createMockQueue();
+    const response = await app.fetch(
+      new Request("https://example.com/notify/manual", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: "notification without authentication" }),
+      }),
+      createTestEnv({
+        NOTIFICATION_QUEUE: mockQueue,
+        MANUAL_NOTIFICATION_PASSWORD: undefined,
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ok: true, queued: true });
+    expect(mockQueue.send).toHaveBeenCalled();
+  });
+});
+
+describe("GitHub notification authentication", () => {
+  it("accepts a request without a signature when secret is not configured", async () => {
+    const mockQueue = createMockQueue();
+    const response = await app.fetch(
+      new Request("https://example.com/notify/github", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-GitHub-Event": "__not_supported_event__",
+        },
+        body: JSON.stringify({}),
+      }),
+      createTestEnv({
+        NOTIFICATION_QUEUE: mockQueue,
+        GITHUB_WEBHOOK_SECRET: undefined,
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ok: true, queued: false, ignored: true });
+    expect(mockQueue.send).not.toHaveBeenCalled();
+  });
 });
 
 describe("notification availability", () => {
@@ -231,7 +274,7 @@ describe("notification availability", () => {
       }),
       createTestEnv({
         NOTIFICATION_QUEUE: mockQueue,
-        MANUAL_NOTIFICATION_PASSWORD: undefined,
+        DISCORD_WEBHOOK_URL_1: undefined,
       }),
     );
 
