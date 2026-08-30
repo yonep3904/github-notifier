@@ -98,6 +98,24 @@ describe("/notify/manual", () => {
   });
 });
 
+describe("/notify", () => {
+  it("queues a manual notification as an alias for /notify/manual", async () => {
+    const mockQueue = createMockQueue();
+    const response = await app.fetch(
+      new Request("https://example.com/notify", {
+        method: "POST",
+        headers: manualHeaders,
+        body: JSON.stringify({ message: "Notification through alias" }),
+      }),
+      createTestEnv({ NOTIFICATION_QUEUE: mockQueue }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ok: true, queued: true });
+    expect(mockQueue.send).toHaveBeenCalled();
+  });
+});
+
 describe("/notify/github", () => {
   it("returns 400 when the request body is invalid JSON", async () => {
     const mockQueue = createMockQueue();

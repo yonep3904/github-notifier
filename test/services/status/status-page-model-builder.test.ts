@@ -26,7 +26,7 @@ describe("StatusPageModelBuilder", () => {
         { label: "issues", selected: false },
       ]),
     );
-    expect(model.manualHandler.endpoint).toBe("https://notifier.example/notify");
+    expect(model.manualHandler.endpoint).toBe("https://notifier.example/notify/manual");
     expect(model.channels[0]?.webhook).not.toContain("discord.example/webhook");
     expect(model.channels[0]?.sources).toEqual([
       { label: "github", selected: true },
