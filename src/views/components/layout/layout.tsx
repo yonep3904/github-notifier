@@ -5,11 +5,14 @@ export interface LayoutProps {
   children: Child;
   title: string;
   description: string;
+  lang?: "ja" | "en";
 }
 
-export function Layout({ children, title, description }: LayoutProps) {
+export function Layout({ children, title, description, lang = "en" }: LayoutProps) {
+  const skipToMainContentText = lang === "en" ? "Skip to main content" : "本文へ移動";
+
   return (
-    <html lang="en">
+    <html lang={lang}>
       <head>
         <meta charSet="utf-8" />
         <link rel="stylesheet" href={styleUrl} />
@@ -22,7 +25,7 @@ export function Layout({ children, title, description }: LayoutProps) {
           href="#main-content"
           class="sr-only fixed top-4 left-4 z-50 rounded-lg bg-white px-4 py-2 font-medium text-stone-950 focus:not-sr-only"
         >
-          Skip to main content
+          {skipToMainContentText}
         </a>
         <main
           id="main-content"
