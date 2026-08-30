@@ -72,20 +72,6 @@ describe("resolveConfig", () => {
       },
       "handlers.github.handleEventTypes",
     ],
-    [
-      "no GitHub secret",
-      (config: ReturnType<typeof createBaseConfig>) => {
-        config.handlers.github.secret = undefined;
-      },
-      "handlers.github.secret",
-    ],
-    [
-      "no manual password",
-      (config: ReturnType<typeof createBaseConfig>) => {
-        config.handlers.manual.password = undefined;
-      },
-      "handlers.manual.password",
-    ],
   ])("returns an error issue for %s", (_name, mutate, expectedPath) => {
     const config = createBaseConfig();
     mutate(config);
@@ -94,6 +80,31 @@ describe("resolveConfig", () => {
     expect(result.issues).toContainEqual(
       expect.objectContaining({ severity: "error", path: expectedPath }),
     );
+  });
+
+  it.each([
+    [
+      "GitHub secret",
+      (config: ReturnType<typeof createBaseConfig>) => {
+        config.handlers.github.secret = undefined;
+      },
+      "handlers.github.secret",
+    ],
+    [
+      "manual password",
+      (config: ReturnType<typeof createBaseConfig>) => {
+        config.handlers.manual.password = undefined;
+      },
+      "handlers.manual.password",
+    ],
+  ])("keeps Config valid and returns a warning when %s is missing", (_name, mutate, path) => {
+    const config = createBaseConfig();
+    mutate(config);
+
+    const result = resolveConfig(config);
+
+    expect(result.status).toBe("valid");
+    expect(result.issues).toContainEqual(expect.objectContaining({ severity: "warning", path }));
   });
 
   it("keeps the status valid when only warnings exist", () => {

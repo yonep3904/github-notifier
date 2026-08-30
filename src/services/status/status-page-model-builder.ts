@@ -139,7 +139,7 @@ export class StatusPageModelBuilder {
         issues: githubIssues,
       },
       manualHandler: {
-        endpoint: `${baseUrl}/notify`,
+        endpoint: `${baseUrl}/notify/manual`,
         enabled: config.handlers.manual.allowed,
         passwordSet: config.handlers.manual.password !== undefined,
         status: getDisplayState(manualIssues),

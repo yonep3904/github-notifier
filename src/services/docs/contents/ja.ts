@@ -37,8 +37,8 @@ function japaneseSections(baseUrl: string): DocsSectionModel[] {
             ["GET /docs", "デプロイ・設定・利用方法を確認するドキュメント"],
             ["GET /status", "Config の状態、エラー、警告を確認する画面"],
             ["POST /notify/github", "GitHub Webhook の受信先"],
-            ["POST /notify", "JSON から手動通知を送信するAPI"],
-            ["POST /notify/manual", "手動通知APIの別名"],
+            ["POST /notify/manual", "JSON から手動通知を送信するAPI"],
+            ["POST /notify/", "JSON から手動通知を送信するAPI（/notify/manual のエイリアス）"],
           ],
         },
       ],
@@ -66,7 +66,7 @@ function japaneseSections(baseUrl: string): DocsSectionModel[] {
             {
               title: "Secrets を登録する",
               paragraphs: [
-                "基本構成では Discord の通知先と、GitHub・手動通知ハンドラーの認証情報を登録します。コマンド実行後に各値を入力してください。",
+                "Discord の通知先を登録します。GitHub・手動通知ハンドラーの認証情報は任意ですが、設定を推奨します。コマンド実行後に各値を入力してください。",
               ],
               codeSamples: [{ title: "Configure secrets", language: "bash", code: secretCommands }],
             },
@@ -98,8 +98,14 @@ function japaneseSections(baseUrl: string): DocsSectionModel[] {
           rows: [
             ["DISCORD_WEBHOOK_URL_1 … 5", "Discord の通知先。未設定の番号は無効になります。"],
             ["SLACK_WEBHOOK_URL_1 … 5", "Slack 用の予約済み設定。dispatcher は現在未実装です。"],
-            ["GITHUB_WEBHOOK_SECRET", "GitHub handler を有効にする場合に必要です。"],
-            ["MANUAL_NOTIFICATION_PASSWORD", "Manual handler を有効にする場合に必要です。"],
+            [
+              "GITHUB_WEBHOOK_SECRET",
+              "任意。設定すると、GitHub Webhook に正しい署名が必要になります。",
+            ],
+            [
+              "MANUAL_NOTIFICATION_PASSWORD",
+              "任意。設定すると、手動通知に一致する Bearer token が必要になります。",
+            ],
           ],
         },
         {
@@ -139,7 +145,7 @@ function japaneseSections(baseUrl: string): DocsSectionModel[] {
             {
               title: "Webhook を追加する",
               paragraphs: [
-                "GitHub の Repository settings → Webhooks → Add webhook を開き、次の値を設定します。Secret には Worker と同じ GITHUB_WEBHOOK_SECRET を使用します。",
+                "GitHub の Repository settings → Webhooks → Add webhook を開きます。Worker に GITHUB_WEBHOOK_SECRET を設定した場合は、GitHub 側の Secret にも同じ値を入力します。未設定の場合は署名を検証せず、Warning が表示されます。",
               ],
               codeSamples: [
                 {
@@ -170,7 +176,7 @@ function japaneseSections(baseUrl: string): DocsSectionModel[] {
             {
               title: "通知を送信する",
               paragraphs: [
-                "message は必須です。title は省略できます。成功時は通知が Queue に追加されたことを示す JSON が返ります。",
+                "MANUAL_NOTIFICATION_PASSWORD を設定した場合は Bearer token として指定し、未設定の場合は Authorization header を省略します。message は必須です。title は省略できます。成功時は通知が Queue に追加されたことを示す JSON が返ります。",
               ],
               codeSamples: [
                 { title: "Send a test notification", language: "bash", code: manualCurl(baseUrl) },
