@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { execFile } from "node:child_process";
 import pc from "picocolors";
 import { type ConfigIssue, createConfig, type ResolveConfigResult, resolveConfig } from "@/config";
 
@@ -33,6 +32,7 @@ const DUMMY_SECRET_VALUE = "__CONFIG_CHECK_SECRET_PRESENT__";
 
 async function createValidationEnv(): Promise<Record<string, string | undefined>> {
   const env = { ...process.env };
+  const { execFile } = await import("node:child_process");
 
   const stdout = await new Promise<string>((resolve, reject) => {
     execFile(
@@ -63,7 +63,7 @@ async function createValidationEnv(): Promise<Record<string, string | undefined>
   return env;
 }
 
-function isSecretMetadata(value: unknown): value is WranglerSecretMetadata[] {
+export function isSecretMetadata(value: unknown): value is WranglerSecretMetadata[] {
   return (
     Array.isArray(value) &&
     value.every(
@@ -76,7 +76,7 @@ function isSecretMetadata(value: unknown): value is WranglerSecretMetadata[] {
   );
 }
 
-function createCheckReport(result: ResolveConfigResult, color: boolean): string {
+export function createCheckReport(result: ResolveConfigResult, color: boolean): string {
   const colors = pc.createColors(color);
 
   const errorCount = result.issues.filter(({ severity }) => severity === "error").length;
@@ -125,10 +125,13 @@ function createCheckReport(result: ResolveConfigResult, color: boolean): string 
   }
 }
 
-function checkConfig(env: Record<string, string | undefined>): Output {
+export function checkConfig(
+  env: Record<string, string | undefined>,
+  color = pc.isColorSupported,
+): Output {
   const config = createConfig(env);
   const resolution = resolveConfig(config);
-  const report = createCheckReport(resolution, pc.isColorSupported);
+  const report = createCheckReport(resolution, color);
 
   return resolution.status === "valid"
     ? { exitCode: 0, stdout: report, stderr: "" }
@@ -155,4 +158,6 @@ async function main(): Promise<void> {
   process.exitCode = output.exitCode;
 }
 
-await main();
+if (typeof process !== "undefined" && process.argv[1]?.endsWith("scripts/config-check.ts")) {
+  await main();
+}
