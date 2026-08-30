@@ -178,8 +178,9 @@ function validateNormalizedConfig(config: NormalizedConfig): ConfigIssue[] {
       createIssue(
         "handlers.github.secret",
         "GitHub webhook secret is missing",
-        "The enabled GitHub handler cannot authenticate webhook requests.",
-        "Set GITHUB_WEBHOOK_SECRET or disable the GitHub handler.",
+        "The GitHub handler will accept webhook requests without verifying their authenticity.",
+        "Set GITHUB_WEBHOOK_SECRET to authenticate incoming GitHub webhook requests.",
+        "warning",
       ),
     );
   }
@@ -188,8 +189,9 @@ function validateNormalizedConfig(config: NormalizedConfig): ConfigIssue[] {
       createIssue(
         "handlers.manual.password",
         "Manual notification password is missing",
-        "The enabled manual handler cannot authenticate notification requests.",
-        "Set MANUAL_NOTIFICATION_PASSWORD or disable the manual handler.",
+        "The manual notification endpoint will accept requests without authentication.",
+        "Set MANUAL_NOTIFICATION_PASSWORD to require a Bearer token for manual notifications.",
+        "warning",
       ),
     );
   }
