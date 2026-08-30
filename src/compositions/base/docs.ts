@@ -1,4 +1,4 @@
-import { DocsRender } from "@/services/docs";
+import { DocsPageModelBuilder, DocsRender } from "@/services/docs";
 import { DocsRootPage } from "@/views/pages/docs";
 
 export interface DocsServices {
@@ -6,7 +6,8 @@ export interface DocsServices {
 }
 
 export function createDocsServices(): DocsServices {
-  const render = new DocsRender(DocsRootPage);
+  const modelBuilder = new DocsPageModelBuilder();
+  const render = new DocsRender(modelBuilder, DocsRootPage);
 
   return {
     docsRender: render,
