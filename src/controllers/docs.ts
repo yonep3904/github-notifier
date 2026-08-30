@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import type { DocsRender } from "@/services/docs";
+import type { DocsLocale, DocsRender } from "@/services/docs";
 import type { AppEnv } from "@/types/env";
 
 interface DocsControllerDependencies {
@@ -11,6 +11,7 @@ export class DocsController {
 
   root(c: Context<AppEnv>) {
     const baseUrl = new URL(c.req.url).origin;
-    return c.html(this.dependencies.docsRender.renderRootPage(baseUrl));
+    const locale: DocsLocale = c.req.query("lang") === "en" ? "en" : "ja";
+    return c.html(this.dependencies.docsRender.renderRootPage(baseUrl, locale));
   }
 }
