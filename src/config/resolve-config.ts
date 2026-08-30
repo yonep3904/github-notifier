@@ -48,14 +48,14 @@ function parseConfig(
     z.object({
       type: z.literal("discord"),
       id: z.string().min(1),
-      webhookUrl: z.url().optional(),
+      webhookUrl: z.string().min(1).optional(),
       allowedSources: z.array(notificationSourceSchema).default([...defaultAllowedSources]),
       enabled: z.boolean(),
     }),
     z.object({
       type: z.literal("slack"),
       id: z.string().min(1),
-      webhookUrl: z.url().optional(),
+      webhookUrl: z.string().min(1).optional(),
       allowedSources: z.array(notificationSourceSchema).default([...defaultAllowedSources]),
       enabled: z.boolean(),
     }),
@@ -206,6 +206,13 @@ function createRuntimeConfig(config: NormalizedConfig): RuntimeConfig {
   return { ...config, dispatch: { ...config.dispatch, channels } };
 }
 
+/**
+ * Secret values are intentionally validated for presence only.
+ *
+ * Config validation results may be exposed to users, so secret values
+ * (webhook URLs, webhook secrets, passwords, etc.) must never be
+ * inspected, included in issues, or exposed through validation messages.
+ */
 export function resolveConfig(inputConfig: Config): ResolveConfigResult {
   const parsed = parseConfig(inputConfig);
   if (!parsed.success) {

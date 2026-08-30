@@ -131,4 +131,21 @@ describe("resolveConfig", () => {
       issues: [expect.objectContaining({ severity: "error", path: "contents.maxCommitLines" })],
     });
   });
+
+  it("only checks the presence of environment-derived credential values", () => {
+    const config = createBaseConfig();
+    config.dispatch.channels[0] = {
+      type: "discord",
+      id: "discord-main",
+      webhookUrl: "opaque-secret-value",
+      enabled: true,
+    };
+    config.handlers.github.secret = "opaque-secret-value";
+    config.handlers.manual.password = "opaque-secret-value";
+
+    const result = resolveConfig(config);
+
+    expect(result.status).toBe("valid");
+    expect(result.issues).toEqual([]);
+  });
 });
