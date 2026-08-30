@@ -1,4 +1,12 @@
-export * from "./error-handler";
-export * from "./github-webhook-validator";
-export * from "./json";
-export * from "./zod-validator";
+export { errorHandler } from "./error-handler";
+export {
+  createGithubWebhookAuth,
+  type GithubWebhookAuthPolicy,
+} from "./github-webhook-auth";
+export { githubWebhookValidator } from "./github-webhook-validator";
+export { jsonBodyMiddleware } from "./json";
+export {
+  createManualNotificationAuth,
+  type ManualNotificationAuthPolicy,
+} from "./manual-notification-auth";
+export { zodValidator } from "./zod-validator";
