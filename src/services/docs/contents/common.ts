@@ -16,7 +16,9 @@ export const deployCommands = `pnpm deploy`;
 
 export function manualCurl(baseUrl: string): string {
   return `\
-curl -X POST '${baseUrl}/notify' \\
+# Omit the Authorization header when MANUAL_NOTIFICATION_PASSWORD is not configured.
+curl -X POST '${baseUrl}/notify/manual' \\
+-H 'Authorization: Bearer <MANUAL_NOTIFICATION_PASSWORD>' \\
 -H 'content-type: application/json' \\
 -d '{
   "title": "Deploy completed",

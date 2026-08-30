@@ -37,8 +37,7 @@ function englishSections(baseUrl: string): DocsSectionModel[] {
             ["GET /docs", "Deployment, configuration, and usage documentation"],
             ["GET /status", "Configuration status, errors, and warnings"],
             ["POST /notify/github", "GitHub Webhook receiver"],
-            ["POST /notify", "Send a manual notification from JSON"],
-            ["POST /notify/manual", "Alias for the manual notification endpoint"],
+            ["POST /notify/manual", "Send a manual notification from JSON"],
           ],
         },
       ],
@@ -66,7 +65,7 @@ function englishSections(baseUrl: string): DocsSectionModel[] {
             {
               title: "Configure secrets",
               paragraphs: [
-                "Register the Discord destination and credentials used by the enabled handlers.",
+                "Register the Discord destination. Authentication credentials are optional but recommended for enabled handlers.",
               ],
               codeSamples: [{ title: "Configure secrets", language: "bash", code: secretCommands }],
             },
@@ -101,8 +100,14 @@ function englishSections(baseUrl: string): DocsSectionModel[] {
               "SLACK_WEBHOOK_URL_1 … 5",
               "Reserved Slack configuration; the dispatcher is not implemented yet.",
             ],
-            ["GITHUB_WEBHOOK_SECRET", "Required while the GitHub handler is enabled."],
-            ["MANUAL_NOTIFICATION_PASSWORD", "Required while the manual handler is enabled."],
+            [
+              "GITHUB_WEBHOOK_SECRET",
+              "Optional. When set, incoming GitHub Webhooks must have a valid signature.",
+            ],
+            [
+              "MANUAL_NOTIFICATION_PASSWORD",
+              "Optional. When set, manual notifications require a matching Bearer token.",
+            ],
           ],
         },
         {
@@ -142,7 +147,7 @@ function englishSections(baseUrl: string): DocsSectionModel[] {
             {
               title: "Add the webhook",
               paragraphs: [
-                "Open Repository settings → Webhooks → Add webhook. Use the same GITHUB_WEBHOOK_SECRET as the Worker.",
+                "Open Repository settings → Webhooks → Add webhook. If GITHUB_WEBHOOK_SECRET is configured on the Worker, enter the same value in GitHub. Leaving it unset disables signature verification and produces a warning.",
               ],
               codeSamples: [
                 {
@@ -173,7 +178,7 @@ function englishSections(baseUrl: string): DocsSectionModel[] {
             {
               title: "Send a notification",
               paragraphs: [
-                "message is required and title is optional. A successful response confirms that the notification was queued.",
+                "If MANUAL_NOTIFICATION_PASSWORD is configured, send it as a Bearer token; otherwise omit the Authorization header. message is required and title is optional. A successful response confirms that the notification was queued.",
               ],
               codeSamples: [
                 { title: "Send a test notification", language: "bash", code: manualCurl(baseUrl) },
