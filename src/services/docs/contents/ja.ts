@@ -38,6 +38,7 @@ function japaneseSections(baseUrl: string): DocsSectionModel[] {
             ["GET /status", "Config の状態、エラー、警告を確認する画面"],
             ["POST /notify/github", "GitHub Webhook の受信先"],
             ["POST /notify/manual", "JSON から手動通知を送信するAPI"],
+            ["POST /notify/", "JSON から手動通知を送信するAPI（/notify/manual のエイリアス）"],
           ],
         },
       ],

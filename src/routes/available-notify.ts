@@ -20,6 +20,14 @@ export function createAvailableNotifyRoutes(controller: NotifyController, config
   const githubPolicy = createGithubPolicy(config);
 
   router.post(
+    "/",
+    createManualNotificationAuth(manualPolicy),
+    jsonBodyMiddleware,
+    zodValidator("manualNotify", manualNotifyRequestSchema),
+    (c) => controller.manual(c),
+  );
+
+  router.post(
     "/manual",
     createManualNotificationAuth(manualPolicy),
     jsonBodyMiddleware,

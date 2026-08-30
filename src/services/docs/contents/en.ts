@@ -38,6 +38,7 @@ function englishSections(baseUrl: string): DocsSectionModel[] {
             ["GET /status", "Configuration status, errors, and warnings"],
             ["POST /notify/github", "GitHub Webhook receiver"],
             ["POST /notify/manual", "Send a manual notification from JSON"],
+            ["POST /notify/", "Send a manual notification from JSON (alias for /notify/manual)"],
           ],
         },
       ],
