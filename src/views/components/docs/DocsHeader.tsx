@@ -17,20 +17,20 @@ export function DocsHeader({ model }: DocsHeaderProps) {
         </div>
         <nav aria-label="Language" class="flex rounded-xl border border-stone-800 p-1">
           <a
-            href="?lang=ja"
-            lang="ja"
-            aria-current={model.locale === "ja" ? "page" : undefined}
-            class={`rounded-lg px-3 py-1.5 font-medium text-sm ${model.locale === "ja" ? "bg-stone-800 text-white" : "text-stone-400 hover:text-white"}`}
-          >
-            日本語
-          </a>
-          <a
-            href="?lang=en"
+            href="/docs/en"
             lang="en"
             aria-current={model.locale === "en" ? "page" : undefined}
             class={`rounded-lg px-3 py-1.5 font-medium text-sm ${model.locale === "en" ? "bg-stone-800 text-white" : "text-stone-400 hover:text-white"}`}
           >
             English
+          </a>
+          <a
+            href="/docs/ja"
+            lang="ja"
+            aria-current={model.locale === "ja" ? "page" : undefined}
+            class={`rounded-lg px-3 py-1.5 font-medium text-sm ${model.locale === "ja" ? "bg-stone-800 text-white" : "text-stone-400 hover:text-white"}`}
+          >
+            日本語
           </a>
         </nav>
       </div>

@@ -9,9 +9,8 @@ interface DocsControllerDependencies {
 export class DocsController {
   constructor(private readonly dependencies: DocsControllerDependencies) {}
 
-  root(c: Context<AppEnv>) {
+  root(c: Context<AppEnv>, locale: DocsLocale) {
     const baseUrl = new URL(c.req.url).origin;
-    const locale: DocsLocale = c.req.query("lang") === "en" ? "en" : "ja";
     return c.html(this.dependencies.docsRender.renderRootPage(baseUrl, locale));
   }
 }
