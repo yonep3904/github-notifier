@@ -18,7 +18,8 @@ describe("SlackNotificationBuilder", () => {
   it("builds a GitHub notification with fallback text and Block Kit fields", () => {
     const payload = builder.build(createGithubNotification());
 
-    expect(payload.text).toBe("Push to main\nabc1234: initial commit");
+    expect(payload.text).toBeUndefined();
+    expect(payload.attachments?.[0]?.fallback).toBe("Push to main\nabc1234: initial commit");
     expect(payload.attachments?.[0]?.color).toBe("#1F883D");
     expect(payload.attachments?.[0]?.blocks).toEqual([
       {
@@ -72,12 +73,14 @@ describe("SlackNotificationBuilder", () => {
     expect(main).toHaveLength(3000);
     expect(fields).toHaveLength(10);
     expect(fields?.[0]?.text).toHaveLength(2000);
+    expect(payload.attachments?.[0]?.fallback).toHaveLength(4000);
   });
 
   it("builds a colored system notification", () => {
     const payload = builder.build(createSystemNotification());
-    expect(payload.text).toBe("[WARNING] System Warning\nSystem message");
+    expect(payload.text).toBeUndefined();
     expect(payload.attachments?.[0]).toMatchObject({
+      fallback: "[WARNING] System Warning\nSystem message",
       color: "#FFAA00",
       blocks: [
         { type: "header", text: { type: "plain_text", text: "[WARNING] System Warning" } },

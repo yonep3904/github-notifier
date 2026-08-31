@@ -123,14 +123,18 @@ export class SlackNotificationBuilder implements NotificationBuilder<SlackNotifi
     ]);
   }
 
-  private withAttachment(text: string, color: RGB, blocks: SlackBlock[]): SlackNotificationPayload {
+  private withAttachment(
+    fallback: string,
+    color: RGB,
+    blocks: SlackBlock[],
+  ): SlackNotificationPayload {
     this.validateColor(color);
     const attachment: SlackAttachment = {
+      fallback,
       color,
       blocks,
     };
     return {
-      text,
       attachments: [attachment],
     };
   }
@@ -138,12 +142,17 @@ export class SlackNotificationBuilder implements NotificationBuilder<SlackNotifi
   private finalizePayload(payload: SlackNotificationPayload): SlackNotificationPayload {
     return {
       ...payload,
-      text: truncateText(payload.text, SlackNotificationBuilder.MAX_LENGTH.fallbackText),
+      text: payload.text
+        ? truncateText(payload.text, SlackNotificationBuilder.MAX_LENGTH.fallbackText)
+        : undefined,
       blocks: payload.blocks
         ?.slice(0, SlackNotificationBuilder.MAX_LENGTH.blocks)
         .map((block) => this.finalizeBlock(block)),
       attachments: payload.attachments?.map((attachment) => ({
         ...attachment,
+        fallback: attachment.fallback
+          ? truncateText(attachment.fallback, SlackNotificationBuilder.MAX_LENGTH.fallbackText)
+          : undefined,
         blocks: attachment.blocks
           .slice(0, SlackNotificationBuilder.MAX_LENGTH.blocks)
           .map((block) => this.finalizeBlock(block)),

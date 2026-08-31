@@ -36,13 +36,15 @@ export type SlackContextBlock = {
 export type SlackBlock = SlackHeaderBlock | SlackSectionBlock | SlackContextBlock;
 
 export type SlackAttachment = {
+  /** Plain-text fallback used when attachment blocks cannot be rendered. */
+  fallback?: string;
   color?: string;
   blocks: SlackBlock[];
 };
 
 export type SlackNotificationPayload = {
   /** Plain-text fallback used by notifications and assistive technology. */
-  text: string;
+  text?: string;
   blocks?: SlackBlock[];
   attachments?: SlackAttachment[];
 };
