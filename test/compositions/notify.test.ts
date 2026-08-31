@@ -53,4 +53,30 @@ describe("createNotifyServices", () => {
       },
     ]);
   });
+
+  it("connects an enabled Slack channel to notification fan-out", async () => {
+    const config = createBaseConfig();
+    config.dispatch.channels = [
+      {
+        type: "slack",
+        id: "slack-manual",
+        webhookUrl: "https://hooks.slack.test/services/test",
+        allowedSources: ["manual"],
+        enabled: true,
+      },
+    ];
+    const resolution = resolveConfig(config);
+    if (resolution.status !== "valid") throw new Error("expected valid config");
+    const queue = createMockQueue();
+    const services = createNotifyServices(
+      resolution.runtimeConfig,
+      createTestEnv({ NOTIFICATION_QUEUE: queue }),
+    );
+
+    await services.manualProducer.produce({ type: "standard", title: null, message: "test" });
+
+    expect(queue.sendBatch).toHaveBeenCalledWith([
+      { body: expect.objectContaining({ channelId: "slack-manual", reenqueueCount: 0 }) },
+    ]);
+  });
 });
