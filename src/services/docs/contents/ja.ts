@@ -176,7 +176,7 @@ function japaneseSections(baseUrl: string): DocsSectionModel[] {
             {
               title: "通知を送信する",
               paragraphs: [
-                "MANUAL_NOTIFICATION_PASSWORD を設定した場合は Bearer token として指定し、未設定の場合は Authorization header を省略します。message は必須です。title は省略できます。成功時は通知が Queue に追加されたことを示す JSON が返ります。",
+                "MANUAL_NOTIFICATION_PASSWORD を設定した場合は Bearer token として指定し、未設定の場合は Authorization header を省略します。message は必須です。title は省略できます。レスポンスの queued が false の場合、manual を許可する有効な通知先がありません。",
               ],
               codeSamples: [
                 { title: "Send a test notification", language: "bash", code: manualCurl(baseUrl) },

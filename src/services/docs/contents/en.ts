@@ -179,7 +179,7 @@ function englishSections(baseUrl: string): DocsSectionModel[] {
             {
               title: "Send a notification",
               paragraphs: [
-                "If MANUAL_NOTIFICATION_PASSWORD is configured, send it as a Bearer token; otherwise omit the Authorization header. message is required and title is optional. A successful response confirms that the notification was queued.",
+                "If MANUAL_NOTIFICATION_PASSWORD is configured, send it as a Bearer token; otherwise omit the Authorization header. message is required and title is optional. Check the queued response field: false means no enabled channel accepts manual notifications.",
               ],
               codeSamples: [
                 { title: "Send a test notification", language: "bash", code: manualCurl(baseUrl) },
