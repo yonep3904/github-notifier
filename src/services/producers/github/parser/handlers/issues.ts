@@ -1,0 +1,81 @@
+import type { GithubNotificationContent } from "@/types/internal/notification";
+import { createContent, createField, createRepositoryField } from "../content";
+import type { EventOf } from "../types";
+
+export function parseIssueComment(event: EventOf<"issue_comment">): GithubNotificationContent {
+  const payload = event.payload;
+  const { action, issue, comment, repository } = payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Issue comment ${action ?? "updated"}: ${issue.title ?? "unknown issue"}`,
+    description: comment.body,
+    url: comment.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Issue #", issue.number, true),
+      createField("State", issue.state, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
+export function parseIssues(event: EventOf<"issues">): GithubNotificationContent {
+  const payload = event.payload;
+  const { action, issue, repository } = payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Issue ${action ?? "updated"}: ${issue.title ?? "unknown issue"}`,
+    description: issue.body,
+    url: issue.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("State", issue.state, true),
+      createField("Issue #", issue.number, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
+export function parseLabel(event: EventOf<"label">): GithubNotificationContent {
+  const payload = event.payload;
+  const { action, label, repository } = payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Label ${action}: ${label.name}`,
+    description: label.description,
+    url: repository.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Label", label.name, true),
+      createField("Color", `#${label.color}`, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
+export function parseMilestone(event: EventOf<"milestone">): GithubNotificationContent {
+  const payload = event.payload;
+  const { action, milestone, repository } = payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Milestone ${action}: ${milestone.title}`,
+    description: milestone.description,
+    url: milestone.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("State", milestone.state, true),
+      createField("Open Issues", milestone.open_issues, true),
+      createField("Closed Issues", milestone.closed_issues, true),
+      createField("Due On", milestone.due_on, true),
+      createRepositoryField(repository),
+    ],
+  });
+}

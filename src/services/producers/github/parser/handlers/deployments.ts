@@ -1,0 +1,62 @@
+import type { GithubNotificationContent } from "@/types/internal/notification";
+import { createContent, createField, createRepositoryField, createStateColor } from "../content";
+import type { EventOf } from "../types";
+
+export function parseDeployment(event: EventOf<"deployment">): GithubNotificationContent {
+  const payload = event.payload;
+  const action = "created";
+  const { deployment, repository } = payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Deployment created: ${deployment.environment}`,
+    description: deployment.description,
+    url: repository.html_url,
+    fields: [
+      createField("Ref", deployment.ref, true),
+      createField("SHA", deployment.sha.slice(0, 7), true),
+      createField("Environment", deployment.environment, true),
+      createField("Task", deployment.task, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
+export function parseDeploymentStatus(
+  event: EventOf<"deployment_status">,
+): GithubNotificationContent {
+  const payload = event.payload;
+  const action = "created";
+  const { deployment, deployment_status: deploymentStatus, repository } = payload;
+
+  const statusColor = createStateColor(deploymentStatus.state, {
+    success: "success",
+    pending: "pending",
+    failure: "failure",
+    error: "failure",
+    inactive: "pending",
+    in_progress: "pending",
+    queued: "pending",
+  });
+
+  return createContent({
+    event,
+    action,
+    title: `Deployment status: ${deploymentStatus.state}`,
+    description: deploymentStatus.description,
+    url:
+      deploymentStatus.environment_url ??
+      deploymentStatus.log_url ??
+      deploymentStatus.target_url ??
+      repository.html_url,
+    fields: [
+      createField("State", deploymentStatus.state, true),
+      createField("Environment", deployment.environment, true),
+      createField("Ref", deployment.ref, true),
+      createField("SHA", deployment.sha.slice(0, 7), true),
+      createRepositoryField(repository),
+    ],
+    status: statusColor,
+  });
+}
