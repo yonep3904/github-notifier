@@ -5,16 +5,48 @@ import {
   parseDeploymentProtectionRule,
   parseDeploymentReview,
   parseMergeGroup,
-  parsePageBuild,
   parsePackage,
+  parsePageBuild,
   parsePush,
-  parseWorkflowJob,
+  parseRegistryPackage,
   parseWorkflowDispatch,
+  parseWorkflowJob,
   parseWorkflowRun,
 } from "@/services/producers/github/parser/handlers";
 import type { GithubWebhookEvent } from "@/types/external/github";
 
 describe("GitHub event handlers", () => {
+  it("parses registry package events", () => {
+    const event = createGithubEvent("registry_package", {
+      action: "published",
+      registry_package: {
+        name: "container",
+        namespace: "acme",
+        ecosystem: "container",
+        package_type: "container",
+        description: "Application image",
+        html_url: "https://github.com/acme/packages/container/1",
+        package_version: { version: "sha-1234567" },
+      },
+      repository: {
+        full_name: "acme/repo",
+        html_url: "https://github.com/acme/repo",
+      },
+      sender: { login: "octocat" },
+    } as unknown as GithubWebhookEvent["payload"]);
+
+    expect(parseRegistryPackage(event)).toMatchObject({
+      type: "registry_package",
+      action: "published",
+      title: "Registry package published: container",
+      description: "Application image",
+      fields: expect.arrayContaining([
+        { name: "Type", value: "container", inline: true },
+        { name: "Version", value: "sha-1234567", inline: true },
+      ]),
+    });
+  });
+
   it("parses package events", () => {
     const event = createGithubEvent("package", {
       action: "published",

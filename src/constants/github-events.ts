@@ -27,6 +27,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "pull_request_review",
   "pull_request_review_thread",
   "push",
+  "registry_package",
   "release",
   "repository",
   "status",

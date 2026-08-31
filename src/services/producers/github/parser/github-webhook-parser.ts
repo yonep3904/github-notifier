@@ -22,14 +22,15 @@ import {
   parseMember,
   parseMergeGroup,
   parseMilestone,
-  parsePageBuild,
   parsePackage,
+  parsePageBuild,
   parsePublic,
   parsePullRequest,
   parsePullRequestReview,
   parsePullRequestReviewComment,
   parsePullRequestReviewThread,
   parsePush,
+  parseRegistryPackage,
   parseRelease,
   parseRepository,
   parseStatus,
@@ -114,6 +115,8 @@ export class GithubWebhookParser {
         return parsePullRequestReviewThread(event);
       case "push":
         return parsePush(event, this.config.maxCommitLines);
+      case "registry_package":
+        return parseRegistryPackage(event);
       case "release":
         return parseRelease(event);
       case "repository":
