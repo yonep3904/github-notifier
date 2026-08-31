@@ -17,3 +17,17 @@
     background-repeat: no-repeat;
   }
 }
+
+@layer components {
+  .channel-card-disabled {
+    display: none;
+  }
+
+  .channel-card-list:has(input[type="checkbox"]:checked) .channel-card-disabled {
+    display: block;
+  }
+
+  .channel-card-list:has(input[type="checkbox"]:checked) .channel-card-list-empty {
+    display: none;
+  }
+}

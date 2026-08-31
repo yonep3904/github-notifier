@@ -294,6 +294,9 @@ describe("notification availability", () => {
         NOTIFICATION_QUEUE: mockQueue,
         DISCORD_WEBHOOK_URL_1: undefined,
         DISCORD_WEBHOOK_URL_2: undefined,
+        DISCORD_WEBHOOK_URL_3: undefined,
+        DISCORD_WEBHOOK_URL_4: undefined,
+        DISCORD_WEBHOOK_URL_5: undefined,
       }),
     );
 
