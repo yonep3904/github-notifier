@@ -17,13 +17,13 @@ export class NotifyController {
 
   async manual(c: Context<AppEnv>) {
     const body = c.get("manualNotify");
-    await this.dependencies.manualProducer.produce({
+    const queued = await this.dependencies.manualProducer.produce({
       type: "standard",
       title: body.title ?? null,
       message: body.message,
     });
 
-    return c.json({ ok: true, queued: true });
+    return c.json({ ok: true, queued });
   }
 
   async github(c: Context<AppEnv>) {

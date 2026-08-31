@@ -39,7 +39,6 @@ export class GithubNotificationProducer {
       content,
     };
 
-    await this.receiver.notify(notification);
-    return true;
+    return this.receiver.notify(notification);
   }
 }

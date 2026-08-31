@@ -28,7 +28,6 @@ export function createMockDiscordDispatcher(
 export function createMockDiscordDispatchers(
   configs: DiscordNotificationDispatcherConfig = {
     id: "test-dispatcher",
-    allowSources: ["manual", "github", "system"],
   },
 ): {
   builder: DiscordNotificationBuilder;

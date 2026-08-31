@@ -1,7 +1,7 @@
 import type { StatusPageModel } from "@/services/status";
 import { Layout } from "@/views/components/layout";
 import {
-  ChannelCard,
+  ChannelCardList,
   GithubHandlerCard,
   IssueCard,
   ManualHandlerCard,
@@ -52,11 +52,7 @@ export function StatusRootPage({ model }: StatusRootPageProps) {
             Channels
           </h2>
           {model.channels.length > 0 ? (
-            <div class="grid gap-4">
-              {model.channels.map((channel, index) => (
-                <ChannelCard key={`${channel.id}-${index}`} channel={channel} />
-              ))}
-            </div>
+            <ChannelCardList channels={model.channels} />
           ) : (
             <p class="rounded-3xl border border-stone-800 bg-stone-900/65 p-5 text-stone-300">
               No channels are configured.

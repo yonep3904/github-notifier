@@ -106,9 +106,22 @@ function parseConfig(
 
 function validateNormalizedConfig(config: NormalizedConfig): ConfigIssue[] {
   const issues: ConfigIssue[] = [];
+  const channelIds = new Set<string>();
 
   for (const [index, channel] of config.dispatch.channels.entries()) {
     const basePath = `dispatch.channels.${index}`;
+
+    if (channelIds.has(channel.id)) {
+      issues.push(
+        createIssue(
+          `${basePath}.id`,
+          `Channel ID "${channel.id}" is duplicated`,
+          "Channel IDs identify the dispatcher that processes each queued notification job and must be unique.",
+          `Change "${channel.id}" to an ID that is not used by another channel.`,
+        ),
+      );
+    }
+    channelIds.add(channel.id);
 
     if (channel.enabled && !channel.webhookUrl) {
       issues.push(
