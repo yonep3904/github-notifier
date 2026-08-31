@@ -11,6 +11,7 @@ export {
   parseDeployKey,
   parseDeployment,
   parseDeploymentProtectionRule,
+  parseDeploymentReview,
   parseDeploymentStatus,
 } from "./deployments";
 export { parseFallback } from "./fallback";

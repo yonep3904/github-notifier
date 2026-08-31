@@ -63,6 +63,30 @@ export function parseDeploymentProtectionRule(
   });
 }
 
+export function parseDeploymentReview(
+  event: EventOf<"deployment_review">,
+): GithubNotificationContent {
+  const payload = event.payload;
+  const { action, repository, workflow_run: workflowRun } = payload;
+  const comment = "comment" in payload ? payload.comment : undefined;
+  const workflowTitle = workflowRun?.display_title ?? workflowRun?.name ?? "unknown workflow";
+
+  return createContent({
+    event,
+    action,
+    title: `Deployment review ${action}: ${workflowTitle}`,
+    description: comment,
+    url: workflowRun?.html_url ?? repository.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Workflow", workflowRun?.name, true),
+      createField("Status", workflowRun?.status, true),
+      createField("Conclusion", workflowRun?.conclusion, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
 export function parseDeploymentStatus(
   event: EventOf<"deployment_status">,
 ): GithubNotificationContent {

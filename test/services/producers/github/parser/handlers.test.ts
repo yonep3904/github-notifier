@@ -3,6 +3,7 @@ import {
   parseCheckRun,
   parseDeployKey,
   parseDeploymentProtectionRule,
+  parseDeploymentReview,
   parseMergeGroup,
   parsePageBuild,
   parsePush,
@@ -13,6 +14,37 @@ import {
 import type { GithubWebhookEvent } from "@/types/external/github";
 
 describe("GitHub event handlers", () => {
+  it("parses deployment reviews", () => {
+    const event = createGithubEvent("deployment_review", {
+      action: "approved",
+      comment: "Approved for production",
+      workflow_run: {
+        display_title: "Deploy production",
+        name: "Deploy",
+        status: "in_progress",
+        conclusion: null,
+        html_url: "https://github.com/acme/repo/actions/runs/1",
+      },
+      repository: {
+        full_name: "acme/repo",
+        html_url: "https://github.com/acme/repo",
+      },
+      sender: { login: "octocat" },
+    } as unknown as GithubWebhookEvent["payload"]);
+
+    expect(parseDeploymentReview(event)).toMatchObject({
+      type: "deployment_review",
+      action: "approved",
+      title: "Deployment review approved: Deploy production",
+      description: "Approved for production",
+      url: "https://github.com/acme/repo/actions/runs/1",
+      fields: expect.arrayContaining([
+        { name: "Workflow", value: "Deploy", inline: true },
+        { name: "Status", value: "in_progress", inline: true },
+      ]),
+    });
+  });
+
   it("parses deployment protection rule requests", () => {
     const event = createGithubEvent("deployment_protection_rule", {
       action: "requested",
