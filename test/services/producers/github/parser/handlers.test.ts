@@ -6,6 +6,7 @@ import {
   parseDeploymentReview,
   parseMergeGroup,
   parsePageBuild,
+  parsePackage,
   parsePush,
   parseWorkflowJob,
   parseWorkflowDispatch,
@@ -14,6 +15,37 @@ import {
 import type { GithubWebhookEvent } from "@/types/external/github";
 
 describe("GitHub event handlers", () => {
+  it("parses package events", () => {
+    const event = createGithubEvent("package", {
+      action: "published",
+      package: {
+        name: "github-notifier",
+        namespace: "acme",
+        ecosystem: "npm",
+        package_type: "npm",
+        description: "GitHub notifications",
+        html_url: "https://github.com/acme/github-notifier/packages/1",
+        package_version: { version: "1.2.3" },
+      },
+      repository: {
+        full_name: "acme/github-notifier",
+        html_url: "https://github.com/acme/github-notifier",
+      },
+      sender: { login: "octocat" },
+    } as unknown as GithubWebhookEvent["payload"]);
+
+    expect(parsePackage(event)).toMatchObject({
+      type: "package",
+      action: "published",
+      title: "Package published: github-notifier",
+      description: "GitHub notifications",
+      fields: expect.arrayContaining([
+        { name: "Ecosystem", value: "npm", inline: true },
+        { name: "Version", value: "1.2.3", inline: true },
+      ]),
+    });
+  });
+
   it("parses deployment reviews", () => {
     const event = createGithubEvent("deployment_review", {
       action: "approved",

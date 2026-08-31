@@ -20,6 +20,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "merge_group",
   "milestone",
   "page_build",
+  "package",
   "public",
   "pull_request",
   "pull_request_review_comment",
