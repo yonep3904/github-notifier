@@ -9,6 +9,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "delete",
   "deploy_key",
   "deployment",
+  "deployment_protection_rule",
   "deployment_status",
   "fork",
   "issue_comment",

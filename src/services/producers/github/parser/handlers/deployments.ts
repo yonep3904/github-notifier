@@ -41,6 +41,28 @@ export function parseDeployment(event: EventOf<"deployment">): GithubNotificatio
   });
 }
 
+export function parseDeploymentProtectionRule(
+  event: EventOf<"deployment_protection_rule">,
+): GithubNotificationContent {
+  const payload = event.payload;
+  const action = payload.action ?? "requested";
+
+  return createContent({
+    event,
+    action,
+    title: `Deployment protection rule ${action}: ${payload.environment ?? "unknown environment"}`,
+    description: null,
+    url: payload.deployment_callback_url ?? payload.repository?.html_url,
+    fields: [
+      createField("Environment", payload.environment, true),
+      createField("Event", payload.event, true),
+      createField("Ref", payload.ref, true),
+      createField("SHA", payload.sha?.slice(0, 7), true),
+      payload.repository ? createRepositoryField(payload.repository) : null,
+    ],
+  });
+}
+
 export function parseDeploymentStatus(
   event: EventOf<"deployment_status">,
 ): GithubNotificationContent {

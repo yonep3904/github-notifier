@@ -2,6 +2,7 @@ import { createGithubEvent } from "test/helpers/factories/github-event";
 import {
   parseCheckRun,
   parseDeployKey,
+  parseDeploymentProtectionRule,
   parseMergeGroup,
   parsePageBuild,
   parsePush,
@@ -12,6 +13,33 @@ import {
 import type { GithubWebhookEvent } from "@/types/external/github";
 
 describe("GitHub event handlers", () => {
+  it("parses deployment protection rule requests", () => {
+    const event = createGithubEvent("deployment_protection_rule", {
+      action: "requested",
+      environment: "production",
+      event: "push",
+      ref: "refs/heads/main",
+      sha: "1234567890abcdef",
+      deployment_callback_url: "https://api.github.com/deployments/callback",
+      repository: {
+        full_name: "acme/repo",
+        html_url: "https://github.com/acme/repo",
+      },
+      sender: { login: "octocat" },
+    } as GithubWebhookEvent["payload"]);
+
+    expect(parseDeploymentProtectionRule(event)).toMatchObject({
+      type: "deployment_protection_rule",
+      action: "requested",
+      title: "Deployment protection rule requested: production",
+      url: "https://api.github.com/deployments/callback",
+      fields: expect.arrayContaining([
+        { name: "Environment", value: "production", inline: true },
+        { name: "SHA", value: "1234567", inline: true },
+      ]),
+    });
+  });
+
   it("parses deploy key events", () => {
     const event = createGithubEvent("deploy_key", {
       action: "created",

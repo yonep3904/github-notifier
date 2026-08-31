@@ -11,6 +11,7 @@ import {
   parseDelete,
   parseDeployKey,
   parseDeployment,
+  parseDeploymentProtectionRule,
   parseDeploymentStatus,
   parseFallback,
   parseFork,
@@ -75,6 +76,8 @@ export class GithubWebhookParser {
         return parseDeployKey(event);
       case "deployment":
         return parseDeployment(event);
+      case "deployment_protection_rule":
+        return parseDeploymentProtectionRule(event);
       case "deployment_status":
         return parseDeploymentStatus(event);
       case "fork":

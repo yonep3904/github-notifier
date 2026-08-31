@@ -7,7 +7,12 @@ export {
   parseWorkflowJob,
   parseWorkflowRun,
 } from "./ci";
-export { parseDeployKey, parseDeployment, parseDeploymentStatus } from "./deployments";
+export {
+  parseDeployKey,
+  parseDeployment,
+  parseDeploymentProtectionRule,
+  parseDeploymentStatus,
+} from "./deployments";
 export { parseFallback } from "./fallback";
 export { parseIssueComment, parseIssues, parseLabel, parseMilestone } from "./issues";
 export {
