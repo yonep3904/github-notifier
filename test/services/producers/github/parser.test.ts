@@ -6,7 +6,7 @@ describe("GithubWebhookParser", () => {
   it("returns null for unsupported events", () => {
     const parser = new GithubWebhookParser({});
 
-    const event = createGithubEvent("check_run", {
+    const event = createGithubEvent("gollum", {
       sender: {
         login: "octocat",
         html_url: "https://github.com/octocat",
@@ -15,6 +15,86 @@ describe("GithubWebhookParser", () => {
     } as GithubWebhookEvent["payload"]);
 
     expect(parser.parse(event)).toBeNull();
+  });
+
+  it("parses completed check runs with their conclusion color", () => {
+    const parser = new GithubWebhookParser({});
+    const event = createGithubEvent("check_run", {
+      action: "completed",
+      check_run: {
+        name: "unit tests",
+        status: "completed",
+        conclusion: "failure",
+        head_sha: "1234567890abcdef",
+        html_url: "https://github.com/acme/repo/runs/1",
+        details_url: "https://ci.example.com/runs/1",
+        output: {
+          summary: "Two tests failed",
+          annotations_count: 2,
+        },
+      },
+      repository: {
+        full_name: "acme/repo",
+        html_url: "https://github.com/acme/repo",
+      },
+      sender: {
+        login: "octocat",
+        html_url: "https://github.com/octocat",
+        avatar_url: "https://avatars.githubusercontent.com/u/1",
+      },
+    } as GithubWebhookEvent["payload"]);
+
+    expect(parser.parse(event)).toMatchObject({
+      type: "check_run",
+      action: "completed",
+      title: "Check run completed: unit tests",
+      description: "Two tests failed",
+      url: "https://github.com/acme/repo/runs/1",
+      color: "#CF222E",
+      fields: expect.arrayContaining([
+        { name: "Conclusion", value: "failure", inline: true },
+        { name: "SHA", value: "1234567", inline: true },
+        { name: "Annotations", value: "2", inline: true },
+      ]),
+    });
+  });
+
+  it("parses destroyed merge groups with their reason", () => {
+    const parser = new GithubWebhookParser({});
+    const event = createGithubEvent("merge_group", {
+      action: "destroyed",
+      reason: "merged",
+      merge_group: {
+        head_ref: "refs/heads/gh-readonly-queue/main/pr-1",
+        head_sha: "abcdef1234567890",
+        base_ref: "refs/heads/main",
+        base_sha: "1234567890abcdef",
+        head_commit: { message: "Merge pull request #1" },
+      },
+      repository: {
+        full_name: "acme/repo",
+        html_url: "https://github.com/acme/repo",
+      },
+      sender: {
+        login: "octocat",
+        html_url: "https://github.com/octocat",
+        avatar_url: "https://avatars.githubusercontent.com/u/1",
+      },
+    } as GithubWebhookEvent["payload"]);
+
+    expect(parser.parse(event)).toMatchObject({
+      type: "merge_group",
+      action: "destroyed",
+      title: "Merge group destroyed: refs/heads/gh-readonly-queue/main/pr-1",
+      description: "Merge pull request #1",
+      url: "https://github.com/acme/repo",
+      color: "#8250DF",
+      fields: expect.arrayContaining([
+        { name: "Reason", value: "merged", inline: true },
+        { name: "Base", value: "refs/heads/main", inline: true },
+        { name: "SHA", value: "abcdef1", inline: true },
+      ]),
+    });
   });
 
   it("summarizes push commits and appends an overflow marker", () => {
