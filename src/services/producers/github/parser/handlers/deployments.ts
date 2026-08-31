@@ -2,6 +2,24 @@ import type { GithubNotificationContent } from "@/types/internal/notification";
 import { createContent, createField, createRepositoryField, createStateColor } from "../content";
 import type { EventOf } from "../types";
 
+export function parseDeployKey(event: EventOf<"deploy_key">): GithubNotificationContent {
+  const { action, key, repository } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Deploy key ${action}: ${key.title}`,
+    description: null,
+    url: repository.html_url,
+    fields: [
+      createField("Title", key.title, true),
+      createField("Read Only", key.read_only, true),
+      createField("Verified", key.verified, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
 export function parseDeployment(event: EventOf<"deployment">): GithubNotificationContent {
   const payload = event.payload;
   const action = "created";

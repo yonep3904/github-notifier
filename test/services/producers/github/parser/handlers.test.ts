@@ -1,6 +1,7 @@
 import { createGithubEvent } from "test/helpers/factories/github-event";
 import {
   parseCheckRun,
+  parseDeployKey,
   parseMergeGroup,
   parsePageBuild,
   parsePush,
@@ -11,6 +12,28 @@ import {
 import type { GithubWebhookEvent } from "@/types/external/github";
 
 describe("GitHub event handlers", () => {
+  it("parses deploy key events", () => {
+    const event = createGithubEvent("deploy_key", {
+      action: "created",
+      key: { title: "production", read_only: true, verified: true },
+      repository: {
+        full_name: "acme/repo",
+        html_url: "https://github.com/acme/repo",
+      },
+      sender: { login: "octocat" },
+    } as GithubWebhookEvent["payload"]);
+
+    expect(parseDeployKey(event)).toMatchObject({
+      type: "deploy_key",
+      action: "created",
+      title: "Deploy key created: production",
+      fields: expect.arrayContaining([
+        { name: "Read Only", value: "true", inline: true },
+        { name: "Verified", value: "true", inline: true },
+      ]),
+    });
+  });
+
   it("parses workflow dispatches", () => {
     const event = createGithubEvent("workflow_dispatch", {
       workflow: "deploy.yml",

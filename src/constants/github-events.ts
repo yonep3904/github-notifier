@@ -7,6 +7,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "commit_comment",
   "create",
   "delete",
+  "deploy_key",
   "deployment",
   "deployment_status",
   "fork",
