@@ -16,7 +16,7 @@ describe("NotificationReceiver", () => {
     ]);
 
     const notification = createManualNotification();
-    await receiver.notify(notification);
+    const queued = await receiver.notify(notification);
 
     expect(queue.sendBatch).toHaveBeenCalledWith([
       {
@@ -37,6 +37,7 @@ describe("NotificationReceiver", () => {
       },
     ]);
     expect(queue.send).not.toHaveBeenCalled();
+    expect(queued).toBe(true);
   });
 
   it("does not enqueue a job when no channel accepts the notification source", async () => {
@@ -45,8 +46,9 @@ describe("NotificationReceiver", () => {
       { id: "discord-system", allowedSources: ["system"] },
     ]);
 
-    await receiver.notify(createManualNotification());
+    const queued = await receiver.notify(createManualNotification());
 
     expect(queue.sendBatch).not.toHaveBeenCalled();
+    expect(queued).toBe(false);
   });
 });
