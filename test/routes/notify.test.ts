@@ -297,6 +297,11 @@ describe("notification availability", () => {
         DISCORD_WEBHOOK_URL_3: undefined,
         DISCORD_WEBHOOK_URL_4: undefined,
         DISCORD_WEBHOOK_URL_5: undefined,
+        SLACK_WEBHOOK_URL_1: undefined,
+        SLACK_WEBHOOK_URL_2: undefined,
+        SLACK_WEBHOOK_URL_3: undefined,
+        SLACK_WEBHOOK_URL_4: undefined,
+        SLACK_WEBHOOK_URL_5: undefined,
       }),
     );
 

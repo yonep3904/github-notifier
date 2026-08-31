@@ -1,5 +1,8 @@
 import type { RuntimeConfig } from "@/config";
-import { createDiscordNotificationDispatcher } from "@/services/dispatchers";
+import {
+  createDiscordNotificationDispatcher,
+  createSlackNotificationDispatcher,
+} from "@/services/dispatchers";
 import { NotificationConsumer, NotificationReceiver } from "@/services/pipeline";
 import {
   GithubNotificationProducer,
@@ -32,14 +35,12 @@ export function createNotifyServices(config: RuntimeConfig, env: Env): NotifySer
           defaultRetryAfterMs: config.dispatch.defaultRetryAfterMs,
         });
       case "slack":
-        // TODO: Implement SlackNotificationDispatcher and return its instance here
-        throw new Error("Slack dispatcher is not implemented yet");
-      // return createSlackNotificationDispatcher({
-      //   id: ch.id,
-      //   webhookUrl: ch.webhookUrl,
-      //   timeout: config.dispatch.timeout,
-      //   defaultRetryAfterMs: config.dispatch.defaultRetryAfterMs,
-      // });
+        return createSlackNotificationDispatcher({
+          id: ch.id,
+          webhookUrl: ch.webhookUrl,
+          timeout: config.dispatch.timeout,
+          defaultRetryAfterMs: config.dispatch.defaultRetryAfterMs,
+        });
       default:
         throw new Error("Unsupported channel type");
     }

@@ -66,8 +66,7 @@ export class DiscordNotificationDispatcher implements NotificationDispatcher {
    * @throws {Error} For any other unexpected errors during sending
    */
   dispatch(notification: Notification): Promise<void> {
-    const payload = this.build(notification);
-    return this.send(payload);
+    return this.send(this.build(notification));
   }
 }
 
@@ -88,7 +87,7 @@ export interface CreateDiscordNotificationDispatcherConfig
 export function createDiscordNotificationDispatcher(
   config: CreateDiscordNotificationDispatcherConfig,
 ): DiscordNotificationDispatcher {
-  const sender = new DiscordNotificationSender(config);
   const builder = new DiscordNotificationBuilder();
+  const sender = new DiscordNotificationSender(config);
   return new DiscordNotificationDispatcher(config, builder, sender);
 }

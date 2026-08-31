@@ -77,21 +77,11 @@ export class DiscordNotificationSender implements NotificationSender<DiscordNoti
           return;
 
         case 400:
-          throw new NonRetryableNotificationDispatchError(
-            "Discord webhook bad request",
-            DiscordNotificationSender.SERVICE_NAME,
-          );
-
-        case 401:
         case 403:
-          throw new NonRetryableNotificationDispatchError(
-            "Discord webhook authentication failed",
-            DiscordNotificationSender.SERVICE_NAME,
-          );
-
         case 404:
+        case 410:
           throw new NonRetryableNotificationDispatchError(
-            "Discord webhook not found",
+            `Discord webhook rejected request (${response.status})`,
             DiscordNotificationSender.SERVICE_NAME,
           );
 
