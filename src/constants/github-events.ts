@@ -14,6 +14,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "issues",
   "label",
   "member",
+  "merge_group",
   "milestone",
   "public",
   "pull_request",

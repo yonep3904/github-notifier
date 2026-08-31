@@ -83,6 +83,7 @@ export class GithubWebhookParser {
     // workflow
     workflow_job: GithubWebhookParser.colorMap.workflow,
     workflow_run: GithubWebhookParser.colorMap.workflow,
+    merge_group: GithubWebhookParser.colorMap.pr,
   };
 
   parse(event: GithubWebhookEvent): GithubNotificationContent | null {
@@ -121,6 +122,8 @@ export class GithubWebhookParser {
         return this.handleLabel(event);
       case "member":
         return this.handleMember(event);
+      case "merge_group":
+        return this.handleMergeGroup(event);
       case "milestone":
         return this.handleMilestone(event);
       case "public":
@@ -506,6 +509,30 @@ export class GithubWebhookParser {
         this.createField("Closed Issues", milestone.closed_issues, true),
         this.createField("Due On", milestone.due_on, true),
         this.createRepositoryField(repository),
+      ],
+    });
+  }
+
+  private handleMergeGroup(
+    event: Extract<SupportedEvent, { type: "merge_group" }>,
+  ): GithubNotificationContent {
+    const payload = event.payload;
+    const { action, merge_group: mergeGroup, repository } = payload;
+    const reason = "reason" in payload ? payload.reason : undefined;
+
+    return this.createContent({
+      event,
+      action,
+      title: `Merge group ${action}: ${mergeGroup.head_ref}`,
+      description: mergeGroup.head_commit.message,
+      url: repository?.html_url,
+      fields: [
+        this.createField("Action", action, true),
+        this.createField("Reason", reason, true),
+        this.createField("Base", mergeGroup.base_ref, true),
+        this.createField("Head", mergeGroup.head_ref, true),
+        this.createField("SHA", mergeGroup.head_sha.slice(0, 7), true),
+        repository ? this.createRepositoryField(repository) : null,
       ],
     });
   }
