@@ -11,7 +11,7 @@ import type { RGB } from "@/types/utility/scalars";
 import { truncateText } from "@/utils/text";
 
 export class DiscordNotificationBuilder implements NotificationBuilder<DiscordNotificationPayload> {
-  private static MAX_LENGTH = {
+  private static readonly MAX_LENGTH = {
     content: 2000,
     embeds: 25,
     embedTitle: 256,
