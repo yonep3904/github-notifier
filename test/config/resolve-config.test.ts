@@ -72,6 +72,18 @@ describe("resolveConfig", () => {
       },
       "handlers.github.handleEventTypes",
     ],
+    [
+      "duplicate channel IDs",
+      (config: ReturnType<typeof createBaseConfig>) => {
+        config.dispatch.channels.push({
+          type: "discord",
+          id: "discord-main",
+          webhookUrl: "https://discord.example/second-webhook",
+          enabled: true,
+        });
+      },
+      "dispatch.channels.1.id",
+    ],
   ])("returns an error issue for %s", (_name, mutate, expectedPath) => {
     const config = createBaseConfig();
     mutate(config);

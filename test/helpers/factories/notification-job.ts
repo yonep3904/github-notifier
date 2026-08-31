@@ -10,6 +10,7 @@ export function createManualNotificationJob(
 ): NotificationJob {
   return {
     id: "job-1",
+    channelId: "discord-main",
     notification: createManualNotification(),
     reenqueueCount: 0,
     ...overrides,
@@ -21,6 +22,7 @@ export function createGithubNotificationJob(
 ): NotificationJob {
   return {
     id: "job-1",
+    channelId: "discord-main",
     notification: createGithubNotification(),
     reenqueueCount: 0,
     ...overrides,
@@ -32,6 +34,7 @@ export function createSystemNotificationJob(
 ): NotificationJob {
   return {
     id: "job-1",
+    channelId: "discord-main",
     notification: createSystemNotification(),
     reenqueueCount: 0,
     ...overrides,
