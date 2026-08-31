@@ -16,20 +16,31 @@ export class NotificationConsumer {
   };
 
   private readonly config: Required<NotificationConsumerConfig>;
+  private readonly dispatchers: ReadonlyMap<string, NotificationDispatcher>;
 
   /**
    * Initializes a new instance of the NotificationConsumer with the provided configuration.
    * @param config The configuration for the NotificationConsumer, including:
    * - reenqueueLimit: The maximum number of times a job can be re-enqueued for retry before it is dropped (default: 5)
-   * @param dispatcher The NotificationDispatcher instance responsible for dispatching notifications
+   * @param dispatchers NotificationDispatcher instances keyed by their channel IDs
    * @param queue The Queue instance used for re-enqueuing jobs that need to be retried
    */
   constructor(
     config: NotificationConsumerConfig,
-    private readonly dispatcher: NotificationDispatcher,
+    dispatchers: NotificationDispatcher[],
     private readonly queue: Queue<NotificationJob>,
   ) {
     this.config = createConfig(config, NotificationConsumer.DEFAULTS);
+
+    const dispatcherMap = new Map<string, NotificationDispatcher>();
+    for (const dispatcher of dispatchers) {
+      if (dispatcherMap.has(dispatcher.id)) {
+        throw new Error(`Duplicate dispatcher ID: ${dispatcher.id}`);
+      }
+      dispatcherMap.set(dispatcher.id, dispatcher);
+    }
+
+    this.dispatchers = dispatcherMap;
   }
 
   /**
@@ -43,27 +54,33 @@ export class NotificationConsumer {
       return;
     }
 
+    const dispatcher = this.dispatchers.get(job.channelId);
+    if (!dispatcher) {
+      console.error(`Dispatcher not found: job=${job.id}, channel=${job.channelId}`);
+      return;
+    }
+
     try {
-      await this.dispatcher.dispatch(job.notification);
-      console.debug(`Success notification: job=${job.id}`);
+      await dispatcher.dispatch(job.notification);
+      console.debug(`Success notification: job=${job.id}, channel=${job.channelId}`);
       return;
     } catch (err: unknown) {
       // Rate limit errors (429 Too Many Requests)
       if (err instanceof RateLimitNotificationDispatchError) {
-        console.warn(`Rate limited: job=${job.id}`);
+        console.warn(`Rate limited: job=${job.id}, channel=${job.channelId}`);
         await this.requeueWithDelay(job, err.retryAfterMs);
         return;
       }
 
       // Retryable errors (5xx server errors, network errors)
       if (err instanceof RetryableNotificationDispatchError) {
-        console.warn(`Retryable error: job=${job.id}`);
+        console.warn(`Retryable error: job=${job.id}, channel=${job.channelId}`);
         await this.requeueWithDelay(job, 1000);
         return;
       }
 
       // Non-retryable errors: Log and drop
-      console.error(`Dropped: job=${job.id}`, err);
+      console.error(`Dropped: job=${job.id}, channel=${job.channelId}`, err);
     }
   }
 

@@ -1,13 +1,22 @@
 import { randomUUID } from "@/lib/uuid";
-import type { Notification } from "@/types/internal/notification";
+import type { Notification, NotificationSource } from "@/types/internal/notification";
 import type { NotificationJob } from "@/types/internal/pipeline";
+
+export type NotificationChannel = {
+  id: string;
+  allowedSources: NotificationSource[];
+};
 
 export class NotificationReceiver {
   /**
-   * Initializes a new instance of the NotificationReceiver with the provided queue for enqueuing notification jobs.
+   * Initializes a receiver that fans notifications out to the channels that accept their source.
    * @param queue The Queue instance used for enqueuing notification jobs that will be processed by the pipeline
+   * @param channels Enabled notification channels and their allowed sources
    */
-  constructor(private readonly queue: Queue<NotificationJob>) {}
+  constructor(
+    private readonly queue: Queue<NotificationJob>,
+    private readonly channels: NotificationChannel[],
+  ) {}
 
   /**
    * Validates and enqueues a notification for processing by the pipeline.
@@ -17,14 +26,26 @@ export class NotificationReceiver {
   async notify(notification: Notification): Promise<void> {
     this.validate(notification);
 
-    const job: NotificationJob = {
-      id: randomUUID(),
-      notification,
-      reenqueueCount: 0,
-    };
+    const jobs = this.channels
+      .filter(({ allowedSources }) => allowedSources.includes(notification.source))
+      .map(
+        ({ id: channelId }): NotificationJob => ({
+          id: randomUUID(),
+          channelId,
+          notification,
+          reenqueueCount: 0,
+        }),
+      );
 
-    console.debug(`Enqueuing notification: job=${job.id}, source=${notification.source}`);
-    await this.queue.send(job);
+    if (jobs.length === 0) {
+      console.debug(`No channel accepts notification source=${notification.source}`);
+      return;
+    }
+
+    console.debug(
+      `Enqueuing notification: jobs=${jobs.length}, source=${notification.source}, channels=${jobs.map(({ channelId }) => channelId).join(",")}`,
+    );
+    await this.queue.sendBatch(jobs.map((body) => ({ body })));
   }
 
   // biome-ignore lint/correctness/noUnusedFunctionParameters: To allow for future validation rules that may require access to the notification object, this function is intentionally designed to accept a notification parameter even if it's not currently used.

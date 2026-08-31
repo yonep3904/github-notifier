@@ -9,5 +9,6 @@ export interface NotificationBuilder<TPayload> {
 }
 
 export interface NotificationDispatcher {
+  readonly id: string;
   dispatch(notification: Notification): Promise<void>;
 }
