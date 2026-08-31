@@ -56,6 +56,7 @@ export class GithubWebhookParser {
 
   private static readonly eventColorMap: Partial<Record<SupportedGithubEventName, RGB>> = {
     branch_protection_rule: GithubWebhookParser.colorMap.default,
+    check_run: GithubWebhookParser.colorMap.workflow,
     check_suite: GithubWebhookParser.colorMap.workflow,
     // issue
     issues: GithubWebhookParser.colorMap.issue,
@@ -96,6 +97,8 @@ export class GithubWebhookParser {
     switch (event.type) {
       case "branch_protection_rule":
         return this.handleBranchProtectionRule(event);
+      case "check_run":
+        return this.handleCheckRun(event);
       case "check_suite":
         return this.handleCheckSuite(event);
       case "commit_comment":
@@ -211,6 +214,43 @@ export class GithubWebhookParser {
         this.createField("Conclusion", checkSuite.conclusion, true),
         this.createField("Branch", checkSuite.head_branch, true),
         this.createField("SHA", checkSuite.head_sha?.slice(0, 7), true),
+        this.createRepositoryField(repository),
+      ],
+      status: statusColor,
+    });
+  }
+
+  private handleCheckRun(
+    event: Extract<SupportedEvent, { type: "check_run" }>,
+  ): GithubNotificationContent {
+    const payload = event.payload;
+    const { action, check_run: checkRun, repository } = payload;
+
+    const statusColor = this.createStateColor(checkRun.conclusion, {
+      waiting: "pending",
+      pending: "pending",
+      startup_failure: "failure",
+      stale: "pending",
+      success: "success",
+      failure: "failure",
+      neutral: "pending",
+      cancelled: "failure",
+      skipped: "pending",
+      timed_out: "failure",
+      action_required: "failure",
+    });
+
+    return this.createContent({
+      event,
+      action: action ?? "updated",
+      title: `Check run ${action ?? "updated"}: ${checkRun.name}`,
+      description: checkRun.output.summary,
+      url: checkRun.html_url ?? checkRun.details_url,
+      fields: [
+        this.createField("Status", checkRun.status, true),
+        this.createField("Conclusion", checkRun.conclusion, true),
+        this.createField("SHA", checkRun.head_sha.slice(0, 7), true),
+        this.createField("Annotations", checkRun.output.annotations_count, true),
         this.createRepositoryField(repository),
       ],
       status: statusColor,
