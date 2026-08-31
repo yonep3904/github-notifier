@@ -13,12 +13,12 @@ export class ManualNotificationProducer {
    * Produce a manual notification and send it to the receiver.
    * @param payload The payload of the manual notification.
    */
-  async produce(payload: ManualNotificationPayload): Promise<void> {
+  async produce(payload: ManualNotificationPayload): Promise<boolean> {
     const notification: Notification = {
       source: "manual",
       content: payload,
     };
 
-    await this.receiver.notify(notification);
+    return this.receiver.notify(notification);
   }
 }

@@ -23,7 +23,7 @@ export class NotificationReceiver {
    * @param notification The notification to be processed, which must conform to the Notification type
    * @throws {InvalidNotificationError} If the notification fails validation checks (e.g., missing required fields, invalid content)
    */
-  async notify(notification: Notification): Promise<void> {
+  async notify(notification: Notification): Promise<boolean> {
     this.validate(notification);
 
     const jobs = this.channels
@@ -39,13 +39,14 @@ export class NotificationReceiver {
 
     if (jobs.length === 0) {
       console.debug(`No channel accepts notification source=${notification.source}`);
-      return;
+      return false;
     }
 
     console.debug(
       `Enqueuing notification: jobs=${jobs.length}, source=${notification.source}, channels=${jobs.map(({ channelId }) => channelId).join(",")}`,
     );
     await this.queue.sendBatch(jobs.map((body) => ({ body })));
+    return true;
   }
 
   // biome-ignore lint/correctness/noUnusedFunctionParameters: To allow for future validation rules that may require access to the notification object, this function is intentionally designed to accept a notification parameter even if it's not currently used.

@@ -30,7 +30,7 @@ export class SystemNotificationProducer {
     title: string;
     message: string;
     type: SystemNotificationType;
-  }): Promise<void> {
+  }): Promise<boolean> {
     const notification: Notification = {
       source: "system",
       content: {
@@ -41,6 +41,6 @@ export class SystemNotificationProducer {
       },
     };
 
-    await this.receiver.notify(notification);
+    return this.receiver.notify(notification);
   }
 }
