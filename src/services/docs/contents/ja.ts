@@ -97,7 +97,7 @@ function japaneseSections(baseUrl: string): DocsSectionModel[] {
           columns: ["変数", "説明"],
           rows: [
             ["DISCORD_WEBHOOK_URL_1 … 5", "Discord の通知先。未設定の番号は無効になります。"],
-            ["SLACK_WEBHOOK_URL_1 … 5", "Slack 用の予約済み設定。dispatcher は現在未実装です。"],
+            ["SLACK_WEBHOOK_URL_1 … 5", "Slack の通知先。未設定の番号は無効になります。"],
             [
               "GITHUB_WEBHOOK_SECRET",
               "任意。設定すると、GitHub Webhook に正しい署名が必要になります。",
@@ -208,12 +208,6 @@ function japaneseSections(baseUrl: string): DocsSectionModel[] {
               ],
             },
           ],
-        },
-        {
-          type: "note",
-          tone: "warning",
-          title: "Slack dispatcher",
-          body: "環境変数と Config 型には Slack の設定がありますが、通知 dispatcher は現在未実装です。",
         },
       ],
     },

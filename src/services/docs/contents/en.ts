@@ -97,10 +97,7 @@ function englishSections(baseUrl: string): DocsSectionModel[] {
           columns: ["Variable", "Description"],
           rows: [
             ["DISCORD_WEBHOOK_URL_1 … 5", "Discord destinations. Unset entries are disabled."],
-            [
-              "SLACK_WEBHOOK_URL_1 … 5",
-              "Reserved Slack configuration; the dispatcher is not implemented yet.",
-            ],
+            ["SLACK_WEBHOOK_URL_1 … 5", "Slack destinations. Unset entries are disabled."],
             [
               "GITHUB_WEBHOOK_SECRET",
               "Optional. When set, incoming GitHub Webhooks must have a valid signature.",
@@ -211,12 +208,6 @@ function englishSections(baseUrl: string): DocsSectionModel[] {
               ],
             },
           ],
-        },
-        {
-          type: "note",
-          tone: "warning",
-          title: "Slack dispatcher",
-          body: "Environment variables and Config types include Slack settings, but the notification dispatcher is not implemented yet.",
         },
       ],
     },
