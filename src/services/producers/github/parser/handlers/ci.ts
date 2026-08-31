@@ -190,3 +190,20 @@ export function parseWorkflowRun(event: EventOf<"workflow_run">): GithubNotifica
     status: statusColor,
   });
 }
+
+export function parsePageBuild(event: EventOf<"page_build">): GithubNotificationContent {
+  const { build, repository } = event.payload;
+
+  return createContent({
+    event,
+    action: build.status,
+    title: `Page build ${build.status}`,
+    description: build.error.message,
+    url: build.url,
+    fields: [
+      createField("Commit", build.commit?.slice(0, 7), true),
+      createField("Duration", `${build.duration} ms`, true),
+      createRepositoryField(repository),
+    ],
+  });
+}

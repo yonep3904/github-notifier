@@ -1,6 +1,7 @@
 export {
   parseCheckRun,
   parseCheckSuite,
+  parsePageBuild,
   parseStatus,
   parseWorkflowJob,
   parseWorkflowRun,

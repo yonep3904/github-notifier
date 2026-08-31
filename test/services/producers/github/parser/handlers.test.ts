@@ -2,6 +2,7 @@ import { createGithubEvent } from "test/helpers/factories/github-event";
 import {
   parseCheckRun,
   parseMergeGroup,
+  parsePageBuild,
   parsePush,
   parseWorkflowJob,
   parseWorkflowRun,
@@ -9,6 +10,34 @@ import {
 import type { GithubWebhookEvent } from "@/types/external/github";
 
 describe("GitHub event handlers", () => {
+  it("parses page builds", () => {
+    const event = createGithubEvent("page_build", {
+      build: {
+        status: "built",
+        commit: "1234567890abcdef",
+        duration: 1250,
+        error: { message: null },
+        url: "https://api.github.com/repos/acme/repo/pages/builds/1",
+      },
+      repository: {
+        full_name: "acme/repo",
+        html_url: "https://github.com/acme/repo",
+      },
+      sender: { login: "octocat" },
+    } as GithubWebhookEvent["payload"]);
+
+    expect(parsePageBuild(event)).toMatchObject({
+      type: "page_build",
+      action: "built",
+      title: "Page build built",
+      url: "https://api.github.com/repos/acme/repo/pages/builds/1",
+      fields: expect.arrayContaining([
+        { name: "Commit", value: "1234567", inline: true },
+        { name: "Duration", value: "1250 ms", inline: true },
+      ]),
+    });
+  });
+
   it("parses completed check runs with their conclusion color", () => {
     const event = createGithubEvent("check_run", {
       action: "completed",

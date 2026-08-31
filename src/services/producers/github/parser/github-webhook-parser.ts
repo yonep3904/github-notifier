@@ -19,6 +19,7 @@ import {
   parseMember,
   parseMergeGroup,
   parseMilestone,
+  parsePageBuild,
   parsePublic,
   parsePullRequest,
   parsePullRequestReview,
@@ -86,6 +87,8 @@ export class GithubWebhookParser {
         return parseMergeGroup(event);
       case "milestone":
         return parseMilestone(event);
+      case "page_build":
+        return parsePageBuild(event);
       case "public":
         return parsePublic(event);
       case "pull_request":
