@@ -5,11 +5,36 @@ import {
   parsePageBuild,
   parsePush,
   parseWorkflowJob,
+  parseWorkflowDispatch,
   parseWorkflowRun,
 } from "@/services/producers/github/parser/handlers";
 import type { GithubWebhookEvent } from "@/types/external/github";
 
 describe("GitHub event handlers", () => {
+  it("parses workflow dispatches", () => {
+    const event = createGithubEvent("workflow_dispatch", {
+      workflow: "deploy.yml",
+      ref: "main",
+      inputs: { environment: "production" },
+      repository: {
+        full_name: "acme/repo",
+        html_url: "https://github.com/acme/repo",
+      },
+      sender: { login: "octocat" },
+    } as unknown as GithubWebhookEvent["payload"]);
+
+    expect(parseWorkflowDispatch(event)).toMatchObject({
+      type: "workflow_dispatch",
+      action: "dispatched",
+      title: "Workflow dispatched: deploy.yml",
+      description: '{\n  "environment": "production"\n}',
+      fields: expect.arrayContaining([
+        { name: "Workflow", value: "deploy.yml", inline: true },
+        { name: "Ref", value: "main", inline: true },
+      ]),
+    });
+  });
+
   it("parses page builds", () => {
     const event = createGithubEvent("page_build", {
       build: {

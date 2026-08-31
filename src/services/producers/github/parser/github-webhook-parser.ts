@@ -30,6 +30,7 @@ import {
   parseRepository,
   parseStatus,
   parseWatch,
+  parseWorkflowDispatch,
   parseWorkflowJob,
   parseWorkflowRun,
 } from "./handlers";
@@ -109,6 +110,8 @@ export class GithubWebhookParser {
         return parseStatus(event);
       case "watch":
         return parseWatch(event);
+      case "workflow_dispatch":
+        return parseWorkflowDispatch(event);
       case "workflow_job":
         return parseWorkflowJob(event, this.config.maxWorkflowJobLines);
       case "workflow_run":

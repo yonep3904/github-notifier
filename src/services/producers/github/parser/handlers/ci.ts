@@ -152,6 +152,25 @@ export function parseWorkflowJob(
   });
 }
 
+export function parseWorkflowDispatch(
+  event: EventOf<"workflow_dispatch">,
+): GithubNotificationContent {
+  const { inputs, ref, repository, workflow } = event.payload;
+
+  return createContent({
+    event,
+    action: "dispatched",
+    title: `Workflow dispatched: ${workflow}`,
+    description: inputs ? JSON.stringify(inputs, null, 2) : null,
+    url: repository.html_url,
+    fields: [
+      createField("Workflow", workflow, true),
+      createField("Ref", ref, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
 export function parseWorkflowRun(event: EventOf<"workflow_run">): GithubNotificationContent | null {
   const payload = event.payload;
   const { action, repository, workflow_run: workflowRun, workflow } = payload;

@@ -3,6 +3,7 @@ export {
   parseCheckSuite,
   parsePageBuild,
   parseStatus,
+  parseWorkflowDispatch,
   parseWorkflowJob,
   parseWorkflowRun,
 } from "./ci";

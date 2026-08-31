@@ -27,6 +27,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "repository",
   "status",
   "watch",
+  "workflow_dispatch",
   "workflow_job",
   "workflow_run",
 ] as const satisfies readonly GithubWebhookEventName[];
