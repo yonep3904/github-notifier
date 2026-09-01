@@ -59,6 +59,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "star",
   "status",
   "sub_issues",
+  "team",
   "team_add",
   "watch",
   "workflow_dispatch",

@@ -177,3 +177,21 @@ export function parseSponsorship(event: EventOf<"sponsorship">): GithubNotificat
     ],
   });
 }
+
+export function parseTeam(event: EventOf<"team">): GithubNotificationContent {
+  const { action, organization, repository, team } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Team ${action}: ${team.name}`,
+    description: team.description,
+    url: team.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Team", team.name, true),
+      createField("Organization", organization.login, true),
+      repository ? createField("Repository", repository.full_name, true) : null,
+    ],
+  });
+}
