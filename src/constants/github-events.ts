@@ -20,6 +20,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "fork",
   "github_app_authorization",
   "gollum",
+  "installation",
   "issue_comment",
   "issue_dependencies",
   "issues",
