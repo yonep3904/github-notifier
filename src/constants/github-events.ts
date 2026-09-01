@@ -22,6 +22,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "gollum",
   "installation",
   "installation_repositories",
+  "installation_target",
   "issue_comment",
   "issue_dependencies",
   "issues",

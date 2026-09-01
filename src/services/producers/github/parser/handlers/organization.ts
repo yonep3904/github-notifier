@@ -60,3 +60,23 @@ export function parseInstallationRepositories(
     ],
   });
 }
+
+export function parseInstallationTarget(
+  event: EventOf<"installation_target">,
+): GithubNotificationContent {
+  const { account, action, target_type: targetType } = event.payload;
+  const accountName = account.login ?? account.slug ?? account.name ?? "unknown account";
+
+  return createContent({
+    event,
+    action,
+    title: `Installation target ${action}: ${accountName}`,
+    description: null,
+    url: account.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Account", accountName, true),
+      createField("Target Type", targetType, true),
+    ],
+  });
+}

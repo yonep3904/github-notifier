@@ -29,6 +29,7 @@ export {
   parseGithubAppAuthorization,
   parseInstallation,
   parseInstallationRepositories,
+  parseInstallationTarget,
 } from "./organization";
 export { parsePackage, parseRegistryPackage } from "./packages";
 export {
