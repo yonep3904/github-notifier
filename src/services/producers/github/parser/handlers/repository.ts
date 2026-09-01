@@ -370,6 +370,24 @@ export function parseStar(event: EventOf<"star">): GithubNotificationContent {
   });
 }
 
+export function parseTeamAdd(event: EventOf<"team_add">): GithubNotificationContent {
+  const { repository, team } = event.payload;
+  const action = "added";
+
+  return createContent({
+    event,
+    action,
+    title: `Team added to repository: ${team.name}`,
+    description: team.description,
+    url: repository.html_url,
+    fields: [
+      createField("Team", team.name, true),
+      createField("Permission", team.permission, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
 export function parseWatch(event: EventOf<"watch">): GithubNotificationContent {
   const payload = event.payload;
   const { action, repository } = payload;

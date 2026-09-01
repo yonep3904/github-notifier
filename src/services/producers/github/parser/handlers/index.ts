@@ -53,5 +53,6 @@ export {
   parseRepositoryImport,
   parseRepositoryRuleset,
   parseStar,
+  parseTeamAdd,
   parseWatch,
 } from "./repository";
