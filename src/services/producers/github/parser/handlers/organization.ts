@@ -156,3 +156,24 @@ export function parseOrgBlock(event: EventOf<"org_block">): GithubNotificationCo
     ],
   });
 }
+
+export function parseSponsorship(event: EventOf<"sponsorship">): GithubNotificationContent {
+  const { action, repository, sponsorship } = event.payload;
+  const sponsor = sponsorship.sponsor?.login ?? "private sponsor";
+  const sponsorable = sponsorship.sponsorable?.login ?? "unknown account";
+
+  return createContent({
+    event,
+    action,
+    title: `Sponsorship ${action}: ${sponsor} → ${sponsorable}`,
+    description: null,
+    url: sponsorship.sponsor?.html_url ?? sponsorship.sponsorable?.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Sponsor", sponsor, true),
+      createField("Sponsorable", sponsorable, true),
+      createField("Privacy", sponsorship.privacy_level, true),
+      repository ? createRepositoryField(repository) : null,
+    ],
+  });
+}

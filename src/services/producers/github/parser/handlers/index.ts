@@ -34,6 +34,7 @@ export {
   parseMembership,
   parseOrganization,
   parseOrgBlock,
+  parseSponsorship,
 } from "./organization";
 export { parsePackage, parseRegistryPackage } from "./packages";
 export {
