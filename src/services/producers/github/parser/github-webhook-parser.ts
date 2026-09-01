@@ -30,6 +30,7 @@ import {
   parseIssueDependencies,
   parseIssues,
   parseLabel,
+  parseMarketplacePurchase,
   parseMember,
   parseMergeGroup,
   parseMeta,
@@ -139,6 +140,8 @@ export class GithubWebhookParser {
         return parseIssues(event);
       case "label":
         return parseLabel(event);
+      case "marketplace_purchase":
+        return parseMarketplacePurchase(event);
       case "member":
         return parseMember(event);
       case "merge_group":

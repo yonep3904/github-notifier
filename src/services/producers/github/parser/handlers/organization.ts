@@ -80,3 +80,23 @@ export function parseInstallationTarget(
     ],
   });
 }
+
+export function parseMarketplacePurchase(
+  event: EventOf<"marketplace_purchase">,
+): GithubNotificationContent {
+  const { action, effective_date: effectiveDate, marketplace_purchase: purchase } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Marketplace purchase ${action}: ${purchase.plan.name}`,
+    description: purchase.plan.description,
+    fields: [
+      createField("Action", action, true),
+      createField("Account", purchase.account.login, true),
+      createField("Plan", purchase.plan.name, true),
+      createField("Billing Cycle", purchase.billing_cycle, true),
+      createField("Effective Date", effectiveDate, true),
+    ],
+  });
+}

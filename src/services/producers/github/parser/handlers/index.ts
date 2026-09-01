@@ -30,6 +30,7 @@ export {
   parseInstallation,
   parseInstallationRepositories,
   parseInstallationTarget,
+  parseMarketplacePurchase,
 } from "./organization";
 export { parsePackage, parseRegistryPackage } from "./packages";
 export {

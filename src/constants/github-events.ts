@@ -27,6 +27,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "issue_dependencies",
   "issues",
   "label",
+  "marketplace_purchase",
   "member",
   "merge_group",
   "meta",
