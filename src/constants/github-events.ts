@@ -16,6 +16,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "discussion_comment",
   "fork",
   "issue_comment",
+  "issue_dependencies",
   "issues",
   "label",
   "member",

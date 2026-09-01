@@ -58,6 +58,37 @@ export function parseIssueComment(event: EventOf<"issue_comment">): GithubNotifi
   });
 }
 
+export function parseIssueDependencies(
+  event: EventOf<"issue_dependencies">,
+): GithubNotificationContent {
+  const {
+    action,
+    blocked_issue: blockedIssue,
+    blocking_issue: blockingIssue,
+    repository,
+  } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Issue dependency ${action}`,
+    description: null,
+    url: blockedIssue?.html_url ?? blockingIssue?.html_url ?? repository.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField(
+        "Blocked Issue",
+        blockedIssue ? `#${blockedIssue.number} ${blockedIssue.title}` : null,
+      ),
+      createField(
+        "Blocking Issue",
+        blockingIssue ? `#${blockingIssue.number} ${blockingIssue.title}` : null,
+      ),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
 export function parseIssues(event: EventOf<"issues">): GithubNotificationContent {
   const payload = event.payload;
   const { action, issue, repository } = payload;

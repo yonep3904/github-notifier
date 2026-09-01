@@ -19,6 +19,7 @@ export {
   parseDiscussion,
   parseDiscussionComment,
   parseIssueComment,
+  parseIssueDependencies,
   parseIssues,
   parseLabel,
   parseMilestone,
