@@ -42,6 +42,7 @@ import {
   parseOrgBlock,
   parsePackage,
   parsePageBuild,
+  parsePersonalAccessTokenRequest,
   parseProject,
   parseProjectCard,
   parseProjectColumn,
@@ -171,6 +172,8 @@ export class GithubWebhookParser {
         return parsePackage(event);
       case "page_build":
         return parsePageBuild(event);
+      case "personal_access_token_request":
+        return parsePersonalAccessTokenRequest(event);
       case "project":
         return parseProject(event);
       case "project_card":

@@ -39,6 +39,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "org_block",
   "package",
   "page_build",
+  "personal_access_token_request",
   "project",
   "project_card",
   "project_column",

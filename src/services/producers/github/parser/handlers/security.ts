@@ -44,3 +44,22 @@ export function parseDependabotAlert(
     ],
   });
 }
+
+export function parsePersonalAccessTokenRequest(
+  event: EventOf<"personal_access_token_request">,
+): GithubNotificationContent {
+  const { action, organization, personal_access_token_request: request } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Personal access token request ${action}: ${request.owner.login}`,
+    description: null,
+    fields: [
+      createField("Action", action, true),
+      createField("Owner", request.owner.login, true),
+      createField("Token Expired", request.token_expired, true),
+      createField("Organization", organization.login, true),
+    ],
+  });
+}
