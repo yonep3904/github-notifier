@@ -83,3 +83,23 @@ export function parseRepositoryAdvisory(
     ],
   });
 }
+
+export function parseRepositoryVulnerabilityAlert(
+  event: EventOf<"repository_vulnerability_alert">,
+): GithubNotificationContent {
+  const { action, alert, repository } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Repository vulnerability alert ${action}: ${alert.affected_package_name}`,
+    description: alert.affected_range,
+    url: alert.external_reference ?? repository.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Package", alert.affected_package_name, true),
+      createField("Severity", alert.severity, true),
+      createRepositoryField(repository),
+    ],
+  });
+}

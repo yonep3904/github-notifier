@@ -81,4 +81,5 @@ export {
   parseDependabotAlert,
   parsePersonalAccessTokenRequest,
   parseRepositoryAdvisory,
+  parseRepositoryVulnerabilityAlert,
 } from "./security";
