@@ -120,3 +120,22 @@ export function parseMembership(event: EventOf<"membership">): GithubNotificatio
     ],
   });
 }
+
+export function parseOrgBlock(event: EventOf<"org_block">): GithubNotificationContent {
+  const { action, blocked_user: blockedUser, organization, repository } = event.payload;
+  const blockedUserLogin = blockedUser?.login ?? "unknown user";
+
+  return createContent({
+    event,
+    action,
+    title: `Organization user ${action}: ${blockedUserLogin}`,
+    description: null,
+    url: blockedUser?.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("User", blockedUserLogin, true),
+      createField("Organization", organization.login, true),
+      repository ? createRepositoryField(repository) : null,
+    ],
+  });
+}

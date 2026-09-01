@@ -33,6 +33,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "merge_group",
   "meta",
   "milestone",
+  "org_block",
   "package",
   "page_build",
   "project",

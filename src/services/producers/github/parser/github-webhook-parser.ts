@@ -36,6 +36,7 @@ import {
   parseMergeGroup,
   parseMeta,
   parseMilestone,
+  parseOrgBlock,
   parsePackage,
   parsePageBuild,
   parseProject,
@@ -153,6 +154,8 @@ export class GithubWebhookParser {
         return parseMeta(event);
       case "milestone":
         return parseMilestone(event);
+      case "org_block":
+        return parseOrgBlock(event);
       case "package":
         return parsePackage(event);
       case "page_build":
