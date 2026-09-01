@@ -172,3 +172,23 @@ export function parseSecretScanningScan(
     ],
   });
 }
+
+export function parseSecurityAdvisory(
+  event: EventOf<"security_advisory">,
+): GithubNotificationContent {
+  const { action, repository, security_advisory: advisory } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Security advisory ${action}: ${advisory.summary}`,
+    description: advisory.description,
+    url: advisory.references[0]?.url,
+    fields: [
+      createField("Action", action, true),
+      createField("GHSA ID", advisory.ghsa_id, true),
+      createField("Severity", advisory.severity, true),
+      repository ? createRepositoryField(repository) : null,
+    ],
+  });
+}
