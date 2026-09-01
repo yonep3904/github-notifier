@@ -8,6 +8,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "commit_comment",
   "create",
   "custom_property",
+  "custom_property_values",
   "delete",
   "deploy_key",
   "deployment",

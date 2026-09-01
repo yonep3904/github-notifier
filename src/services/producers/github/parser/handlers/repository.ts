@@ -18,6 +18,25 @@ export function parseCustomProperty(event: EventOf<"custom_property">): GithubNo
   });
 }
 
+export function parseCustomPropertyValues(
+  event: EventOf<"custom_property_values">,
+): GithubNotificationContent {
+  const { action, new_property_values: propertyValues, repository } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Custom property values ${action}: ${repository.full_name}`,
+    description: null,
+    url: repository.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Properties", propertyValues.length, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
 export function parseBranchProtectionConfiguration(
   event: EventOf<"branch_protection_configuration">,
 ): GithubNotificationContent {

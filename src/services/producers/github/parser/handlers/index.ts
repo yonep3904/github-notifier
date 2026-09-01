@@ -39,6 +39,7 @@ export {
   parseCommitComment,
   parseCreate,
   parseCustomProperty,
+  parseCustomPropertyValues,
   parseDelete,
   parseFork,
   parseMember,

@@ -10,6 +10,7 @@ import {
   parseCommitComment,
   parseCreate,
   parseCustomProperty,
+  parseCustomPropertyValues,
   parseDelete,
   parseDeployKey,
   parseDeployment,
@@ -83,6 +84,8 @@ export class GithubWebhookParser {
         return parseCreate(event);
       case "custom_property":
         return parseCustomProperty(event);
+      case "custom_property_values":
+        return parseCustomPropertyValues(event);
       case "delete":
         return parseDelete(event);
       case "deploy_key":
