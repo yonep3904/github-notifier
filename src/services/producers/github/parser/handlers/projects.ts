@@ -37,3 +37,21 @@ export function parseProjectCard(event: EventOf<"project_card">): GithubNotifica
     ],
   });
 }
+
+export function parseProjectColumn(event: EventOf<"project_column">): GithubNotificationContent {
+  const { action, project_column: projectColumn, repository } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Project column ${action}: ${projectColumn.name}`,
+    description: null,
+    url: projectColumn.url,
+    fields: [
+      createField("Action", action, true),
+      createField("Column", projectColumn.name, true),
+      createField("Column ID", projectColumn.id, true),
+      repository ? createRepositoryField(repository) : null,
+    ],
+  });
+}
