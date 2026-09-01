@@ -58,6 +58,7 @@ import {
   parseRegistryPackage,
   parseRelease,
   parseRepository,
+  parseRepositoryAdvisory,
   parseRepositoryDispatch,
   parseRepositoryImport,
   parseRepositoryRuleset,
@@ -204,6 +205,8 @@ export class GithubWebhookParser {
         return parseRelease(event);
       case "repository":
         return parseRepository(event);
+      case "repository_advisory":
+        return parseRepositoryAdvisory(event);
       case "repository_dispatch":
         return parseRepositoryDispatch(event);
       case "repository_import":

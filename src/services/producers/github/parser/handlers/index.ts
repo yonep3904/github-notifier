@@ -80,4 +80,5 @@ export {
   parseCodeScanningAlert,
   parseDependabotAlert,
   parsePersonalAccessTokenRequest,
+  parseRepositoryAdvisory,
 } from "./security";

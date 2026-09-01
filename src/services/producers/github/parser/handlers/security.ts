@@ -63,3 +63,23 @@ export function parsePersonalAccessTokenRequest(
     ],
   });
 }
+
+export function parseRepositoryAdvisory(
+  event: EventOf<"repository_advisory">,
+): GithubNotificationContent {
+  const { action, repository, repository_advisory: advisory } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Repository advisory ${action}: ${advisory.summary}`,
+    description: advisory.description,
+    url: advisory.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("GHSA ID", advisory.ghsa_id, true),
+      createField("Severity", advisory.severity, true),
+      createRepositoryField(repository),
+    ],
+  });
+}

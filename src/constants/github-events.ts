@@ -55,6 +55,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "registry_package",
   "release",
   "repository",
+  "repository_advisory",
   "repository_dispatch",
   "repository_import",
   "repository_ruleset",
