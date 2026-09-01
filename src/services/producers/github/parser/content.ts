@@ -82,7 +82,7 @@ export function createField(
 }
 
 export function createRepositoryField(
-  repository: GithubOpenAPIComponents["schemas"]["repository"],
+  repository: GithubOpenAPIComponents["schemas"]["repository"] | null,
   inline: boolean = true,
 ): FieldItem | null {
   if (repository === null) {
