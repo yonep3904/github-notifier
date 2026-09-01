@@ -21,6 +21,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "github_app_authorization",
   "gollum",
   "installation",
+  "installation_repositories",
   "issue_comment",
   "issue_dependencies",
   "issues",

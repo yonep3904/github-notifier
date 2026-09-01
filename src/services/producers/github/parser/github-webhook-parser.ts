@@ -24,6 +24,7 @@ import {
   parseGithubAppAuthorization,
   parseGollum,
   parseInstallation,
+  parseInstallationRepositories,
   parseIssueComment,
   parseIssueDependencies,
   parseIssues,
@@ -125,6 +126,8 @@ export class GithubWebhookParser {
         return parseGollum(event);
       case "installation":
         return parseInstallation(event);
+      case "installation_repositories":
+        return parseInstallationRepositories(event);
       case "issue_comment":
         return parseIssueComment(event);
       case "issue_dependencies":

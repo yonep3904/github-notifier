@@ -34,3 +34,29 @@ export function parseInstallation(event: EventOf<"installation">): GithubNotific
     ],
   });
 }
+
+export function parseInstallationRepositories(
+  event: EventOf<"installation_repositories">,
+): GithubNotificationContent {
+  const {
+    action,
+    installation,
+    repositories_added: repositoriesAdded,
+    repositories_removed: repositoriesRemoved,
+    repository_selection: repositorySelection,
+  } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Installation repositories ${action}`,
+    description: null,
+    url: installation.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Added", repositoriesAdded.length, true),
+      createField("Removed", repositoriesRemoved.length, true),
+      createField("Repository Selection", repositorySelection, true),
+    ],
+  });
+}
