@@ -88,3 +88,4 @@ export {
   parseSecurityAdvisory,
   parseSecurityAndAnalysis,
 } from "./security";
+export { parsePing } from "./system";
