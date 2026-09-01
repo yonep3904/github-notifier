@@ -5,6 +5,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "branch_protection_rule",
   "check_run",
   "check_suite",
+  "code_scanning_alert",
   "commit_comment",
   "create",
   "custom_property",

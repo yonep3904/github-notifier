@@ -76,3 +76,4 @@ export {
   parseTeamAdd,
   parseWatch,
 } from "./repository";
+export { parseCodeScanningAlert } from "./security";

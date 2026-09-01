@@ -7,6 +7,7 @@ import {
   parseBranchProtectionRule,
   parseCheckRun,
   parseCheckSuite,
+  parseCodeScanningAlert,
   parseCommitComment,
   parseCreate,
   parseCustomProperty,
@@ -101,6 +102,8 @@ export class GithubWebhookParser {
         return parseCheckRun(event);
       case "check_suite":
         return parseCheckSuite(event);
+      case "code_scanning_alert":
+        return parseCodeScanningAlert(event);
       case "commit_comment":
         return parseCommitComment(event);
       case "create":
