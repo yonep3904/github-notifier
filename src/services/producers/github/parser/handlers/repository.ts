@@ -3,6 +3,21 @@ import type { GithubNotificationContent } from "@/types/internal/notification";
 import { createContent, createField, createRepositoryField } from "../content";
 import type { EventOf } from "../types";
 
+export function parseCustomProperty(event: EventOf<"custom_property">): GithubNotificationContent {
+  const { action, definition } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Custom property ${action}: ${definition.property_name}`,
+    description: null,
+    fields: [
+      createField("Action", action, true),
+      createField("Property", definition.property_name, true),
+    ],
+  });
+}
+
 export function parseBranchProtectionConfiguration(
   event: EventOf<"branch_protection_configuration">,
 ): GithubNotificationContent {

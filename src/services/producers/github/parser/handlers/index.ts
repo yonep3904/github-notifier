@@ -38,6 +38,7 @@ export {
   parseBranchProtectionRule,
   parseCommitComment,
   parseCreate,
+  parseCustomProperty,
   parseDelete,
   parseFork,
   parseMember,
