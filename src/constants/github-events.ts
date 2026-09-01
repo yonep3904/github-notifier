@@ -29,6 +29,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "label",
   "marketplace_purchase",
   "member",
+  "membership",
   "merge_group",
   "meta",
   "milestone",

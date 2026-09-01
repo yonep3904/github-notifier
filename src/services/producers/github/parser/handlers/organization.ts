@@ -100,3 +100,23 @@ export function parseMarketplacePurchase(
     ],
   });
 }
+
+export function parseMembership(event: EventOf<"membership">): GithubNotificationContent {
+  const { action, member, organization, repository, scope } = event.payload;
+  const memberLogin = member?.login ?? "unknown member";
+
+  return createContent({
+    event,
+    action,
+    title: `Organization membership ${action}: ${memberLogin}`,
+    description: null,
+    url: member?.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Member", memberLogin, true),
+      createField("Scope", scope, true),
+      createField("Organization", organization.login, true),
+      repository ? createRepositoryField(repository) : null,
+    ],
+  });
+}
