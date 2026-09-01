@@ -189,6 +189,23 @@ export function parseMember(event: EventOf<"member">): GithubNotificationContent
   });
 }
 
+export function parseMeta(event: EventOf<"meta">): GithubNotificationContent {
+  const { action, hook } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Webhook ${action}`,
+    description: null,
+    url: hook.config.url,
+    fields: [
+      createField("Action", action, true),
+      createField("Active", hook.active ? "yes" : "no", true),
+      createField("Events", hook.events.length, true),
+    ],
+  });
+}
+
 export function parsePublic(event: EventOf<"public">): GithubNotificationContent {
   const payload = event.payload;
   const action = "publicized";

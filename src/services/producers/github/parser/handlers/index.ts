@@ -44,6 +44,7 @@ export {
   parseFork,
   parseGollum,
   parseMember,
+  parseMeta,
   parsePublic,
   parsePush,
   parseRelease,
