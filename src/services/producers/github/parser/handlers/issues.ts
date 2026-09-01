@@ -2,6 +2,24 @@ import type { GithubNotificationContent } from "@/types/internal/notification";
 import { createContent, createField, createRepositoryField } from "../content";
 import type { EventOf } from "../types";
 
+export function parseDiscussion(event: EventOf<"discussion">): GithubNotificationContent {
+  const { action, discussion, repository } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Discussion ${action}: ${discussion.title}`,
+    description: discussion.body,
+    url: discussion.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Discussion #", discussion.number, true),
+      createField("Category", discussion.category.name, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
 export function parseIssueComment(event: EventOf<"issue_comment">): GithubNotificationContent {
   const payload = event.payload;
   const { action, issue, comment, repository } = payload;

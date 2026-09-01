@@ -12,6 +12,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "deployment_protection_rule",
   "deployment_review",
   "deployment_status",
+  "discussion",
   "fork",
   "issue_comment",
   "issues",

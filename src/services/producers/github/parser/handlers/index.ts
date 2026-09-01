@@ -15,7 +15,13 @@ export {
   parseDeploymentStatus,
 } from "./deployments";
 export { parseFallback } from "./fallback";
-export { parseIssueComment, parseIssues, parseLabel, parseMilestone } from "./issues";
+export {
+  parseDiscussion,
+  parseIssueComment,
+  parseIssues,
+  parseLabel,
+  parseMilestone,
+} from "./issues";
 export { parsePackage, parseRegistryPackage } from "./packages";
 export {
   parseMergeGroup,
