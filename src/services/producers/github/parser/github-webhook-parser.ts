@@ -42,6 +42,7 @@ import {
   parseRelease,
   parseRepository,
   parseRepositoryDispatch,
+  parseRepositoryImport,
   parseStatus,
   parseSubIssues,
   parseWatch,
@@ -149,6 +150,8 @@ export class GithubWebhookParser {
         return parseRepository(event);
       case "repository_dispatch":
         return parseRepositoryDispatch(event);
+      case "repository_import":
+        return parseRepositoryImport(event);
       case "status":
         return parseStatus(event);
       case "sub_issues":

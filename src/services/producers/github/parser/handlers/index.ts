@@ -50,5 +50,6 @@ export {
   parseRelease,
   parseRepository,
   parseRepositoryDispatch,
+  parseRepositoryImport,
   parseWatch,
 } from "./repository";

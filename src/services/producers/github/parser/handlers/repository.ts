@@ -317,6 +317,22 @@ export function parseRepositoryDispatch(
   });
 }
 
+export function parseRepositoryImport(
+  event: EventOf<"repository_import">,
+): GithubNotificationContent {
+  const { status, repository } = event.payload;
+  const action = status;
+
+  return createContent({
+    event,
+    action,
+    title: `Repository import ${status}: ${repository.full_name}`,
+    description: repository.description,
+    url: repository.html_url,
+    fields: [createField("Status", status, true), createRepositoryField(repository)],
+  });
+}
+
 export function parseWatch(event: EventOf<"watch">): GithubNotificationContent {
   const payload = event.payload;
   const { action, repository } = payload;
