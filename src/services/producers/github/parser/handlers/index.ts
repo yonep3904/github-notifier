@@ -83,4 +83,5 @@ export {
   parseRepositoryAdvisory,
   parseRepositoryVulnerabilityAlert,
   parseSecretScanningAlert,
+  parseSecretScanningAlertLocation,
 } from "./security";

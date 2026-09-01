@@ -61,6 +61,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "repository_ruleset",
   "repository_vulnerability_alert",
   "secret_scanning_alert",
+  "secret_scanning_alert_location",
   "sponsorship",
   "star",
   "status",

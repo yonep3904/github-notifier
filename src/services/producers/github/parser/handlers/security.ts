@@ -123,3 +123,23 @@ export function parseSecretScanningAlert(
     ],
   });
 }
+
+export function parseSecretScanningAlertLocation(
+  event: EventOf<"secret_scanning_alert_location">,
+): GithubNotificationContent {
+  const { action = "created", alert, location, repository } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Secret scanning alert location ${action}: #${alert.number}`,
+    description: alert.secret_type_display_name,
+    url: alert.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Location Type", location.type, true),
+      createField("Secret Type", alert.secret_type_display_name, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
