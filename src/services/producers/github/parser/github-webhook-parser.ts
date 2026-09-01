@@ -13,6 +13,7 @@ import {
   parseCustomProperty,
   parseCustomPropertyValues,
   parseDelete,
+  parseDependabotAlert,
   parseDeployKey,
   parseDeployment,
   parseDeploymentProtectionRule,
@@ -114,6 +115,8 @@ export class GithubWebhookParser {
         return parseCustomPropertyValues(event);
       case "delete":
         return parseDelete(event);
+      case "dependabot_alert":
+        return parseDependabotAlert(event);
       case "deploy_key":
         return parseDeployKey(event);
       case "deployment":

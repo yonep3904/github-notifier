@@ -11,6 +11,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "custom_property",
   "custom_property_values",
   "delete",
+  "dependabot_alert",
   "deploy_key",
   "deployment",
   "deployment_protection_rule",
