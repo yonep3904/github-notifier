@@ -25,6 +25,7 @@ export {
   parseMilestone,
   parseSubIssues,
 } from "./issues";
+export { parseGithubAppAuthorization } from "./organization";
 export { parsePackage, parseRegistryPackage } from "./packages";
 export {
   parseProject,
