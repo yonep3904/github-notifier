@@ -26,7 +26,13 @@ export {
   parseSubIssues,
 } from "./issues";
 export { parsePackage, parseRegistryPackage } from "./packages";
-export { parseProject, parseProjectCard, parseProjectColumn, parseProjectsV2 } from "./projects";
+export {
+  parseProject,
+  parseProjectCard,
+  parseProjectColumn,
+  parseProjectsV2,
+  parseProjectsV2Item,
+} from "./projects";
 export {
   parseMergeGroup,
   parsePullRequest,

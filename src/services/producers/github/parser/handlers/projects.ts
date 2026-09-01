@@ -72,3 +72,20 @@ export function parseProjectsV2(event: EventOf<"projects_v2">): GithubNotificati
     ],
   });
 }
+
+export function parseProjectsV2Item(event: EventOf<"projects_v2_item">): GithubNotificationContent {
+  const { action, organization, projects_v2_item: projectItem } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Project v2 item ${action}: #${projectItem.id}`,
+    description: null,
+    fields: [
+      createField("Action", action, true),
+      createField("Item ID", projectItem.id, true),
+      createField("Content Type", projectItem.content_type, true),
+      createField("Organization", organization.login, true),
+    ],
+  });
+}

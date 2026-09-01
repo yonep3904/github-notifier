@@ -33,6 +33,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "project_card",
   "project_column",
   "projects_v2",
+  "projects_v2_item",
   "public",
   "pull_request",
   "pull_request_review",
