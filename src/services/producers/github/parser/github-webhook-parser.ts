@@ -1,0 +1,265 @@
+import { SUPPORTED_GITHUB_EVENTS, type SupportedGithubEventName } from "@/constants/github-events";
+import type { GithubWebhookEvent } from "@/types/external/github";
+import type { GithubNotificationContent } from "@/types/internal/notification";
+import { createConfig, type DefaultConfig } from "@/utils/create-config";
+import {
+  parseBranchProtectionConfiguration,
+  parseBranchProtectionRule,
+  parseCheckRun,
+  parseCheckSuite,
+  parseCodeScanningAlert,
+  parseCommitComment,
+  parseCreate,
+  parseCustomProperty,
+  parseCustomPropertyValues,
+  parseDelete,
+  parseDependabotAlert,
+  parseDeployKey,
+  parseDeployment,
+  parseDeploymentProtectionRule,
+  parseDeploymentReview,
+  parseDeploymentStatus,
+  parseDiscussion,
+  parseDiscussionComment,
+  parseFallback,
+  parseFork,
+  parseGithubAppAuthorization,
+  parseGollum,
+  parseInstallation,
+  parseInstallationRepositories,
+  parseInstallationTarget,
+  parseIssueComment,
+  parseIssueDependencies,
+  parseIssues,
+  parseLabel,
+  parseMarketplacePurchase,
+  parseMember,
+  parseMembership,
+  parseMergeGroup,
+  parseMeta,
+  parseMilestone,
+  parseOrganization,
+  parseOrgBlock,
+  parsePackage,
+  parsePageBuild,
+  parsePersonalAccessTokenRequest,
+  parsePing,
+  parseProject,
+  parseProjectCard,
+  parseProjectColumn,
+  parseProjectsV2,
+  parseProjectsV2Item,
+  parseProjectsV2StatusUpdate,
+  parsePublic,
+  parsePullRequest,
+  parsePullRequestReview,
+  parsePullRequestReviewComment,
+  parsePullRequestReviewThread,
+  parsePush,
+  parseRegistryPackage,
+  parseRelease,
+  parseRepository,
+  parseRepositoryAdvisory,
+  parseRepositoryDispatch,
+  parseRepositoryImport,
+  parseRepositoryRuleset,
+  parseRepositoryVulnerabilityAlert,
+  parseSecretScanningAlert,
+  parseSecretScanningAlertLocation,
+  parseSecretScanningScan,
+  parseSecurityAdvisory,
+  parseSecurityAndAnalysis,
+  parseSponsorship,
+  parseStar,
+  parseStatus,
+  parseSubIssues,
+  parseTeam,
+  parseTeamAdd,
+  parseWatch,
+  parseWorkflowDispatch,
+  parseWorkflowJob,
+  parseWorkflowRun,
+} from "./handlers";
+
+export interface GithubWebhookParserConfig {
+  maxCommitLines?: number;
+  maxWorkflowJobLines?: number;
+}
+
+export class GithubWebhookParser {
+  private static readonly DEFAULTS: DefaultConfig<GithubWebhookParserConfig> = {
+    maxCommitLines: 15,
+    maxWorkflowJobLines: 10,
+  };
+
+  private readonly config: Required<GithubWebhookParserConfig>;
+
+  private readonly supportedEventsSet = new Set<SupportedGithubEventName>(SUPPORTED_GITHUB_EVENTS);
+
+  constructor(config: GithubWebhookParserConfig) {
+    this.config = createConfig(config, GithubWebhookParser.DEFAULTS);
+  }
+
+  parse(event: GithubWebhookEvent): GithubNotificationContent | null {
+    if (event.payload == null || !this.isSupportedEvent(event.type)) return null;
+
+    switch (event.type) {
+      case "branch_protection_configuration":
+        return parseBranchProtectionConfiguration(event);
+      case "branch_protection_rule":
+        return parseBranchProtectionRule(event);
+      case "check_run":
+        return parseCheckRun(event);
+      case "check_suite":
+        return parseCheckSuite(event);
+      case "code_scanning_alert":
+        return parseCodeScanningAlert(event);
+      case "commit_comment":
+        return parseCommitComment(event);
+      case "create":
+        return parseCreate(event);
+      case "custom_property":
+        return parseCustomProperty(event);
+      case "custom_property_values":
+        return parseCustomPropertyValues(event);
+      case "delete":
+        return parseDelete(event);
+      case "dependabot_alert":
+        return parseDependabotAlert(event);
+      case "deploy_key":
+        return parseDeployKey(event);
+      case "deployment":
+        return parseDeployment(event);
+      case "deployment_protection_rule":
+        return parseDeploymentProtectionRule(event);
+      case "deployment_review":
+        return parseDeploymentReview(event);
+      case "deployment_status":
+        return parseDeploymentStatus(event);
+      case "discussion":
+        return parseDiscussion(event);
+      case "discussion_comment":
+        return parseDiscussionComment(event);
+      case "fork":
+        return parseFork(event);
+      case "github_app_authorization":
+        return parseGithubAppAuthorization(event);
+      case "gollum":
+        return parseGollum(event);
+      case "installation":
+        return parseInstallation(event);
+      case "installation_repositories":
+        return parseInstallationRepositories(event);
+      case "installation_target":
+        return parseInstallationTarget(event);
+      case "issue_comment":
+        return parseIssueComment(event);
+      case "issue_dependencies":
+        return parseIssueDependencies(event);
+      case "issues":
+        return parseIssues(event);
+      case "label":
+        return parseLabel(event);
+      case "marketplace_purchase":
+        return parseMarketplacePurchase(event);
+      case "member":
+        return parseMember(event);
+      case "membership":
+        return parseMembership(event);
+      case "merge_group":
+        return parseMergeGroup(event);
+      case "meta":
+        return parseMeta(event);
+      case "milestone":
+        return parseMilestone(event);
+      case "organization":
+        return parseOrganization(event);
+      case "org_block":
+        return parseOrgBlock(event);
+      case "package":
+        return parsePackage(event);
+      case "page_build":
+        return parsePageBuild(event);
+      case "personal_access_token_request":
+        return parsePersonalAccessTokenRequest(event);
+      case "ping":
+        return parsePing(event);
+      case "project":
+        return parseProject(event);
+      case "project_card":
+        return parseProjectCard(event);
+      case "project_column":
+        return parseProjectColumn(event);
+      case "projects_v2":
+        return parseProjectsV2(event);
+      case "projects_v2_item":
+        return parseProjectsV2Item(event);
+      case "projects_v2_status_update":
+        return parseProjectsV2StatusUpdate(event);
+      case "public":
+        return parsePublic(event);
+      case "pull_request":
+        return parsePullRequest(event);
+      case "pull_request_review":
+        return parsePullRequestReview(event);
+      case "pull_request_review_comment":
+        return parsePullRequestReviewComment(event);
+      case "pull_request_review_thread":
+        return parsePullRequestReviewThread(event);
+      case "push":
+        return parsePush(event, this.config.maxCommitLines);
+      case "registry_package":
+        return parseRegistryPackage(event);
+      case "release":
+        return parseRelease(event);
+      case "repository":
+        return parseRepository(event);
+      case "repository_advisory":
+        return parseRepositoryAdvisory(event);
+      case "repository_dispatch":
+        return parseRepositoryDispatch(event);
+      case "repository_import":
+        return parseRepositoryImport(event);
+      case "repository_ruleset":
+        return parseRepositoryRuleset(event);
+      case "repository_vulnerability_alert":
+        return parseRepositoryVulnerabilityAlert(event);
+      case "secret_scanning_alert":
+        return parseSecretScanningAlert(event);
+      case "secret_scanning_alert_location":
+        return parseSecretScanningAlertLocation(event);
+      case "secret_scanning_scan":
+        return parseSecretScanningScan(event);
+      case "security_advisory":
+        return parseSecurityAdvisory(event);
+      case "security_and_analysis":
+        return parseSecurityAndAnalysis(event);
+      case "sponsorship":
+        return parseSponsorship(event);
+      case "star":
+        return parseStar(event);
+      case "status":
+        return parseStatus(event);
+      case "sub_issues":
+        return parseSubIssues(event);
+      case "team":
+        return parseTeam(event);
+      case "team_add":
+        return parseTeamAdd(event);
+      case "watch":
+        return parseWatch(event);
+      case "workflow_dispatch":
+        return parseWorkflowDispatch(event);
+      case "workflow_job":
+        return parseWorkflowJob(event, this.config.maxWorkflowJobLines);
+      case "workflow_run":
+        return parseWorkflowRun(event);
+      default:
+        return parseFallback(event);
+    }
+  }
+
+  isSupportedEvent(eventName: string): eventName is SupportedGithubEventName {
+    return this.supportedEventsSet.has(eventName as SupportedGithubEventName);
+  }
+}

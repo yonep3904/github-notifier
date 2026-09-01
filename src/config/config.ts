@@ -1,5 +1,5 @@
 import type { EnvVariables } from "@/types/env";
-import { allSupportedEvents } from "./templates/github-events";
+import { full } from "./templates/github-events";
 import type { Config } from "./types";
 
 export const createConfig = (env: EnvVariables): Config => {
@@ -85,7 +85,7 @@ export const createConfig = (env: EnvVariables): Config => {
       github: {
         allowed: true,
         secret: env.GITHUB_WEBHOOK_SECRET,
-        handleEventTypes: [...allSupportedEvents],
+        handleEventTypes: [...full],
       },
       manual: {
         allowed: true,
