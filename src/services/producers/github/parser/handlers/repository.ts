@@ -353,6 +353,23 @@ export function parseRepositoryRuleset(
   });
 }
 
+export function parseStar(event: EventOf<"star">): GithubNotificationContent {
+  const { action, repository, starred_at: starredAt } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Repository star ${action}: ${repository.full_name}`,
+    description: repository.description,
+    url: repository.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Starred At", typeof starredAt === "string" ? starredAt : null, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
 export function parseWatch(event: EventOf<"watch">): GithubNotificationContent {
   const payload = event.payload;
   const { action, repository } = payload;

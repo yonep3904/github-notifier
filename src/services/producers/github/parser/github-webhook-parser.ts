@@ -44,6 +44,7 @@ import {
   parseRepositoryDispatch,
   parseRepositoryImport,
   parseRepositoryRuleset,
+  parseStar,
   parseStatus,
   parseSubIssues,
   parseWatch,
@@ -155,6 +156,8 @@ export class GithubWebhookParser {
         return parseRepositoryImport(event);
       case "repository_ruleset":
         return parseRepositoryRuleset(event);
+      case "star":
+        return parseStar(event);
       case "status":
         return parseStatus(event);
       case "sub_issues":
