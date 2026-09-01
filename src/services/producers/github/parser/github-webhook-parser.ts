@@ -63,6 +63,7 @@ import {
   parseRepositoryImport,
   parseRepositoryRuleset,
   parseRepositoryVulnerabilityAlert,
+  parseSecretScanningAlert,
   parseSponsorship,
   parseStar,
   parseStatus,
@@ -216,6 +217,8 @@ export class GithubWebhookParser {
         return parseRepositoryRuleset(event);
       case "repository_vulnerability_alert":
         return parseRepositoryVulnerabilityAlert(event);
+      case "secret_scanning_alert":
+        return parseSecretScanningAlert(event);
       case "sponsorship":
         return parseSponsorship(event);
       case "star":

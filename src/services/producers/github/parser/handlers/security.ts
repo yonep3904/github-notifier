@@ -103,3 +103,23 @@ export function parseRepositoryVulnerabilityAlert(
     ],
   });
 }
+
+export function parseSecretScanningAlert(
+  event: EventOf<"secret_scanning_alert">,
+): GithubNotificationContent {
+  const { action, alert, repository } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Secret scanning alert ${action}: #${alert.number}`,
+    description: alert.secret_type_display_name,
+    url: alert.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Secret Type", alert.secret_type_display_name, true),
+      createField("Resolution", alert.resolution, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
