@@ -40,6 +40,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "repository",
   "repository_dispatch",
   "repository_import",
+  "repository_ruleset",
   "status",
   "sub_issues",
   "watch",

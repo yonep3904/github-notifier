@@ -333,6 +333,26 @@ export function parseRepositoryImport(
   });
 }
 
+export function parseRepositoryRuleset(
+  event: EventOf<"repository_ruleset">,
+): GithubNotificationContent {
+  const { action, repository, repository_ruleset: ruleset } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Repository ruleset ${action}: ${ruleset.name}`,
+    description: null,
+    url: repository?.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Ruleset", ruleset.name, true),
+      createField("Enforcement", ruleset.enforcement, true),
+      repository ? createRepositoryField(repository) : null,
+    ],
+  });
+}
+
 export function parseWatch(event: EventOf<"watch">): GithubNotificationContent {
   const payload = event.payload;
   const { action, repository } = payload;
