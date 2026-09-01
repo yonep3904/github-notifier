@@ -19,3 +19,21 @@ export function parseProject(event: EventOf<"project">): GithubNotificationConte
     ],
   });
 }
+
+export function parseProjectCard(event: EventOf<"project_card">): GithubNotificationContent {
+  const { action, project_card: projectCard, repository } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Project card ${action}: ${projectCard.note ?? `#${projectCard.id}`}`,
+    description: projectCard.note,
+    url: projectCard.url,
+    fields: [
+      createField("Action", action, true),
+      createField("Card ID", projectCard.id, true),
+      createField("Column ID", projectCard.column_id, true),
+      repository ? createRepositoryField(repository) : null,
+    ],
+  });
+}
