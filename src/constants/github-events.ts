@@ -29,6 +29,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "milestone",
   "package",
   "page_build",
+  "project",
   "public",
   "pull_request",
   "pull_request_review",
