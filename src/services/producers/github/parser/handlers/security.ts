@@ -143,3 +143,32 @@ export function parseSecretScanningAlertLocation(
     ],
   });
 }
+
+export function parseSecretScanningScan(
+  event: EventOf<"secret_scanning_scan">,
+): GithubNotificationContent {
+  const {
+    action,
+    completed_at: completedAt,
+    repository,
+    source,
+    started_at: startedAt,
+    type,
+  } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Secret scanning scan ${action}: ${source}`,
+    description: null,
+    url: repository?.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Type", type, true),
+      createField("Source", source, true),
+      createField("Started At", startedAt, true),
+      createField("Completed At", completedAt, true),
+      repository ? createRepositoryField(repository) : null,
+    ],
+  });
+}
