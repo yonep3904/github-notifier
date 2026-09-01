@@ -20,6 +20,25 @@ export function parseDiscussion(event: EventOf<"discussion">): GithubNotificatio
   });
 }
 
+export function parseDiscussionComment(
+  event: EventOf<"discussion_comment">,
+): GithubNotificationContent {
+  const { action, comment, discussion, repository } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Discussion comment ${action}: ${discussion.title}`,
+    description: comment.body,
+    url: comment.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Discussion #", discussion.number, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
 export function parseIssueComment(event: EventOf<"issue_comment">): GithubNotificationContent {
   const payload = event.payload;
   const { action, issue, comment, repository } = payload;

@@ -13,6 +13,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "deployment_review",
   "deployment_status",
   "discussion",
+  "discussion_comment",
   "fork",
   "issue_comment",
   "issues",

@@ -17,6 +17,7 @@ export {
 export { parseFallback } from "./fallback";
 export {
   parseDiscussion,
+  parseDiscussionComment,
   parseIssueComment,
   parseIssues,
   parseLabel,

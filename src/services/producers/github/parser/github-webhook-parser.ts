@@ -15,6 +15,7 @@ import {
   parseDeploymentReview,
   parseDeploymentStatus,
   parseDiscussion,
+  parseDiscussionComment,
   parseFallback,
   parseFork,
   parseIssueComment,
@@ -88,6 +89,8 @@ export class GithubWebhookParser {
         return parseDeploymentStatus(event);
       case "discussion":
         return parseDiscussion(event);
+      case "discussion_comment":
+        return parseDiscussionComment(event);
       case "fork":
         return parseFork(event);
       case "issue_comment":
