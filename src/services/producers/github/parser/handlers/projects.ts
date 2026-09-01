@@ -55,3 +55,20 @@ export function parseProjectColumn(event: EventOf<"project_column">): GithubNoti
     ],
   });
 }
+
+export function parseProjectsV2(event: EventOf<"projects_v2">): GithubNotificationContent {
+  const { action, organization, projects_v2: project } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Project v2 ${action}: ${project.title}`,
+    description: project.description,
+    fields: [
+      createField("Action", action, true),
+      createField("Project #", project.number, true),
+      createField("State", project.state, true),
+      createField("Organization", organization.login, true),
+    ],
+  });
+}

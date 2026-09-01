@@ -35,6 +35,7 @@ import {
   parseProject,
   parseProjectCard,
   parseProjectColumn,
+  parseProjectsV2,
   parsePublic,
   parsePullRequest,
   parsePullRequestReview,
@@ -142,6 +143,8 @@ export class GithubWebhookParser {
         return parseProjectCard(event);
       case "project_column":
         return parseProjectColumn(event);
+      case "projects_v2":
+        return parseProjectsV2(event);
       case "public":
         return parsePublic(event);
       case "pull_request":
