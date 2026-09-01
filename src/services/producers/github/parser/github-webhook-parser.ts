@@ -99,10 +99,10 @@ export class GithubWebhookParser {
         return parseMergeGroup(event);
       case "milestone":
         return parseMilestone(event);
-      case "page_build":
-        return parsePageBuild(event);
       case "package":
         return parsePackage(event);
+      case "page_build":
+        return parsePageBuild(event);
       case "public":
         return parsePublic(event);
       case "pull_request":

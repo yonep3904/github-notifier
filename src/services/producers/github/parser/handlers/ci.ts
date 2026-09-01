@@ -2,6 +2,41 @@ import type { GithubNotificationContent } from "@/types/internal/notification";
 import { createContent, createField, createRepositoryField, createStateColor } from "../content";
 import type { EventOf } from "../types";
 
+export function parseCheckRun(event: EventOf<"check_run">): GithubNotificationContent {
+  const payload = event.payload;
+  const { action, check_run: checkRun, repository } = payload;
+
+  const statusColor = createStateColor(checkRun.conclusion, {
+    waiting: "pending",
+    pending: "pending",
+    startup_failure: "failure",
+    stale: "pending",
+    success: "success",
+    failure: "failure",
+    neutral: "pending",
+    cancelled: "failure",
+    skipped: "pending",
+    timed_out: "failure",
+    action_required: "failure",
+  });
+
+  return createContent({
+    event,
+    action: action ?? "updated",
+    title: `Check run ${action ?? "updated"}: ${checkRun.name}`,
+    description: checkRun.output.summary,
+    url: checkRun.html_url ?? checkRun.details_url,
+    fields: [
+      createField("Status", checkRun.status, true),
+      createField("Conclusion", checkRun.conclusion, true),
+      createField("SHA", checkRun.head_sha.slice(0, 7), true),
+      createField("Annotations", checkRun.output.annotations_count, true),
+      createRepositoryField(repository),
+    ],
+    status: statusColor,
+  });
+}
+
 export function parseCheckSuite(event: EventOf<"check_suite">): GithubNotificationContent | null {
   const payload = event.payload;
   const { action, check_suite: checkSuite, repository } = payload;
@@ -39,38 +74,20 @@ export function parseCheckSuite(event: EventOf<"check_suite">): GithubNotificati
   });
 }
 
-export function parseCheckRun(event: EventOf<"check_run">): GithubNotificationContent {
-  const payload = event.payload;
-  const { action, check_run: checkRun, repository } = payload;
-
-  const statusColor = createStateColor(checkRun.conclusion, {
-    waiting: "pending",
-    pending: "pending",
-    startup_failure: "failure",
-    stale: "pending",
-    success: "success",
-    failure: "failure",
-    neutral: "pending",
-    cancelled: "failure",
-    skipped: "pending",
-    timed_out: "failure",
-    action_required: "failure",
-  });
+export function parsePageBuild(event: EventOf<"page_build">): GithubNotificationContent {
+  const { build, repository } = event.payload;
 
   return createContent({
     event,
-    action: action ?? "updated",
-    title: `Check run ${action ?? "updated"}: ${checkRun.name}`,
-    description: checkRun.output.summary,
-    url: checkRun.html_url ?? checkRun.details_url,
+    action: build.status,
+    title: `Page build ${build.status}`,
+    description: build.error.message,
+    url: build.url,
     fields: [
-      createField("Status", checkRun.status, true),
-      createField("Conclusion", checkRun.conclusion, true),
-      createField("SHA", checkRun.head_sha.slice(0, 7), true),
-      createField("Annotations", checkRun.output.annotations_count, true),
+      createField("Commit", build.commit?.slice(0, 7), true),
+      createField("Duration", `${build.duration} ms`, true),
       createRepositoryField(repository),
     ],
-    status: statusColor,
   });
 }
 
@@ -98,6 +115,25 @@ export function parseStatus(event: EventOf<"status">): GithubNotificationContent
       createRepositoryField(repository),
     ],
     status: statusColor,
+  });
+}
+
+export function parseWorkflowDispatch(
+  event: EventOf<"workflow_dispatch">,
+): GithubNotificationContent {
+  const { inputs, ref, repository, workflow } = event.payload;
+
+  return createContent({
+    event,
+    action: "dispatched",
+    title: `Workflow dispatched: ${workflow}`,
+    description: inputs ? JSON.stringify(inputs, null, 2) : null,
+    url: repository.html_url,
+    fields: [
+      createField("Workflow", workflow, true),
+      createField("Ref", ref, true),
+      createRepositoryField(repository),
+    ],
   });
 }
 
@@ -152,25 +188,6 @@ export function parseWorkflowJob(
   });
 }
 
-export function parseWorkflowDispatch(
-  event: EventOf<"workflow_dispatch">,
-): GithubNotificationContent {
-  const { inputs, ref, repository, workflow } = event.payload;
-
-  return createContent({
-    event,
-    action: "dispatched",
-    title: `Workflow dispatched: ${workflow}`,
-    description: inputs ? JSON.stringify(inputs, null, 2) : null,
-    url: repository.html_url,
-    fields: [
-      createField("Workflow", workflow, true),
-      createField("Ref", ref, true),
-      createRepositoryField(repository),
-    ],
-  });
-}
-
 export function parseWorkflowRun(event: EventOf<"workflow_run">): GithubNotificationContent | null {
   const payload = event.payload;
   const { action, repository, workflow_run: workflowRun, workflow } = payload;
@@ -207,22 +224,5 @@ export function parseWorkflowRun(event: EventOf<"workflow_run">): GithubNotifica
       createRepositoryField(repository),
     ],
     status: statusColor,
-  });
-}
-
-export function parsePageBuild(event: EventOf<"page_build">): GithubNotificationContent {
-  const { build, repository } = event.payload;
-
-  return createContent({
-    event,
-    action: build.status,
-    title: `Page build ${build.status}`,
-    description: build.error.message,
-    url: build.url,
-    fields: [
-      createField("Commit", build.commit?.slice(0, 7), true),
-      createField("Duration", `${build.duration} ms`, true),
-      createRepositoryField(repository),
-    ],
   });
 }
