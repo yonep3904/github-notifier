@@ -34,6 +34,7 @@ export {
   parsePullRequestReviewThread,
 } from "./pull-requests";
 export {
+  parseBranchProtectionConfiguration,
   parseBranchProtectionRule,
   parseCommitComment,
   parseCreate,

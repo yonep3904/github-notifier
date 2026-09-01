@@ -1,6 +1,7 @@
 import type { GithubWebhookEventName } from "@/types/external/github";
 
 export const SUPPORTED_GITHUB_EVENTS = [
+  "branch_protection_configuration",
   "branch_protection_rule",
   "check_run",
   "check_suite",

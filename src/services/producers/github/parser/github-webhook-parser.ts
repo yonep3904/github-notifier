@@ -3,6 +3,7 @@ import type { GithubWebhookEvent } from "@/types/external/github";
 import type { GithubNotificationContent } from "@/types/internal/notification";
 import { createConfig, type DefaultConfig } from "@/utils/create-config";
 import {
+  parseBranchProtectionConfiguration,
   parseBranchProtectionRule,
   parseCheckRun,
   parseCheckSuite,
@@ -67,6 +68,8 @@ export class GithubWebhookParser {
     if (event.payload == null || !this.isSupportedEvent(event.type)) return null;
 
     switch (event.type) {
+      case "branch_protection_configuration":
+        return parseBranchProtectionConfiguration(event);
       case "branch_protection_rule":
         return parseBranchProtectionRule(event);
       case "check_run":

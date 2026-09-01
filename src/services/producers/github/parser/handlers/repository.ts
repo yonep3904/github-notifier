@@ -3,6 +3,21 @@ import type { GithubNotificationContent } from "@/types/internal/notification";
 import { createContent, createField, createRepositoryField } from "../content";
 import type { EventOf } from "../types";
 
+export function parseBranchProtectionConfiguration(
+  event: EventOf<"branch_protection_configuration">,
+): GithubNotificationContent {
+  const { action, repository } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Branch protection configuration ${action}`,
+    description: null,
+    url: repository.html_url,
+    fields: [createField("Action", action, true), createRepositoryField(repository)],
+  });
+}
+
 export function parseBranchProtectionRule(
   event: EventOf<"branch_protection_rule">,
 ): GithubNotificationContent {
