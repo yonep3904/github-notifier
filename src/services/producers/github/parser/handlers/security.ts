@@ -192,3 +192,22 @@ export function parseSecurityAdvisory(
     ],
   });
 }
+
+export function parseSecurityAndAnalysis(
+  event: EventOf<"security_and_analysis">,
+): GithubNotificationContent {
+  const { repository } = event.payload;
+  const action = "updated";
+
+  return createContent({
+    event,
+    action,
+    title: `Security and analysis settings updated: ${repository.full_name}`,
+    description: repository.description,
+    url: repository.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Repository", `${repository.full_name}\n${repository.html_url}`, true),
+    ],
+  });
+}

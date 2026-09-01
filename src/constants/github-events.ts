@@ -64,6 +64,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "secret_scanning_alert_location",
   "secret_scanning_scan",
   "security_advisory",
+  "security_and_analysis",
   "sponsorship",
   "star",
   "status",
