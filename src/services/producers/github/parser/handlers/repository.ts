@@ -150,6 +150,25 @@ export function parseFork(event: EventOf<"fork">): GithubNotificationContent {
   });
 }
 
+export function parseGollum(event: EventOf<"gollum">): GithubNotificationContent {
+  const { pages, repository } = event.payload;
+  const page = pages[0];
+  const action = page?.action ?? "updated";
+
+  return createContent({
+    event,
+    action,
+    title: `Wiki ${action}: ${page?.title ?? "unknown page"}`,
+    description: page?.summary,
+    url: page?.html_url ?? repository.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Pages", pages.length, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
 export function parseMember(event: EventOf<"member">): GithubNotificationContent {
   const payload = event.payload;
   const { action, member, repository } = payload;

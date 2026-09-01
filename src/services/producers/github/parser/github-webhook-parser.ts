@@ -21,6 +21,7 @@ import {
   parseDiscussionComment,
   parseFallback,
   parseFork,
+  parseGollum,
   parseIssueComment,
   parseIssueDependencies,
   parseIssues,
@@ -104,6 +105,8 @@ export class GithubWebhookParser {
         return parseDiscussionComment(event);
       case "fork":
         return parseFork(event);
+      case "gollum":
+        return parseGollum(event);
       case "issue_comment":
         return parseIssueComment(event);
       case "issue_dependencies":

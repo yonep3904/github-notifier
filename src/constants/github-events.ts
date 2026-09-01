@@ -18,6 +18,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "discussion",
   "discussion_comment",
   "fork",
+  "gollum",
   "issue_comment",
   "issue_dependencies",
   "issues",

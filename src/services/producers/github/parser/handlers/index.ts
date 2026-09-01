@@ -42,6 +42,7 @@ export {
   parseCustomPropertyValues,
   parseDelete,
   parseFork,
+  parseGollum,
   parseMember,
   parsePublic,
   parsePush,
