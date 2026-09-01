@@ -298,6 +298,25 @@ export function parseRepository(event: EventOf<"repository">): GithubNotificatio
   });
 }
 
+export function parseRepositoryDispatch(
+  event: EventOf<"repository_dispatch">,
+): GithubNotificationContent {
+  const { action, branch, repository } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Repository dispatch: ${action}`,
+    description: null,
+    url: repository.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField("Branch", branch, true),
+      createRepositoryField(repository),
+    ],
+  });
+}
+
 export function parseWatch(event: EventOf<"watch">): GithubNotificationContent {
   const payload = event.payload;
   const { action, repository } = payload;

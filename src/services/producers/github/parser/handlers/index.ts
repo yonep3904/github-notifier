@@ -49,5 +49,6 @@ export {
   parsePush,
   parseRelease,
   parseRepository,
+  parseRepositoryDispatch,
   parseWatch,
 } from "./repository";
