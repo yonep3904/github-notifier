@@ -34,6 +34,7 @@ export const SUPPORTED_GITHUB_EVENTS = [
   "release",
   "repository",
   "status",
+  "sub_issues",
   "watch",
   "workflow_dispatch",
   "workflow_job",

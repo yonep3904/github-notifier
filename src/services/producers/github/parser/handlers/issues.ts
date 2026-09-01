@@ -147,3 +147,24 @@ export function parseMilestone(event: EventOf<"milestone">): GithubNotificationC
     ],
   });
 }
+
+export function parseSubIssues(event: EventOf<"sub_issues">): GithubNotificationContent {
+  const { action, parent_issue: parentIssue, sub_issue: subIssue, repository } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Sub-issue ${action}`,
+    description: null,
+    url: subIssue?.html_url ?? parentIssue?.html_url ?? repository.html_url,
+    fields: [
+      createField("Action", action, true),
+      createField(
+        "Parent Issue",
+        parentIssue ? `#${parentIssue.number} ${parentIssue.title}` : null,
+      ),
+      createField("Sub-issue", subIssue ? `#${subIssue.number} ${subIssue.title}` : null),
+      createRepositoryField(repository),
+    ],
+  });
+}

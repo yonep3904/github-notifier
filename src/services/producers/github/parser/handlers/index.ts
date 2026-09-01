@@ -23,6 +23,7 @@ export {
   parseIssues,
   parseLabel,
   parseMilestone,
+  parseSubIssues,
 } from "./issues";
 export { parsePackage, parseRegistryPackage } from "./packages";
 export {
