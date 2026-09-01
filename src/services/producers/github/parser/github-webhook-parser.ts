@@ -37,6 +37,7 @@ import {
   parseProjectColumn,
   parseProjectsV2,
   parseProjectsV2Item,
+  parseProjectsV2StatusUpdate,
   parsePublic,
   parsePullRequest,
   parsePullRequestReview,
@@ -148,6 +149,8 @@ export class GithubWebhookParser {
         return parseProjectsV2(event);
       case "projects_v2_item":
         return parseProjectsV2Item(event);
+      case "projects_v2_status_update":
+        return parseProjectsV2StatusUpdate(event);
       case "public":
         return parsePublic(event);
       case "pull_request":

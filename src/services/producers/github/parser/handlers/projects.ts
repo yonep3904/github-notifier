@@ -89,3 +89,23 @@ export function parseProjectsV2Item(event: EventOf<"projects_v2_item">): GithubN
     ],
   });
 }
+
+export function parseProjectsV2StatusUpdate(
+  event: EventOf<"projects_v2_status_update">,
+): GithubNotificationContent {
+  const { action, organization, projects_v2_status_update: statusUpdate } = event.payload;
+
+  return createContent({
+    event,
+    action,
+    title: `Project v2 status update ${action}`,
+    description: statusUpdate.body,
+    fields: [
+      createField("Action", action, true),
+      createField("Status", statusUpdate.status, true),
+      createField("Start Date", statusUpdate.start_date, true),
+      createField("Target Date", statusUpdate.target_date, true),
+      createField("Organization", organization.login, true),
+    ],
+  });
+}

@@ -32,6 +32,7 @@ export {
   parseProjectColumn,
   parseProjectsV2,
   parseProjectsV2Item,
+  parseProjectsV2StatusUpdate,
 } from "./projects";
 export {
   parseMergeGroup,
