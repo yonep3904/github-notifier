@@ -1,4 +1,3 @@
-import type { ManualNotifyRequest } from "@/schemas/notify";
 import type { NotificationJob } from "@/types/internal/pipeline";
 
 export type NotificationQueue = Queue<NotificationJob>;
@@ -25,13 +24,6 @@ export type Env = CloudflareBindings & {
   NOTIFICATION_QUEUE: NotificationQueue;
 } & EnvVariables;
 
-export type Variables = {
-  json: unknown;
-  manualNotify: ManualNotifyRequest;
-  githubWebhookEvent: string;
-};
-
 export type AppEnv = {
   Bindings: Env;
-  Variables: Variables;
 };

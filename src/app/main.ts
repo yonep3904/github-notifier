@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { createContainer } from "@/app/container";
-import { errorHandler } from "@/middleware";
+import { errorHandler } from "@/app/error-handler";
 import {
   createAvailableNotifyRoutes,
   createDocsRoutes,

@@ -1,10 +1,10 @@
 import type { ErrorHandler } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { ServiceUnavailableError } from "@/errors/service";
 import { getBaseUrl } from "@/lib/url";
 import type { AppEnv } from "@/types/env";
 
 export const errorHandler: ErrorHandler<AppEnv> = (err, c) => {
-  // ServiceUnavailableError -> 503
   if (err instanceof ServiceUnavailableError) {
     const baseUrl = getBaseUrl(c);
 
@@ -20,7 +20,22 @@ export const errorHandler: ErrorHandler<AppEnv> = (err, c) => {
     );
   }
 
-  // Other errors -> 500
+  if (err instanceof HTTPException) {
+    const response = err.getResponse();
+    if (response.headers.get("Content-Type")?.includes("application/json")) {
+      return response;
+    }
+
+    return c.json(
+      {
+        ok: false,
+        error: "bad_request",
+        message: err.message,
+      },
+      err.status,
+    );
+  }
+
   console.error(err);
 
   return c.json(

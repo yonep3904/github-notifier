@@ -2,68 +2,39 @@ import { Hono } from "hono";
 import type { RuntimeConfig } from "@/config";
 import type { NotifyController } from "@/controllers";
 import {
-  createGithubWebhookAuth,
+  createBodyLimit,
+  createGitHubWebhookAuth,
   createManualNotificationAuth,
-  type GithubWebhookAuthPolicy,
-  githubWebhookValidator,
-  jsonBodyMiddleware,
-  type ManualNotificationAuthPolicy,
-  zodValidator,
+  gitHubWebhookHeadersValidator,
+  gitHubWebhookPayloadValidator,
+  manualNotificationValidator,
 } from "@/middleware";
-import { manualNotifyRequestSchema } from "@/schemas/notify";
 import type { AppEnv } from "@/types/env";
 
 export function createAvailableNotifyRoutes(controller: NotifyController, config: RuntimeConfig) {
   const router = new Hono<AppEnv>();
 
-  const manualPolicy = createManualPolicy(config);
-  const githubPolicy = createGithubPolicy(config);
+  const manualBodyLimit = createBodyLimit(64 * 1024);
+  const gitHubBodyLimit = createBodyLimit(25 * 1024 * 1024);
+  const manualAuth = createManualNotificationAuth(config.handlers.manual.password);
+  const gitHubAuth = createGitHubWebhookAuth(config.handlers.github.secret);
 
-  router.post(
-    "/",
-    createManualNotificationAuth(manualPolicy),
-    jsonBodyMiddleware,
-    zodValidator("manualNotify", manualNotifyRequestSchema),
-    (c) => controller.manual(c.req.raw, c.get("manualNotify")),
+  router.post("/", manualBodyLimit, manualAuth, manualNotificationValidator, (c) =>
+    controller.manual(c.req.raw, c.req.valid("json")),
   );
 
-  router.post(
-    "/manual",
-    createManualNotificationAuth(manualPolicy),
-    jsonBodyMiddleware,
-    zodValidator("manualNotify", manualNotifyRequestSchema),
-    (c) => controller.manual(c.req.raw, c.get("manualNotify")),
+  router.post("/manual", manualBodyLimit, manualAuth, manualNotificationValidator, (c) =>
+    controller.manual(c.req.raw, c.req.valid("json")),
   );
 
   router.post(
     "/github",
-    createGithubWebhookAuth(githubPolicy),
-    jsonBodyMiddleware,
-    githubWebhookValidator,
-    (c) => controller.github(c.req.raw, c.get("githubWebhookEvent"), c.get("json")),
+    gitHubBodyLimit,
+    gitHubAuth,
+    gitHubWebhookHeadersValidator,
+    gitHubWebhookPayloadValidator,
+    (c) => controller.github(c.req.raw, c.req.valid("header").event, c.req.valid("json")),
   );
 
   return router;
-}
-
-function createManualPolicy(config: RuntimeConfig): ManualNotificationAuthPolicy {
-  if (config.handlers.manual.password === undefined) {
-    return { mode: "none" };
-  } else {
-    return {
-      mode: "bearer",
-      password: config.handlers.manual.password,
-    };
-  }
-}
-
-function createGithubPolicy(config: RuntimeConfig): GithubWebhookAuthPolicy {
-  if (config.handlers.github.secret === undefined) {
-    return { mode: "none" };
-  } else {
-    return {
-      mode: "hmac-sha256",
-      secret: config.handlers.github.secret,
-    };
-  }
 }
