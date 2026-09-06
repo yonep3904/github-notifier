@@ -16,7 +16,9 @@ export function Layout({ children, title, description, lang = "en" }: LayoutProp
       <head>
         <meta charSet="utf-8" />
         <link rel="stylesheet" href={styleUrl} />
+        <link rel="icon" type="image/png" href="/favicon.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#0c0a09" />
         <title>{title}</title>
         <meta name="description" content={description} />
       </head>
