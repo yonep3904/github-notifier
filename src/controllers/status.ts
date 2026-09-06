@@ -11,6 +11,6 @@ export class StatusController {
 
   root(c: Context<AppEnv>) {
     const baseUrl = new URL(c.req.url).origin;
-    return c.html(this.dependencies.statusRender.renderRootPage(baseUrl));
+    return c.render(this.dependencies.statusRender.renderRootPage(baseUrl));
   }
 }

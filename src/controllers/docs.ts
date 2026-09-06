@@ -11,6 +11,6 @@ export class DocsController {
 
   root(c: Context<AppEnv>, locale: DocsLocale) {
     const baseUrl = new URL(c.req.url).origin;
-    return c.html(this.dependencies.docsRender.renderRootPage(baseUrl, locale));
+    return c.render(this.dependencies.docsRender.renderRootPage(baseUrl, locale));
   }
 }
