@@ -38,11 +38,14 @@ describe("createNotifyServices", () => {
       createTestEnv({ NOTIFICATION_QUEUE: queue }),
     );
 
-    await services.manualProducer.produce({
-      type: "standard",
-      title: null,
-      message: "test",
-    });
+    await services.manualProducer.produce(
+      {
+        type: "standard",
+        title: null,
+        message: "test",
+      },
+      "https://notifier.example.com",
+    );
 
     expect(queue.sendBatch).toHaveBeenCalledWith([
       {
@@ -73,7 +76,10 @@ describe("createNotifyServices", () => {
       createTestEnv({ NOTIFICATION_QUEUE: queue }),
     );
 
-    await services.manualProducer.produce({ type: "standard", title: null, message: "test" });
+    await services.manualProducer.produce(
+      { type: "standard", title: null, message: "test" },
+      "https://notifier.example.com",
+    );
 
     expect(queue.sendBatch).toHaveBeenCalledWith([
       { body: expect.objectContaining({ channelId: "slack-manual", reenqueueCount: 0 }) },

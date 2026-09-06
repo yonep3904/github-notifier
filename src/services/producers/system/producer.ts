@@ -1,6 +1,13 @@
+import { createBotIdentity } from "@/constants/bot";
 import type { NotificationReceiver } from "@/services/pipeline";
 import type { Notification, SystemNotificationType } from "@/types/internal/notification";
 import type { RGB } from "@/types/utility/scalars";
+
+export type SystemNotificationContent = {
+  title: string;
+  message: string;
+  type: SystemNotificationType;
+};
 
 export class SystemNotificationProducer {
   private static readonly colorMap: Record<SystemNotificationType, RGB> = {
@@ -20,24 +27,18 @@ export class SystemNotificationProducer {
    * @param title The title of the notification.
    * @param message The message of the notification.
    * @param type The type of the notification, which determines its color.
+   * @param origin The origin associated with the system notification.
    * @returns A promise that resolves when the notification has been sent.
    */
-  async produce({
-    title,
-    message,
-    type,
-  }: {
-    title: string;
-    message: string;
-    type: SystemNotificationType;
-  }): Promise<boolean> {
+  async produce(content: SystemNotificationContent, origin: string): Promise<boolean> {
     const notification: Notification = {
       source: "system",
+      identity: createBotIdentity(origin),
       content: {
-        type,
-        title,
-        message,
-        color: SystemNotificationProducer.colorMap[type],
+        type: content.type,
+        title: content.title,
+        message: content.message,
+        color: SystemNotificationProducer.colorMap[content.type],
       },
     };
 

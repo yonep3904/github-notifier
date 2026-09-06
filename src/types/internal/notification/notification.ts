@@ -2,7 +2,14 @@ import type { GithubNotificationContent } from "./github";
 import type { ManualNotificationContent } from "./manual";
 import type { SystemNotificationContent } from "./system";
 
-export type Notification =
+export type NotificationIdentity = {
+  name: string;
+  iconUrl: string;
+};
+
+export type Notification = {
+  identity: NotificationIdentity;
+} & (
   | {
       source: "github";
       content: GithubNotificationContent;
@@ -14,6 +21,7 @@ export type Notification =
   | {
       source: "system";
       content: SystemNotificationContent;
-    };
+    }
+);
 
 export type NotificationSource = Notification["source"];

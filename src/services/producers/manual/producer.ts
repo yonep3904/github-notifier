@@ -1,3 +1,4 @@
+import { createBotIdentity } from "@/constants/bot";
 import type { NotificationReceiver } from "@/services/pipeline";
 import type { ManualNotificationPayload } from "@/types/external/manual";
 import type { Notification } from "@/types/internal/notification";
@@ -12,10 +13,12 @@ export class ManualNotificationProducer {
   /**
    * Produce a manual notification and send it to the receiver.
    * @param payload The payload of the manual notification.
+   * @param origin The origin of the request that produced the notification.
    */
-  async produce(payload: ManualNotificationPayload): Promise<boolean> {
+  async produce(payload: ManualNotificationPayload, origin: string): Promise<boolean> {
     const notification: Notification = {
       source: "manual",
+      identity: createBotIdentity(origin),
       content: payload,
     };
 

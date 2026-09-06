@@ -51,7 +51,20 @@ describe("/notify/manual", () => {
     expect(response.status).toBe(200);
     expect(body).toEqual({ ok: true, queued: true });
 
-    expect(mockQueue.sendBatch).toHaveBeenCalled();
+    expect(mockQueue.sendBatch).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        {
+          body: expect.objectContaining({
+            notification: expect.objectContaining({
+              identity: {
+                name: "GitHub Notifier",
+                iconUrl: "https://example.com/images/icon.png",
+              },
+            }),
+          }),
+        },
+      ]),
+    );
   });
 
   it("returns 400 when the request body is invalid JSON", async () => {
