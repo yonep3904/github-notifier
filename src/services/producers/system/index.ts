@@ -1,1 +1,1 @@
-export { SystemNotificationProducer } from "./producer";
+export { type SystemNotificationContent, SystemNotificationProducer } from "./producer";
