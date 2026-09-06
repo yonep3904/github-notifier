@@ -1,6 +1,8 @@
 import type { ManualNotifyRequest } from "@/schemas/notify";
 import type { NotificationJob } from "@/types/internal/pipeline";
 
+export type NotificationQueue = Queue<NotificationJob>;
+
 export type EnvVariables = {
   GITHUB_WEBHOOK_SECRET?: string;
   MANUAL_NOTIFICATION_PASSWORD?: string;
@@ -20,7 +22,7 @@ export type EnvVariables = {
 
 export type Env = CloudflareBindings & {
   // Queue
-  NOTIFICATION_QUEUE: Queue<NotificationJob>;
+  NOTIFICATION_QUEUE: NotificationQueue;
 } & EnvVariables;
 
 export type Variables = {
