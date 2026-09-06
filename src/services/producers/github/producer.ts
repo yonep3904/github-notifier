@@ -1,3 +1,4 @@
+import { createBotIdentity } from "@/constants/bot";
 import type { NotificationReceiver } from "@/services/pipeline";
 import type { GithubWebhookEvent, GithubWebhookEventName } from "@/types/external/github";
 import type { Notification } from "@/types/internal/notification";
@@ -16,10 +17,12 @@ export class GithubNotificationProducer {
   /**
    * Produce a GitHub notification and send it to the receiver.
    * @param payload The payload of the GitHub notification.
+   * @param origin The origin of the request that produced the notification.
    */
   async produce<K extends GithubWebhookEventName>(
     eventType: K,
     payload: unknown,
+    origin: string,
   ): Promise<boolean> {
     const now = new Date().toISOString();
 
@@ -36,6 +39,7 @@ export class GithubNotificationProducer {
 
     const notification: Notification = {
       source: "github",
+      identity: createBotIdentity(origin),
       content,
     };
 

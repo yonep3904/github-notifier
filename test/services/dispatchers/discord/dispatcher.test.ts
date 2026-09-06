@@ -11,7 +11,7 @@ describe("DiscordNotificationDispatcher", () => {
     await dispatcher.dispatch(notification);
 
     expect(dispatcher.id).toBe("discord-main");
-    expect(builder.build).toHaveBeenCalledOnce();
+    expect(builder.build).toHaveBeenCalledWith(notification);
     expect(sender.send).toHaveBeenCalledWith({ content: "payload" });
   });
 });

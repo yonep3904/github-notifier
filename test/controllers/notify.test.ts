@@ -6,6 +6,7 @@ function createContext(values: Record<string, unknown>) {
   return {
     get: vi.fn((key: string) => values[key]),
     json: vi.fn((body: unknown) => body),
+    req: { url: "https://notifier.example.com/notify" },
   } as unknown as Context<AppEnv>;
 }
 
@@ -24,7 +25,10 @@ describe("NotifyController queue result", () => {
     const response = await controller.manual(context);
 
     expect(response).toEqual({ ok: true, queued: false });
-    expect(manualProducer.produce).toHaveBeenCalledOnce();
+    expect(manualProducer.produce).toHaveBeenCalledWith(
+      { type: "standard", title: null, message: "not routed" },
+      "https://notifier.example.com",
+    );
   });
 
   it("reports queued=false when a supported GitHub event has no destination", async () => {
@@ -39,6 +43,6 @@ describe("NotifyController queue result", () => {
     const response = await controller.github(context);
 
     expect(response).toEqual({ ok: true, queued: false });
-    expect(githubProducer.produce).toHaveBeenCalledOnce();
+    expect(githubProducer.produce).toHaveBeenCalledWith("push", {}, "https://notifier.example.com");
   });
 });

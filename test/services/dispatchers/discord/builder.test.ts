@@ -14,6 +14,26 @@ describe("manual builder", () => {
 
     expect(payload).toEqual({
       content: "# Manual Title\nManual message",
+      username: "GitHub Notifier",
+      avatar_url: "https://notifier.example.com/images/icon.png",
+    });
+  });
+
+  it("uses the notification identity for the webhook profile", () => {
+    const builder = new DiscordNotificationBuilder();
+
+    const payload = builder.build(
+      createManualNotification({
+        identity: {
+          name: "Deployment Bot",
+          iconUrl: "https://example.com/custom-icon.png",
+        },
+      }),
+    );
+
+    expect(payload).toMatchObject({
+      username: "Deployment Bot",
+      avatar_url: "https://example.com/custom-icon.png",
     });
   });
 });
@@ -38,6 +58,10 @@ describe("github builder", () => {
         url: "https://github.com/octocat",
         icon_url: "https://avatars.githubusercontent.com/u/1",
       },
+    });
+    expect(payload).toMatchObject({
+      username: "GitHub Notifier",
+      avatar_url: "https://notifier.example.com/images/icon.png",
     });
   });
 
@@ -78,6 +102,10 @@ describe("system builder", () => {
       title: "[WARNING] System Warning",
       description: "System message",
       color: 0xffaa00,
+    });
+    expect(payload).toMatchObject({
+      username: "GitHub Notifier",
+      avatar_url: "https://notifier.example.com/images/icon.png",
     });
   });
 });

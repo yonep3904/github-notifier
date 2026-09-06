@@ -30,19 +30,30 @@ export class DiscordNotificationBuilder implements NotificationBuilder<DiscordNo
    * @throws {NotificationBuildError} If the notification source or type is unsupported, or if any required fields are missing
    */
   build(notification: Notification): DiscordNotificationPayload {
+    let payload: DiscordNotificationPayload;
+
     switch (notification.source) {
       case "manual":
-        return this.finalizePayload(this.buildManualNotification(notification.content));
+        payload = this.buildManualNotification(notification.content);
+        break;
       case "github":
-        return this.finalizePayload(this.buildGithubNotification(notification.content));
+        payload = this.buildGithubNotification(notification.content);
+        break;
       case "system":
-        return this.finalizePayload(this.buildSystemNotification(notification.content));
+        payload = this.buildSystemNotification(notification.content);
+        break;
       default:
         throw new NotificationBuildError(
           "Unsupported notification source",
           DiscordNotificationBuilder.SERVICE_NAME,
         );
     }
+
+    return this.finalizePayload({
+      ...payload,
+      username: notification.identity.name,
+      avatar_url: notification.identity.iconUrl,
+    });
   }
 
   private buildManualNotification(content: ManualNotificationContent): DiscordNotificationPayload {

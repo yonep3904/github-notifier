@@ -10,24 +10,57 @@ function createReceiver(queued: boolean): NotificationReceiver {
 
 describe("producer queue results", () => {
   it("propagates the receiver result for manual notifications", async () => {
-    const producer = new ManualNotificationProducer(createReceiver(false));
+    const receiver = createReceiver(false);
+    const producer = new ManualNotificationProducer(receiver);
     await expect(
-      producer.produce({ type: "standard", title: null, message: "message" }),
+      producer.produce(
+        { type: "standard", title: null, message: "message" },
+        "https://notifier.example.com",
+      ),
     ).resolves.toBe(false);
+    expect(receiver.notify).toHaveBeenCalledWith(
+      expect.objectContaining({
+        identity: {
+          name: "GitHub Notifier",
+          iconUrl: "https://notifier.example.com/images/icon.png",
+        },
+      }),
+    );
   });
 
   it("propagates the receiver result for parsed GitHub notifications", async () => {
     const parser = {
       parse: vi.fn().mockReturnValue(createGithubNotification().content),
     };
-    const producer = new GithubNotificationProducer(createReceiver(false), parser as never);
-    await expect(producer.produce("push", {})).resolves.toBe(false);
+    const receiver = createReceiver(false);
+    const producer = new GithubNotificationProducer(receiver, parser as never);
+    await expect(producer.produce("push", {}, "https://notifier.example.com")).resolves.toBe(false);
+    expect(receiver.notify).toHaveBeenCalledWith(
+      expect.objectContaining({
+        identity: {
+          name: "GitHub Notifier",
+          iconUrl: "https://notifier.example.com/images/icon.png",
+        },
+      }),
+    );
   });
 
   it("propagates the receiver result for system notifications", async () => {
-    const producer = new SystemNotificationProducer(createReceiver(false));
+    const receiver = createReceiver(false);
+    const producer = new SystemNotificationProducer(receiver);
     await expect(
-      producer.produce({ title: "title", message: "message", type: "warning" }),
+      producer.produce(
+        { title: "title", message: "message", type: "warning" },
+        "https://notifier.example.com",
+      ),
     ).resolves.toBe(false);
+    expect(receiver.notify).toHaveBeenCalledWith(
+      expect.objectContaining({
+        identity: {
+          name: "GitHub Notifier",
+          iconUrl: "https://notifier.example.com/images/icon.png",
+        },
+      }),
+    );
   });
 });

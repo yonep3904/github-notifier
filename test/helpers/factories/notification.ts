@@ -5,6 +5,10 @@ export function createManualNotification(
 ): Extract<Notification, { source: "manual" }> {
   return {
     source: "manual",
+    identity: {
+      name: "GitHub Notifier",
+      iconUrl: "https://notifier.example.com/images/icon.png",
+    },
     content: {
       type: "standard",
       title: "Manual Title",
@@ -19,6 +23,10 @@ export function createSystemNotification(
 ): Extract<Notification, { source: "system" }> {
   return {
     source: "system",
+    identity: {
+      name: "GitHub Notifier",
+      iconUrl: "https://notifier.example.com/images/icon.png",
+    },
     content: {
       type: "warning",
       title: "System Warning",
@@ -34,6 +42,10 @@ export function createGithubNotification(
 ): Extract<Notification, { source: "github" }> {
   return {
     source: "github",
+    identity: {
+      name: "GitHub Notifier",
+      iconUrl: "https://notifier.example.com/images/icon.png",
+    },
     content: {
       type: "push",
       action: "push",
