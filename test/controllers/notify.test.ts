@@ -1,30 +1,20 @@
-import type { Context } from "hono";
 import { NotifyController } from "@/controllers/notify";
-import type { AppEnv } from "@/types/env";
-
-function createContext(values: Record<string, unknown>) {
-  return {
-    get: vi.fn((key: string) => values[key]),
-    json: vi.fn((body: unknown) => body),
-    req: { url: "https://notifier.example.com/notify" },
-  } as unknown as Context<AppEnv>;
-}
 
 describe("NotifyController queue result", () => {
   it("reports queued=false when a manual notification has no destination", async () => {
     const manualProducer = { produce: vi.fn().mockResolvedValue(false) };
-    const controller = new NotifyController({
-      manualProducer,
-      githubProducer: { produce: vi.fn() },
-      githubParser: { isSupportedEvent: vi.fn() },
-    } as never);
-    const context = createContext({
-      manualNotify: { title: undefined, message: "not routed" },
+    const controller = new NotifyController(
+      manualProducer as never,
+      { produce: vi.fn() } as never,
+      { isSupportedEvent: vi.fn() } as never,
+    );
+
+    const response = await controller.manual(new Request("https://notifier.example.com/notify"), {
+      title: undefined,
+      message: "not routed",
     });
 
-    const response = await controller.manual(context);
-
-    expect(response).toEqual({ ok: true, queued: false });
+    await expect(response.json()).resolves.toEqual({ ok: true, queued: false });
     expect(manualProducer.produce).toHaveBeenCalledWith(
       { type: "standard", title: null, message: "not routed" },
       "https://notifier.example.com",
@@ -33,16 +23,19 @@ describe("NotifyController queue result", () => {
 
   it("reports queued=false when a supported GitHub event has no destination", async () => {
     const githubProducer = { produce: vi.fn().mockResolvedValue(false) };
-    const controller = new NotifyController({
-      manualProducer: { produce: vi.fn() },
-      githubProducer,
-      githubParser: { isSupportedEvent: vi.fn().mockReturnValue(true) },
-    } as never);
-    const context = createContext({ githubWebhookEvent: "push", json: {} });
+    const controller = new NotifyController(
+      { produce: vi.fn() } as never,
+      githubProducer as never,
+      { isSupportedEvent: vi.fn().mockReturnValue(true) } as never,
+    );
 
-    const response = await controller.github(context);
+    const response = await controller.github(
+      new Request("https://notifier.example.com/notify"),
+      "push",
+      {},
+    );
 
-    expect(response).toEqual({ ok: true, queued: false });
+    await expect(response.json()).resolves.toEqual({ ok: true, queued: false });
     expect(githubProducer.produce).toHaveBeenCalledWith("push", {}, "https://notifier.example.com");
   });
 });

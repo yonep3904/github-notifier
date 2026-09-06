@@ -1,16 +1,14 @@
-import type { Context } from "hono";
 import type { StatusRenderer } from "@/services/status";
-import type { AppEnv } from "@/types/env";
-
-interface StatusControllerDependencies {
-  statusRender: StatusRenderer;
-}
 
 export class StatusController {
-  constructor(private readonly dependencies: StatusControllerDependencies) {}
+  constructor(private readonly statusRender: StatusRenderer) {}
 
-  root(c: Context<AppEnv>) {
-    const baseUrl = new URL(c.req.url).origin;
-    return c.render(this.dependencies.statusRender.renderRootPage(baseUrl));
+  root(request: Request): Response {
+    const baseUrl = new URL(request.url).origin;
+    const page = this.statusRender.renderRootPage(baseUrl);
+
+    return new Response(page.toString(), {
+      headers: { "Content-Type": "text/html; charset=UTF-8" },
+    });
   }
 }

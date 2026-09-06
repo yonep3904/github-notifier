@@ -1,16 +1,14 @@
-import type { Context } from "hono";
 import type { DocsLocale, DocsRender } from "@/services/docs";
-import type { AppEnv } from "@/types/env";
-
-interface DocsControllerDependencies {
-  docsRender: DocsRender;
-}
 
 export class DocsController {
-  constructor(private readonly dependencies: DocsControllerDependencies) {}
+  constructor(private readonly docsRender: DocsRender) {}
 
-  root(c: Context<AppEnv>, locale: DocsLocale) {
-    const baseUrl = new URL(c.req.url).origin;
-    return c.render(this.dependencies.docsRender.renderRootPage(baseUrl, locale));
+  root(request: Request, locale: DocsLocale): Response {
+    const baseUrl = new URL(request.url).origin;
+    const page = this.docsRender.renderRootPage(baseUrl, locale);
+
+    return new Response(page.toString(), {
+      headers: { "Content-Type": "text/html; charset=UTF-8" },
+    });
   }
 }

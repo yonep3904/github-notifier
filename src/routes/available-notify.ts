@@ -24,7 +24,7 @@ export function createAvailableNotifyRoutes(controller: NotifyController, config
     createManualNotificationAuth(manualPolicy),
     jsonBodyMiddleware,
     zodValidator("manualNotify", manualNotifyRequestSchema),
-    (c) => controller.manual(c),
+    (c) => controller.manual(c.req.raw, c.get("manualNotify")),
   );
 
   router.post(
@@ -32,7 +32,7 @@ export function createAvailableNotifyRoutes(controller: NotifyController, config
     createManualNotificationAuth(manualPolicy),
     jsonBodyMiddleware,
     zodValidator("manualNotify", manualNotifyRequestSchema),
-    (c) => controller.manual(c),
+    (c) => controller.manual(c.req.raw, c.get("manualNotify")),
   );
 
   router.post(
@@ -40,7 +40,7 @@ export function createAvailableNotifyRoutes(controller: NotifyController, config
     createGithubWebhookAuth(githubPolicy),
     jsonBodyMiddleware,
     githubWebhookValidator,
-    (c) => controller.github(c),
+    (c) => controller.github(c.req.raw, c.get("githubWebhookEvent"), c.get("json")),
   );
 
   return router;
