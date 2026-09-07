@@ -19,7 +19,7 @@ export function CodeBlock({
 
   return (
     <figure
-      class={`overflow-hidden rounded-2xl border border-stone-800 bg-stone-950/90 shadow-[0_16px_60px_rgba(0,0,0,0.35)] ${className}`}
+      class={`min-w-0 max-w-full overflow-hidden rounded-2xl border border-stone-800 bg-stone-950/90 shadow-[0_16px_60px_rgba(0,0,0,0.35)] ${className}`}
     >
       <div class="flex items-center justify-between gap-3 border-stone-800 border-b bg-stone-900/80 px-4 py-3">
         <div class="flex min-w-0 items-center gap-2 text-sm text-stone-300">

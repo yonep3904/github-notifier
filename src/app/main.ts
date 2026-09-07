@@ -4,6 +4,7 @@ import { errorHandler } from "@/app/error-handler";
 import {
   createAvailableNotifyRoutes,
   createDocsRoutes,
+  createHomeRoutes,
   createStatusRoutes,
   createUnavailableNotifyRoutes,
 } from "@/routes";
@@ -14,7 +15,8 @@ export function createApp(env: Env) {
   const app = new Hono<AppEnv>();
   const container = createContainer(env);
 
-  // /docs and /status routes are always available, regardless of the configuration status.
+  // The UI routes are always available, regardless of the configuration status.
+  app.route("/", createHomeRoutes());
   app.route("/docs", createDocsRoutes(container.docsController));
   app.route("/status", createStatusRoutes(container.statusController));
 

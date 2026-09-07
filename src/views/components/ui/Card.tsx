@@ -33,17 +33,17 @@ export function Card({
       aria-label={title ? undefined : ariaLabel}
       aria-labelledby={title ? titleId : undefined}
       aria-describedby={description ? descriptionId : undefined}
-      class={`flex flex-col gap-2 rounded-3xl border p-5 ${danger ? "border-rose-500/30 bg-rose-500/8" : "border-stone-800 bg-stone-900/65"}`}
+      class={`flex min-w-0 flex-col gap-2 rounded-3xl border p-5 ${danger ? "border-rose-500/30 bg-rose-500/8" : "border-stone-800 bg-stone-900/65"}`}
     >
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div>
+      <div class="flex min-w-0 flex-wrap items-center justify-between gap-3">
+        <div class="min-w-0">
           {title ? (
-            <h3 id={titleId} class="font-semibold text-lg text-white">
+            <h3 id={titleId} class="wrap-anywhere font-semibold text-lg text-white">
               {title}
             </h3>
           ) : null}
           {description ? (
-            <p id={descriptionId} class="mt-1 text-sm text-stone-400">
+            <p id={descriptionId} class="wrap-anywhere mt-1 text-sm text-stone-400">
               {description}
             </p>
           ) : null}
@@ -60,18 +60,18 @@ export function Card({
       </div>
 
       {visibleSections.length > 0 ? (
-        <div class="mt-2 flex flex-col gap-3">
+        <div class="mt-2 flex min-w-0 flex-col gap-3">
           {visibleSections.map((section, index) => {
             const sectionId = `${cardId}-section-${index}`;
             return section.title ? (
-              <section key={section.title} aria-labelledby={sectionId}>
+              <section key={section.title} aria-labelledby={sectionId} class="min-w-0">
                 <h4 id={sectionId} class="font-semibold text-md text-white">
                   {section.title}
                 </h4>
-                <div class="mt-3 ml-1">{section.content}</div>
+                <div class="mt-3 ml-1 min-w-0">{section.content}</div>
               </section>
             ) : (
-              <div key={`section-${index}`} class="mt-3 ml-1">
+              <div key={`section-${index}`} class="mt-3 ml-1 min-w-0">
                 {section.content}
               </div>
             );

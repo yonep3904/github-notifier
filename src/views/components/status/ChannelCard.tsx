@@ -28,7 +28,7 @@ export function ChannelCard({ channel }: ChannelCardProps) {
         {
           title: "Webhook URL",
           content: (
-            <p class="break-all rounded-lg bg-stone-950/90 p-3 font-mono text-sm">
+            <p class="wrap-anywhere min-w-0 max-w-full rounded-lg bg-stone-950/90 p-3 font-mono text-sm">
               {channel.webhook ?? "not set"}
             </p>
           ),

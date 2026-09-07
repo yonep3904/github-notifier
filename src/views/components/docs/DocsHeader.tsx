@@ -9,7 +9,6 @@ export function DocsHeader({ model }: DocsHeaderProps) {
     <header class="border-stone-800 border-b pb-8">
       <div class="flex flex-wrap items-start justify-between gap-6">
         <div class="max-w-3xl">
-          <p class="font-medium text-sky-300 text-sm">GitHub Notifier</p>
           <h1 class="mt-2 font-semibold text-3xl text-white tracking-tight sm:text-4xl">
             {model.title}
           </h1>

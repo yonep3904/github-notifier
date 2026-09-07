@@ -1,0 +1,1 @@
+export { HomeRootPage } from "./root";
