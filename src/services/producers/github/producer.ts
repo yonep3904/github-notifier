@@ -1,15 +1,24 @@
 import { createBotIdentity } from "@/constants/bot";
+import type { SupportedGithubEventName } from "@/constants/github-events";
 import type { NotificationReceiver } from "@/services/pipeline";
-import type { GithubWebhookEvent, GithubWebhookEventName } from "@/types/external/github";
+import type { GithubWebhookEvent } from "@/types/external/github";
 import type { Notification } from "@/types/internal/notification";
 import type { GithubWebhookParser } from "./parser";
 
+export interface GithubNotificationProducerConfig {
+  allowed: boolean;
+  handleEventTypes: SupportedGithubEventName[];
+}
+
 export class GithubNotificationProducer {
   /**
-   * Initialize the GithubNotificationProducer with a NotificationReceiver.
+   * Initialize the GithubNotificationProducer.
+   * @param config The GitHub handler configuration.
    * @param receiver The NotificationReceiver to which the produced notifications will be sent.
+   * @param parser The parser used to convert GitHub webhook events into notification content.
    */
   constructor(
+    private readonly config: GithubNotificationProducerConfig,
     private readonly receiver: NotificationReceiver,
     private readonly parser: GithubWebhookParser,
   ) {}
@@ -19,11 +28,11 @@ export class GithubNotificationProducer {
    * @param payload The payload of the GitHub notification.
    * @param origin The origin of the request that produced the notification.
    */
-  async produce<K extends GithubWebhookEventName>(
-    eventType: K,
-    payload: unknown,
-    origin: string,
-  ): Promise<boolean> {
+  async produce(eventType: string, payload: unknown, origin: string): Promise<boolean> {
+    if (!this.config.allowed || !this.config.handleEventTypes.some((type) => type === eventType)) {
+      return false;
+    }
+
     const now = new Date().toISOString();
 
     const event = {

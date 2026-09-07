@@ -193,7 +193,7 @@ describe("/notify/github", () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(body).toEqual({ ok: true, queued: false, ignored: true });
+    expect(body).toEqual({ ok: true, queued: false });
 
     expect(mockQueue.sendBatch).not.toHaveBeenCalled();
   });
@@ -297,7 +297,7 @@ describe("GitHub notification authentication", () => {
     );
 
     expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ ok: true, queued: false, ignored: true });
+    expect(await response.json()).toEqual({ ok: true, queued: false });
     expect(mockQueue.sendBatch).not.toHaveBeenCalled();
   });
 });

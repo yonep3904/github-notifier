@@ -11,7 +11,7 @@ function createReceiver(queued: boolean): NotificationReceiver {
 describe("producer queue results", () => {
   it("propagates the receiver result for manual notifications", async () => {
     const receiver = createReceiver(false);
-    const producer = new ManualNotificationProducer(receiver);
+    const producer = new ManualNotificationProducer({ allowed: true }, receiver);
     await expect(
       producer.produce(
         { type: "standard", title: null, message: "message" },
@@ -33,7 +33,11 @@ describe("producer queue results", () => {
       parse: vi.fn().mockReturnValue(createGithubNotification().content),
     };
     const receiver = createReceiver(false);
-    const producer = new GithubNotificationProducer(receiver, parser as never);
+    const producer = new GithubNotificationProducer(
+      { allowed: true, handleEventTypes: ["push"] },
+      receiver,
+      parser as never,
+    );
     await expect(producer.produce("push", {}, "https://notifier.example.com")).resolves.toBe(false);
     expect(receiver.notify).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -43,6 +47,47 @@ describe("producer queue results", () => {
         },
       }),
     );
+  });
+
+  it("does not queue manual notifications when the handler is not allowed", async () => {
+    const receiver = createReceiver(true);
+    const producer = new ManualNotificationProducer({ allowed: false }, receiver);
+
+    await expect(
+      producer.produce(
+        { type: "standard", title: null, message: "message" },
+        "https://notifier.example.com",
+      ),
+    ).resolves.toBe(false);
+    expect(receiver.notify).not.toHaveBeenCalled();
+  });
+
+  it("does not parse or queue GitHub notifications when the handler is not allowed", async () => {
+    const parser = { parse: vi.fn() };
+    const receiver = createReceiver(true);
+    const producer = new GithubNotificationProducer(
+      { allowed: false, handleEventTypes: ["push"] },
+      receiver,
+      parser as never,
+    );
+
+    await expect(producer.produce("push", {}, "https://notifier.example.com")).resolves.toBe(false);
+    expect(parser.parse).not.toHaveBeenCalled();
+    expect(receiver.notify).not.toHaveBeenCalled();
+  });
+
+  it("does not parse or queue GitHub notifications for unconfigured event types", async () => {
+    const parser = { parse: vi.fn() };
+    const receiver = createReceiver(true);
+    const producer = new GithubNotificationProducer(
+      { allowed: true, handleEventTypes: ["issues"] },
+      receiver,
+      parser as never,
+    );
+
+    await expect(producer.produce("push", {}, "https://notifier.example.com")).resolves.toBe(false);
+    expect(parser.parse).not.toHaveBeenCalled();
+    expect(receiver.notify).not.toHaveBeenCalled();
   });
 
   it("propagates the receiver result for system notifications", async () => {

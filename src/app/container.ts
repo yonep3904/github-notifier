@@ -79,10 +79,14 @@ export function createValidContainer(
     queue,
   );
 
-  const manualProducer = new ManualNotificationProducer(receiver);
-  const githubProducer = new GithubNotificationProducer(receiver, githubParser);
+  const manualProducer = new ManualNotificationProducer(config.handlers.manual, receiver);
+  const githubProducer = new GithubNotificationProducer(
+    config.handlers.github,
+    receiver,
+    githubParser,
+  );
 
-  const notifyController = new NotifyController(manualProducer, githubProducer, githubParser);
+  const notifyController = new NotifyController(manualProducer, githubProducer);
   const queueHandler = new AvailableQueueHandler(consumer);
 
   return {
