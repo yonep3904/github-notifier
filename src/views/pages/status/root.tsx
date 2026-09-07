@@ -23,7 +23,7 @@ export function StatusRootPage({ model }: StatusRootPageProps) {
         <StatusHero hero={model.hero} />
 
         <section aria-label="Status overview">
-          <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div class="grid min-w-0 gap-4 md:grid-cols-2 xl:grid-cols-4">
             {model.metrics.map((metric) => (
               <MetricCard key={metric.label} metric={metric} />
             ))}
@@ -41,7 +41,7 @@ export function StatusRootPage({ model }: StatusRootPageProps) {
           <h2 id="handlers-heading" class="font-semibold text-2xl text-white tracking-tight">
             Handlers
           </h2>
-          <div class="grid gap-4 xl:grid-cols-2">
+          <div class="grid min-w-0 gap-4 xl:grid-cols-2">
             <GithubHandlerCard handler={model.githubHandler} />
             <ManualHandlerCard handler={model.manualHandler} />
           </div>

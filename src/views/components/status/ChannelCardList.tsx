@@ -10,7 +10,7 @@ export function ChannelCardList({ channels }: ChannelCardListProps) {
   const hasEnabledChannels = channels.some(({ enabled }) => enabled);
 
   return (
-    <div class="channel-card-list space-y-4">
+    <div class="channel-card-list min-w-0 space-y-4">
       {disabledChannelCount > 0 ? (
         <label class="inline-flex cursor-pointer select-none items-center gap-3 rounded-xl text-sm text-stone-300">
           <input type="checkbox" aria-controls="channel-cards" class="peer sr-only" />
@@ -31,11 +31,11 @@ export function ChannelCardList({ channels }: ChannelCardListProps) {
         </p>
       ) : null}
 
-      <div id="channel-cards" class="grid gap-4">
+      <div id="channel-cards" class="grid min-w-0 gap-4">
         {channels.map((channel, index) => (
           <div
             key={`${channel.id}-${index}`}
-            class={channel.enabled ? undefined : "channel-card-disabled"}
+            class={`min-w-0 ${channel.enabled ? "" : "channel-card-disabled"}`}
           >
             <ChannelCard channel={channel} />
           </div>

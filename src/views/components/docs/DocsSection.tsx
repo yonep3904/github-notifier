@@ -34,11 +34,11 @@ function DocsBlockView({ block }: DocsBlockViewProps) {
   switch (block.type) {
     case "steps":
       return (
-        <ol class="space-y-4">
+        <ol class="min-w-0 space-y-4">
           {block.items.map((item, index) => (
             <li
               key={item.title}
-              class="grid gap-4 rounded-2xl border border-stone-800 bg-stone-900/60 p-5 sm:grid-cols-[2rem_minmax(0,1fr)]"
+              class="grid min-w-0 gap-4 rounded-2xl border border-stone-800 bg-stone-900/60 p-5 sm:grid-cols-[2rem_minmax(0,1fr)]"
             >
               <span
                 aria-hidden="true"
@@ -53,11 +53,11 @@ function DocsBlockView({ block }: DocsBlockViewProps) {
       );
     case "cards":
       return (
-        <div class={`grid gap-4 ${block.columns === 2 ? "md:grid-cols-2" : ""}`}>
+        <div class={`grid min-w-0 gap-4 ${block.columns === 2 ? "md:grid-cols-2" : ""}`}>
           {block.items.map((item) => (
             <article
               key={item.title}
-              class="rounded-2xl border border-stone-800 bg-stone-900/60 p-5"
+              class="min-w-0 rounded-2xl border border-stone-800 bg-stone-900/60 p-5"
             >
               <ArticleContent article={item} />
             </article>
