@@ -2,7 +2,8 @@ import type { NotificationJob } from "@/types/internal/pipeline";
 
 export type NotificationQueue = Queue<NotificationJob>;
 
-export type EnvVariables = {
+/** Secret bindings that are not included in Wrangler's generated bindings. */
+export type Secrets = {
   GITHUB_WEBHOOK_SECRET?: string;
   MANUAL_NOTIFICATION_PASSWORD?: string;
 
@@ -19,10 +20,17 @@ export type EnvVariables = {
   SLACK_WEBHOOK_URL_5?: string;
 };
 
+type StringBindingKey = {
+  [Key in keyof CloudflareBindings]: CloudflareBindings[Key] extends string ? Key : never;
+}[keyof CloudflareBindings];
+
+/** Environment values that may be referenced while building the application configuration. */
+export type ConfigEnvironment = Partial<Pick<CloudflareBindings, StringBindingKey>> & Secrets;
+
 export type Env = CloudflareBindings & {
   // Queue
   NOTIFICATION_QUEUE: NotificationQueue;
-} & EnvVariables;
+} & ConfigEnvironment;
 
 export type AppEnv = {
   Bindings: Env;

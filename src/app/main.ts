@@ -31,12 +31,14 @@ export function createApp(env: Env) {
 }
 
 export default {
-  fetch(req: Request, env: Env) {
-    return createApp(env).fetch(req, env);
+  fetch(req: Request, env: Env, ctx?: ExecutionContext) {
+    const app = createApp(env);
+    return ctx === undefined ? app.fetch(req, env) : app.fetch(req, env, ctx);
   },
 
-  async queue(batch: MessageBatch<NotificationJob>, env: Env) {
+  // biome-ignore lint/correctness/noUnusedFunctionParameters: args are required by the interface but not used in this implementation
+  async queue(batch: MessageBatch<NotificationJob>, env: Env, ctx: ExecutionContext) {
     const container = createContainer(env);
     await container.queueHandler.handle(batch);
   },
-};
+} satisfies ExportedHandler<Env, NotificationJob>;
