@@ -32,6 +32,5 @@ export type DocsPageModel = {
   baseUrlLabel: string;
   baseUrl: string;
   contentsLabel: string;
-  statusLinkLabel: string;
   sections: DocsSectionModel[];
 };

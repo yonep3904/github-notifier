@@ -10,9 +10,9 @@ describe("DocsPageModelBuilder", () => {
     expect(model.sections.map(({ id }) => id)).toEqual([
       "overview",
       "deployment",
-      "configuration",
       "github-webhook",
       "manual-notification",
+      "configuration",
       "diagnostics",
     ]);
     const serialized = JSON.stringify(model);

@@ -53,7 +53,7 @@ function DocsBlockView({ block }: DocsBlockViewProps) {
       );
     case "cards":
       return (
-        <div class={`grid min-w-0 gap-4 ${block.columns === 2 ? "md:grid-cols-2" : ""}`}>
+        <div class="grid min-w-0 gap-4">
           {block.items.map((item) => (
             <article
               key={item.title}
