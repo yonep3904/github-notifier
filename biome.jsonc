@@ -5,6 +5,7 @@
   "files": {
     "includes": [
       "**/*",
+      "!**/*.svg*",
       "!**/*.md",
       "!**/worker-configuration.d.ts",
       "!coverage",
