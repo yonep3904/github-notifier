@@ -1,6 +1,6 @@
 import type { DocsPageModel } from "@/services/docs";
 import { DocsHeader, DocsSection, DocsSidebar } from "@/views/components/docs";
-import { Layout } from "@/views/components/layout";
+import { Layout, PageNavigation } from "@/views/components/layout";
 
 interface DocsRootPageProps {
   model: DocsPageModel;
@@ -9,6 +9,7 @@ interface DocsRootPageProps {
 export function DocsRootPage({ model }: DocsRootPageProps) {
   return (
     <Layout lang={model.locale} title="Docs | GitHub Notifier" description={model.introduction}>
+      <PageNavigation current="docs" />
       <DocsHeader model={model} />
       <div class="mt-8 grid items-start gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
         <DocsSidebar model={model} />

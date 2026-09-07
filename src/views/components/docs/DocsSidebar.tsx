@@ -45,12 +45,6 @@ function Contents({ model }: ContentsProps) {
           </li>
         ))}
       </ol>
-      <a
-        href="/status"
-        class="mt-5 block border-stone-800 border-t px-2 pt-4 font-medium text-sky-300 text-sm hover:text-sky-200"
-      >
-        {model.statusLinkLabel} →
-      </a>
     </nav>
   );
 }

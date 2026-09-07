@@ -1,5 +1,5 @@
 import type { StatusPageModel } from "@/services/status";
-import { Layout } from "@/views/components/layout";
+import { Layout, PageNavigation } from "@/views/components/layout";
 import {
   ChannelCardList,
   GithubHandlerCard,
@@ -19,6 +19,7 @@ export function StatusRootPage({ model }: StatusRootPageProps) {
       title="Status | GitHub Notifier"
       description="Current configuration status for the GitHub Notifier worker."
     >
+      <PageNavigation current="status" />
       <div class="space-y-8">
         <StatusHero hero={model.hero} />
 
