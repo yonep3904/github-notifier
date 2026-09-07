@@ -1,2 +1,2 @@
-export { NotificationConsumer } from "./consumer";
-export { NotificationReceiver } from "./receiver";
+export { NotificationConsumer, type NotificationConsumerConfig } from "./consumer";
+export { type NotificationChannel, NotificationReceiver } from "./receiver";

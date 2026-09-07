@@ -11,8 +11,8 @@ function createRuntimeConfig(): RuntimeConfig {
 
 function createController(): NotifyController {
   return {
-    manual: vi.fn((c) => c.json({ ok: true })),
-    github: vi.fn((c) => c.json({ ok: true })),
+    manual: vi.fn(() => Response.json({ ok: true })),
+    github: vi.fn(() => Response.json({ ok: true })),
   } as unknown as NotifyController;
 }
 

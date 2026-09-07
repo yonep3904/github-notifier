@@ -1,8 +1,8 @@
-import type { EnvVariables } from "@/types/env";
+import type { ConfigEnvironment } from "@/types/env";
 import { full } from "./templates/github-events";
 import type { Config } from "./types";
 
-export const createConfig = (env: EnvVariables): Config => {
+export const createConfig = (env: ConfigEnvironment): Config => {
   return {
     dispatch: {
       channels: [

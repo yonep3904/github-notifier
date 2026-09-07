@@ -1,24 +1,20 @@
-import type { Context } from "hono";
+import type { ManualNotifyRequest } from "@/schemas/notify";
 import type {
   GithubNotificationProducer,
   GithubWebhookParser,
   ManualNotificationProducer,
 } from "@/services/producers";
-import type { AppEnv } from "@/types/env";
-
-export interface NotifyControllerDependencies {
-  manualProducer: ManualNotificationProducer;
-  githubProducer: GithubNotificationProducer;
-  githubParser: GithubWebhookParser;
-}
 
 export class NotifyController {
-  constructor(private readonly dependencies: NotifyControllerDependencies) {}
+  constructor(
+    private readonly manualProducer: ManualNotificationProducer,
+    private readonly githubProducer: GithubNotificationProducer,
+    private readonly githubParser: GithubWebhookParser,
+  ) {}
 
-  async manual(c: Context<AppEnv>) {
-    const body = c.get("manualNotify");
-    const origin = new URL(c.req.url).origin;
-    const queued = await this.dependencies.manualProducer.produce(
+  async manual(request: Request, body: ManualNotifyRequest): Promise<Response> {
+    const origin = new URL(request.url).origin;
+    const queued = await this.manualProducer.produce(
       {
         type: "standard",
         title: body.title ?? null,
@@ -27,21 +23,19 @@ export class NotifyController {
       origin,
     );
 
-    return c.json({ ok: true, queued });
+    return Response.json({ ok: true, queued });
   }
 
-  async github(c: Context<AppEnv>) {
-    const eventType = c.get("githubWebhookEvent");
-    const body = c.get("json");
-    const origin = new URL(c.req.url).origin;
+  async github(request: Request, eventType: string, body: unknown): Promise<Response> {
+    const origin = new URL(request.url).origin;
 
     // Unsupported events are ignored to avoid unnecessary queueing and processing
-    if (!this.dependencies.githubParser.isSupportedEvent(eventType)) {
-      return c.json({ ok: true, queued: false, ignored: true });
+    if (!this.githubParser.isSupportedEvent(eventType)) {
+      return Response.json({ ok: true, queued: false, ignored: true });
     }
 
-    const queued = await this.dependencies.githubProducer.produce(eventType, body, origin);
+    const queued = await this.githubProducer.produce(eventType, body, origin);
 
-    return c.json({ ok: true, queued });
+    return Response.json({ ok: true, queued });
   }
 }

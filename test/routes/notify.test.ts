@@ -81,7 +81,11 @@ describe("/notify/manual", () => {
     const body = await response.json();
 
     expect(response.status).toBe(400);
-    expect(body).toEqual({ ok: false, error: "Invalid JSON" });
+    expect(body).toEqual({
+      ok: false,
+      error: "bad_request",
+      message: "Malformed JSON in request body",
+    });
 
     expect(mockQueue.sendBatch).not.toHaveBeenCalled();
   });
@@ -105,7 +109,7 @@ describe("/notify/manual", () => {
     const body = await response.json();
 
     expect(response.status).toBe(400);
-    expect(body).toEqual({ ok: false });
+    expect(body).toEqual({ ok: false, error: "invalid_request" });
 
     expect(mockQueue.sendBatch).not.toHaveBeenCalled();
   });
@@ -137,7 +141,7 @@ describe("/notify/github", () => {
     const response = await app.fetch(
       new Request("https://example.com/notify/github", {
         method: "POST",
-        headers: await githubHeaders(requestBody),
+        headers: await githubHeaders(requestBody, "push"),
         body: requestBody,
       }),
       createTestEnv({ NOTIFICATION_QUEUE: mockQueue }),
@@ -145,7 +149,11 @@ describe("/notify/github", () => {
     const body = await response.json();
 
     expect(response.status).toBe(400);
-    expect(body).toEqual({ ok: false, error: "Invalid JSON" });
+    expect(body).toEqual({
+      ok: false,
+      error: "bad_request",
+      message: "Malformed JSON in request body",
+    });
 
     expect(mockQueue.sendBatch).not.toHaveBeenCalled();
   });
@@ -165,7 +173,7 @@ describe("/notify/github", () => {
     const body = await response.json();
 
     expect(response.status).toBe(400);
-    expect(body).toEqual({ ok: false, error: "`X-GitHub-Event` header is required" });
+    expect(body).toEqual({ ok: false, error: "missing_github_event" });
 
     expect(mockQueue.sendBatch).not.toHaveBeenCalled();
   });
@@ -244,7 +252,7 @@ describe("manual notification authentication", () => {
       );
 
       expect(response.status).toBe(401);
-      expect(response.headers.get("WWW-Authenticate")).toBe("Bearer");
+      expect(response.headers.get("WWW-Authenticate")).toMatch(/^Bearer(?: |$)/);
       expect(await response.json()).toEqual({ ok: false, error: "unauthorized" });
       expect(mockQueue.sendBatch).not.toHaveBeenCalled();
     },

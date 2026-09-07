@@ -3,8 +3,6 @@ import type { AppEnv } from "@/types/env";
 
 const encoder = new TextEncoder();
 
-export type GithubWebhookAuthPolicy = { mode: "none" } | { mode: "hmac-sha256"; secret: string };
-
 function unauthorized(c: Context<AppEnv>) {
   return c.json({ ok: false, error: "unauthorized" }, 401);
 }
@@ -24,11 +22,9 @@ function decodeSignature(signature: string): Uint8Array | null {
   return bytes;
 }
 
-export function createGithubWebhookAuth(
-  policy: GithubWebhookAuthPolicy,
-): MiddlewareHandler<AppEnv> {
+export function createGitHubWebhookAuth(secret?: string): MiddlewareHandler<AppEnv> {
   return async (c, next) => {
-    if (policy.mode === "none") {
+    if (secret === undefined) {
       await next();
       return;
     }
@@ -48,7 +44,7 @@ export function createGithubWebhookAuth(
     // 3. Verify the signature using HMAC with SHA-256
     const key = await crypto.subtle.importKey(
       "raw",
-      encoder.encode(policy.secret),
+      encoder.encode(secret),
       { name: "HMAC", hash: "SHA-256" },
       false,
       ["verify"],

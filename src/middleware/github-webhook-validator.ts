@@ -1,14 +1,12 @@
-import type { MiddlewareHandler } from "hono";
-import type { AppEnv } from "@/types/env";
+import { validator } from "hono/validator";
 
-export const githubWebhookValidator: MiddlewareHandler<AppEnv> = async (c, next) => {
-  const event = c.req.header("X-GitHub-Event");
-
+export const gitHubWebhookHeadersValidator = validator("header", (headers, c) => {
+  const event = headers["x-github-event"];
   if (!event) {
-    return c.json({ ok: false, error: "`X-GitHub-Event` header is required" }, 400);
+    return c.json({ ok: false, error: "missing_github_event" }, 400);
   }
 
-  c.set("githubWebhookEvent", event);
+  return { event };
+});
 
-  await next();
-};
+export const gitHubWebhookPayloadValidator = validator("json", (value) => value);
