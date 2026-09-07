@@ -3,11 +3,7 @@ import { NotifyController } from "@/controllers/notify";
 describe("NotifyController queue result", () => {
   it("reports queued=false when a manual notification has no destination", async () => {
     const manualProducer = { produce: vi.fn().mockResolvedValue(false) };
-    const controller = new NotifyController(
-      manualProducer as never,
-      { produce: vi.fn() } as never,
-      { isSupportedEvent: vi.fn() } as never,
-    );
+    const controller = new NotifyController(manualProducer as never, { produce: vi.fn() } as never);
 
     const response = await controller.manual(new Request("https://notifier.example.com/notify"), {
       title: undefined,
@@ -23,11 +19,7 @@ describe("NotifyController queue result", () => {
 
   it("reports queued=false when a supported GitHub event has no destination", async () => {
     const githubProducer = { produce: vi.fn().mockResolvedValue(false) };
-    const controller = new NotifyController(
-      { produce: vi.fn() } as never,
-      githubProducer as never,
-      { isSupportedEvent: vi.fn().mockReturnValue(true) } as never,
-    );
+    const controller = new NotifyController({ produce: vi.fn() } as never, githubProducer as never);
 
     const response = await controller.github(
       new Request("https://notifier.example.com/notify"),
@@ -37,5 +29,23 @@ describe("NotifyController queue result", () => {
 
     await expect(response.json()).resolves.toEqual({ ok: true, queued: false });
     expect(githubProducer.produce).toHaveBeenCalledWith("push", {}, "https://notifier.example.com");
+  });
+
+  it("delegates unsupported GitHub events to the producer without an ignored response", async () => {
+    const githubProducer = { produce: vi.fn().mockResolvedValue(false) };
+    const controller = new NotifyController({ produce: vi.fn() } as never, githubProducer as never);
+
+    const response = await controller.github(
+      new Request("https://notifier.example.com/notify"),
+      "unsupported",
+      {},
+    );
+
+    await expect(response.json()).resolves.toEqual({ ok: true, queued: false });
+    expect(githubProducer.produce).toHaveBeenCalledWith(
+      "unsupported",
+      {},
+      "https://notifier.example.com",
+    );
   });
 });
